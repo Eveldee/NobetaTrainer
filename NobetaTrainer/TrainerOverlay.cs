@@ -13,6 +13,9 @@ namespace NobetaTrainer
         private bool _isInfiniteManaEnabled;
         public bool IsInfiniteManaEnabled => _isInfiniteManaEnabled;
 
+        private bool _noDamageEnabled;
+        public bool NoDamageEnabled => _noDamageEnabled;
+
         private bool _isToolVisible = true;
 
         protected override Task PostInitialized()
@@ -50,6 +53,7 @@ namespace NobetaTrainer
             {
                 ImGui.SeparatorText("General");
                 ImGui.Checkbox("Infinite Mana", ref _isInfiniteManaEnabled);
+                ImGui.Checkbox("No Damage", ref _noDamageEnabled);
 
                 ImGui.SeparatorText("Actions");
             }

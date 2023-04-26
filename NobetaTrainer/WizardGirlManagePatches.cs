@@ -7,6 +7,8 @@ public class WizardGirlManagePatches
 {
     public static WizardGirlManage Instance;
 
+    private static bool _appliedNoDamage;
+
     [HarmonyPatch(typeof(WizardGirlManage), nameof(WizardGirlManage.Init))]
     [HarmonyPostfix]
     static void WizardGirlManageInitPostfix(WizardGirlManage __instance)
@@ -19,6 +21,20 @@ public class WizardGirlManagePatches
     [HarmonyPrefix]
     static void UpdatePrefix()
     {
+        if (Plugin.TrainerOverlay.NoDamageEnabled && !_appliedNoDamage)
+        {
+            Instance.PlayerController.SetDodgeTime(float.MaxValue);
 
+            _appliedNoDamage = true;
+        }
+        else
+        {
+            if (_appliedNoDamage)
+            {
+                Instance.playerController.SetDodgeTime();
+
+                _appliedNoDamage = false;
+            }
+        }
     }
 }
