@@ -11,16 +11,13 @@ public class GamePatches
     {
         if (Plugin.TrainerOverlay.IsInfiniteManaEnabled)
         {
-            var sceneManager = Object.FindObjectOfType<SceneManager>();
-            var player = sceneManager.GetPlayerManager();
+            var player = WizardGirlManagePatches.Instance;
             var data = player.BaseData;
 
             // Increase mana if needed
             if (data.g_fMP < data.g_fMPMax)
             {
                 data.g_fMP = data.g_fMPMax;
-
-                Plugin.Log.LogDebug($"Set MP to Max ({data.g_fMPMax}) because 'infinite mana' is activated");
 
                 return false;
             }
