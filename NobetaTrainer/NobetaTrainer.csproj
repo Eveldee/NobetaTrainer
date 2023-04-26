@@ -18,6 +18,7 @@
     <ItemGroup>
         <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.*" IncludeAssets="compile" />
         <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+        <PackageReference Include="ClickableTransparentOverlay" Version="8.1.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -321,5 +322,9 @@
       <Reference Include="UnityEngine.XRModule">
         <HintPath>lib\interop\UnityEngine.XRModule.dll</HintPath>
       </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\ClickableTransparentOverlay\ClickableTransparentOverlay\ClickableTransparentOverlay.csproj" />
     </ItemGroup>
 </Project>

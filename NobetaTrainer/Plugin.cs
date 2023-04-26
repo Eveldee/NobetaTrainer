@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Threading.Tasks;
 using BepInEx;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
@@ -13,6 +14,8 @@ public class Plugin : BasePlugin
 {
     internal new static ManualLogSource Log;
 
+    public static TrainerOverlay TrainerOverlay;
+
     public override void Load()
     {
         // Plugin startup logic
@@ -20,10 +23,17 @@ public class Plugin : BasePlugin
 
         Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
 
+        // Create and show overlay
+        TrainerOverlay = new TrainerOverlay();
+        Task.Run(TrainerOverlay.Run);
+
+        // Apply patches
         Harmony.CreateAndPatchAll(typeof(Plugin));
+        Harmony.CreateAndPatchAll(typeof(WizardGirlManagePatches));
+        Harmony.CreateAndPatchAll(typeof(GamePatches));
     }
 
-    [HarmonyPatch(typeof(UIPauseMenu), "Appear")]
+    [HarmonyPatch(typeof(UIPauseMenu), nameof(UIPauseMenu.Appear))]
     [HarmonyPrefix]
     static void PauseMenuOpenPrefix()
     {
