@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using BepInEx;
 using BepInEx.Logging;
@@ -15,6 +16,7 @@ public class Plugin : BasePlugin
     internal new static ManualLogSource Log;
 
     public static TrainerOverlay TrainerOverlay;
+    private Thread _overlayThread;
 
     public override void Load()
     {
