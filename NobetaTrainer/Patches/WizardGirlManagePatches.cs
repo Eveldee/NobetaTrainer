@@ -19,25 +19,18 @@ public class WizardGirlManagePatches
         RuntimeData = Instance.playerController.runtimeData;
     }
 
+    [HarmonyPatch(typeof(WizardGirlManage), nameof(WizardGirlManage.Hit))]
+    [HarmonyPrefix]
+    static bool HitPrefix(ref bool __result, AttackData Data, bool bIgnoreDodge = false)
+    {
+        // No Damage
+        return !Plugin.TrainerOverlay.NoDamageEnabled;
+    }
+
     [HarmonyPatch(typeof(WizardGirlManage), nameof(WizardGirlManage.Update))]
     [HarmonyPrefix]
     static void UpdatePrefix()
     {
-        // No damage
-        if (Plugin.TrainerOverlay.NoDamageEnabled && !_appliedNoDamage)
-        {
-            Instance.PlayerController.SetDodgeTime(float.MaxValue);
 
-            _appliedNoDamage = true;
-        }
-        else
-        {
-            if (_appliedNoDamage)
-            {
-                Instance.playerController.SetDodgeTime();
-
-                _appliedNoDamage = false;
-            }
-        }
     }
 }
