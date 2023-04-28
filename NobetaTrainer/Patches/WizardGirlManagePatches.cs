@@ -1,14 +1,11 @@
 ﻿using HarmonyLib;
-using UnityEngine;
 
-namespace NobetaTrainer;
+namespace NobetaTrainer.Patches;
 
 public class WizardGirlManagePatches
 {
-    public static WizardGirlManage Instance;
-    public static NobetaRuntimeData RuntimeData;
-
-    private static bool _appliedNoDamage;
+    public static WizardGirlManage Instance { get; private set; }
+    public static NobetaRuntimeData RuntimeData { get; private set; }
 
     [HarmonyPatch(typeof(WizardGirlManage), nameof(WizardGirlManage.Init))]
     [HarmonyPostfix]
@@ -31,6 +28,30 @@ public class WizardGirlManagePatches
     [HarmonyPrefix]
     static void UpdatePrefix()
     {
+        // Infinite Mana
+        if (Plugin.TrainerOverlay.InfiniteManaEnabled)
+        {
+            var player = Instance;
+            var data = player.BaseData;
 
+            // Increase mana if needed
+            if (data.g_fMP < data.g_fMPMax)
+            {
+                data.g_fMP = data.g_fMPMax;
+            }
+        }
+
+        // Infinite Stamina
+        if (Plugin.TrainerOverlay.InfiniteStaminaEnabled)
+        {
+            var player = Instance;
+            var data = player.BaseData;
+
+            // Increase stamina if needed
+            if (data.g_fSP < data.g_fSPMax)
+            {
+                data.g_fSP = data.g_fSPMax;
+            }
+        }
     }
 }

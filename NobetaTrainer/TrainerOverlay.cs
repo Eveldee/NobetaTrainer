@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ClickableTransparentOverlay;
 using Il2CppInterop.Runtime;
 using ImGuiNET;
+using NobetaTrainer.Patches;
 using NobetaTrainer.Utils;
 using UnityEngine;
 using Vector4 = System.Numerics.Vector4;
@@ -23,14 +24,17 @@ namespace NobetaTrainer
 
         private readonly Vector4 _valueColor = new(252 / 255f, 161 / 255f, 3 / 255f, 1f);
 
-        private bool _isInfiniteManaEnabled;
-        public bool IsInfiniteManaEnabled => _isInfiniteManaEnabled;
+        private bool _infiniteManaEnabled;
+        public bool InfiniteManaEnabled => _infiniteManaEnabled;
 
         private bool _noDamageEnabled;
         public bool NoDamageEnabled => _noDamageEnabled;
 
+        private bool _infiniteStaminaEnabled;
+        public bool InfiniteStaminaEnabled => _infiniteStaminaEnabled;
+
         private bool _isToolVisible = true;
-        private string _assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
+        private readonly string _assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
 
         protected override Task PostInitialized()
         {
@@ -86,8 +90,9 @@ namespace NobetaTrainer
             if (ImGui.CollapsingHeader("Character", ImGuiTreeNodeFlags.DefaultOpen))
             {
                 ImGui.SeparatorText("General");
-                ImGui.Checkbox("Infinite Mana", ref _isInfiniteManaEnabled);
                 ImGui.Checkbox("No Damage", ref _noDamageEnabled);
+                ImGui.Checkbox("Infinite Mana", ref _infiniteManaEnabled);
+                ImGui.Checkbox("Infinite Stamina", ref _infiniteStaminaEnabled);
 
                 ImGui.SeparatorText("Actions");
             }
@@ -103,7 +108,7 @@ namespace NobetaTrainer
 
         private void ShowInspectWindow()
         {
-            void ShowValue(string title, object value, string format = null)
+            void ShowValue(string title, object value, string format = null, string help = null)
             {
                 ImGui.Text(title);
                 ImGui.SameLine();
@@ -115,6 +120,12 @@ namespace NobetaTrainer
                 else
                 {
                     ImGui.TextColored(_valueColor, string.Format(CultureInfo.InvariantCulture, $"{{0:{format}}}", value));
+                }
+
+                if (help is not null)
+                {
+                    ImGui.SameLine();
+                    HelpMarker(help);
                 }
             }
 
@@ -150,7 +161,7 @@ namespace NobetaTrainer
                 ImGui.ShowStyleSelector("Pick a style");
             }
 
-            if (ImGui.CollapsingHeader("Unity Engine", ImGuiTreeNodeFlags.DefaultOpen))
+            if (ImGui.CollapsingHeader("Unity Engine"))
             {
                 ImGui.SeparatorText("Framerate");
                 ShowValue("Target Framerate:", Application.targetFrameRate);
@@ -175,9 +186,9 @@ namespace NobetaTrainer
                 else
                 {
                     ImGui.SeparatorText("Constants");
-                    ShowValue("Absorb CD Time Max:", NobetaRuntimeData.ABSORB_CD_TIME_MAX);
-                    ShowValue("Absorb Status Time Max:", NobetaRuntimeData.ABSORB_STATUS_TIME_MAX);
-                    ShowValue("Absorb Time Max:", NobetaRuntimeData.ABSORB_TIME_MAX);
+                    ShowValue("Absorb CD Time Max:", NobetaRuntimeData.ABSORB_CD_TIME_MAX, help: "Delay between absorb status");
+                    ShowValue("Absorb Status Time Max:", NobetaRuntimeData.ABSORB_STATUS_TIME_MAX, help: "Duration of absorption");
+                    ShowValue("Absorb Time Max:", NobetaRuntimeData.ABSORB_TIME_MAX, help: "Duration of absorb time status (time in which getting hit triggers an absorption");
                     ShowValue("Repulse Time Max:", NobetaRuntimeData.REPULSE_TIME_MAX);
                     ShowValue("Full Timer Limit:", NobetaRuntimeData.FULL_TIMER_LIMIT);
 
@@ -194,6 +205,18 @@ namespace NobetaTrainer
             }
 
             ImGui.End();
+        }
+
+        private static void HelpMarker(string description)
+        {
+            ImGui.TextDisabled("(?)");
+            if (ImGui.IsItemHovered(ImGuiHoveredFlags.DelayShort) && ImGui.BeginTooltip())
+            {
+                ImGui.PushTextWrapPos(ImGui.GetFontSize() * 35.0f);
+                ImGui.TextUnformatted(description);
+                ImGui.PopTextWrapPos();
+                ImGui.EndTooltip();
+            }
         }
     }
 }

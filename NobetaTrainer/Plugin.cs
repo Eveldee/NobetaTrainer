@@ -5,6 +5,7 @@ using BepInEx;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
+using NobetaTrainer.Patches;
 using UnityEngine;
 
 namespace NobetaTrainer;
