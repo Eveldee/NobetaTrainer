@@ -14,6 +14,8 @@ namespace NobetaTrainer
 {
     public class TrainerOverlay : Overlay
     {
+        private static readonly Vector4 ValueColor = new(252 / 255f, 161 / 255f, 3 / 255f, 1f);
+
         private bool _showImGuiAboutWindow;
         private bool _showImGuiStyleEditorWindow;
         private bool _showImGuiDebugLogWindow;
@@ -22,13 +24,14 @@ namespace NobetaTrainer
         private bool _showImGuiUserGuideWindow;
         private bool _showImGuiStackToolWindow;
 
-        private readonly Vector4 _valueColor = new(252 / 255f, 161 / 255f, 3 / 255f, 1f);
+        private bool _noDamageEnabled;
+        public bool NoDamageEnabled => _noDamageEnabled;
+
+        private bool _infiniteHPEnabled;
+        public bool InfiniteHPEnabled => _infiniteHPEnabled;
 
         private bool _infiniteManaEnabled;
         public bool InfiniteManaEnabled => _infiniteManaEnabled;
-
-        private bool _noDamageEnabled;
-        public bool NoDamageEnabled => _noDamageEnabled;
 
         private bool _infiniteStaminaEnabled;
         public bool InfiniteStaminaEnabled => _infiniteStaminaEnabled;
@@ -91,8 +94,16 @@ namespace NobetaTrainer
             {
                 ImGui.SeparatorText("General");
                 ImGui.Checkbox("No Damage", ref _noDamageEnabled);
+                HelpMarker("Ignore damages, disabling any effect like knockback");
+
+                ImGui.Checkbox("Infinite HP", ref _infiniteHPEnabled);
+                HelpMarker("Regen HP anytime it goes below max");
+
                 ImGui.Checkbox("Infinite Mana", ref _infiniteManaEnabled);
+                HelpMarker("Regen Mana anytime it goes below max");
+
                 ImGui.Checkbox("Infinite Stamina", ref _infiniteStaminaEnabled);
+                HelpMarker("Regen Stamina anytime it goes below max");
 
                 ImGui.SeparatorText("Actions");
             }
@@ -108,35 +119,6 @@ namespace NobetaTrainer
 
         private void ShowInspectWindow()
         {
-            void ShowValue(string title, object value, string format = null, string help = null)
-            {
-                ImGui.Text(title);
-                ImGui.SameLine();
-
-                if (format is null)
-                {
-                    ImGui.TextColored(_valueColor, string.Format(CultureInfo.InvariantCulture, "{0}", value));
-                }
-                else
-                {
-                    ImGui.TextColored(_valueColor, string.Format(CultureInfo.InvariantCulture, $"{{0:{format}}}", value));
-                }
-
-                if (help is not null)
-                {
-                    ImGui.SameLine();
-                    HelpMarker(help);
-                }
-            }
-
-            void ToggleButton(string title, ref bool valueToToggle)
-            {
-                if (ImGui.Button(title))
-                {
-                    valueToToggle = !valueToToggle;
-                }
-            }
-
             ImGui.Begin("NobetaTrainerInspector");
 
             if (ImGui.CollapsingHeader("ImGui"))
@@ -207,8 +189,41 @@ namespace NobetaTrainer
             ImGui.End();
         }
 
-        private static void HelpMarker(string description)
+        private static void ShowValue(string title, object value, string format = null, string help = null)
         {
+            ImGui.Text(title);
+            ImGui.SameLine();
+
+            if (format is null)
+            {
+                ImGui.TextColored(ValueColor, string.Format(CultureInfo.InvariantCulture, "{0}", value));
+            }
+            else
+            {
+                ImGui.TextColored(ValueColor, string.Format(CultureInfo.InvariantCulture, $"{{0:{format}}}", value));
+            }
+
+            if (help is not null)
+            {
+                HelpMarker(help);
+            }
+        }
+
+        private static void ToggleButton(string title, ref bool valueToToggle)
+        {
+            if (ImGui.Button(title))
+            {
+                valueToToggle = !valueToToggle;
+            }
+        }
+
+        private static void HelpMarker(string description, bool sameLine = true)
+        {
+            if (sameLine)
+            {
+                ImGui.SameLine();
+            }
+
             ImGui.TextDisabled("(?)");
             if (ImGui.IsItemHovered(ImGuiHoveredFlags.DelayShort) && ImGui.BeginTooltip())
             {

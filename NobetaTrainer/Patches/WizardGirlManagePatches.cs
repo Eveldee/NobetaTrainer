@@ -28,12 +28,22 @@ public class WizardGirlManagePatches
     [HarmonyPrefix]
     static void UpdatePrefix()
     {
+        var player = Instance;
+        var data = player.BaseData;
+
+        // Infinite HP
+        if (Plugin.TrainerOverlay.InfiniteHPEnabled)
+        {
+            // Increase mana if needed
+            if (data.g_fHP < data.g_fHPMax)
+            {
+                data.g_fHP = data.g_fHPMax;
+            }
+        }
+
         // Infinite Mana
         if (Plugin.TrainerOverlay.InfiniteManaEnabled)
         {
-            var player = Instance;
-            var data = player.BaseData;
-
             // Increase mana if needed
             if (data.g_fMP < data.g_fMPMax)
             {
@@ -44,9 +54,6 @@ public class WizardGirlManagePatches
         // Infinite Stamina
         if (Plugin.TrainerOverlay.InfiniteStaminaEnabled)
         {
-            var player = Instance;
-            var data = player.BaseData;
-
             // Increase stamina if needed
             if (data.g_fSP < data.g_fSPMax)
             {
