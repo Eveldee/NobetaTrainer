@@ -32,7 +32,7 @@ public class WizardGirlManagePatches
         var data = player.BaseData;
 
         // Infinite HP
-        if (Plugin.TrainerOverlay.InfiniteHPEnabled)
+        if (Plugin.TrainerOverlay.InfiniteHpEnabled)
         {
             // Increase mana if needed
             if (data.g_fHP < data.g_fHPMax)

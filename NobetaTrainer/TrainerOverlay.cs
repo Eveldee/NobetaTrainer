@@ -27,14 +27,29 @@ namespace NobetaTrainer
         private bool _noDamageEnabled;
         public bool NoDamageEnabled => _noDamageEnabled;
 
-        private bool _infiniteHPEnabled;
-        public bool InfiniteHPEnabled => _infiniteHPEnabled;
+        private bool _infiniteHpEnabled;
+        public bool InfiniteHpEnabled => _infiniteHpEnabled;
 
         private bool _infiniteManaEnabled;
         public bool InfiniteManaEnabled => _infiniteManaEnabled;
 
         private bool _infiniteStaminaEnabled;
         public bool InfiniteStaminaEnabled => _infiniteStaminaEnabled;
+
+        private bool _forceShowTeleportMenu;
+        public bool ForceShowTeleportMenu
+        {
+            get => _forceShowTeleportMenu;
+            set => _forceShowTeleportMenu = value;
+        }
+
+        private int _soulsCount;
+        public int SoulsCount
+        {
+            get => _soulsCount;
+            set => _soulsCount = value;
+        }
+
 
         private bool _isToolVisible = true;
         private readonly string _assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
@@ -96,7 +111,7 @@ namespace NobetaTrainer
                 ImGui.Checkbox("No Damage", ref _noDamageEnabled);
                 HelpMarker("Ignore damages, disabling any effect like knockback");
 
-                ImGui.Checkbox("Infinite HP", ref _infiniteHPEnabled);
+                ImGui.Checkbox("Infinite HP", ref _infiniteHpEnabled);
                 HelpMarker("Regen HP anytime it goes below max");
 
                 ImGui.Checkbox("Infinite Mana", ref _infiniteManaEnabled);
@@ -105,6 +120,18 @@ namespace NobetaTrainer
                 ImGui.Checkbox("Infinite Stamina", ref _infiniteStaminaEnabled);
                 HelpMarker("Regen Stamina anytime it goes below max");
 
+                ImGui.SeparatorText("Items");
+                ImGui.DragInt("Souls", ref _soulsCount, 10, 0, 99_999);
+                ImGui.SameLine();
+                if (ImGui.Button("Set") && WizardGirlManagePatches.Instance is not null)
+                {
+                    UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                    {
+                        Game.GameSave.stats.currentMoney = _soulsCount;
+                        Game.UpdateMoney(_soulsCount);
+                    });
+                }
+
                 ImGui.SeparatorText("Actions");
             }
 
@@ -112,6 +139,24 @@ namespace NobetaTrainer
             if (ImGui.CollapsingHeader("Magic"))
             {
 
+            }
+
+            if (ImGui.CollapsingHeader("Others"))
+            {
+                ImGui.SeparatorText("Save");
+
+                if (UiGameSavePatches.CurrentGameSave is { } gameSave)
+                {
+                    if (ImGui.Checkbox("Show Teleport menu", ref _forceShowTeleportMenu))
+                    {
+                        gameSave.basic.showTeleportMenu = _forceShowTeleportMenu;
+                        Plugin.Log.LogDebug(_forceShowTeleportMenu);
+                    }
+                }
+                else
+                {
+                    ImGui.Text("Please load a save first...");
+                }
             }
 
             ImGui.End();
@@ -159,7 +204,74 @@ namespace NobetaTrainer
                 ShowValue("Maximum DeltaTime:", Time.maximumDeltaTime);
             }
 
-            if (ImGui.CollapsingHeader("NobetaRuntimeData", ImGuiTreeNodeFlags.DefaultOpen))
+            if (ImGui.CollapsingHeader("PlayerStats"))
+            {
+                if (UiGameSavePatches.CurrentGameSave?.stats is not { } stats)
+                {
+                    ImGui.TextWrapped("No stats available, load a save first...");
+                }
+                else
+                {
+                    ImGui.SeparatorText("General");
+
+                    ShowValue("Health Point:", stats.currentHealthyPoint);
+                    ShowValue("Mana point:", stats.currentManaPoint);
+                    ShowValue("Magic Index:", stats.currentMagicIndex);
+                    ShowValue("Souls:", stats.currentMoney);
+                    ShowValue("Curse Percent:", stats.cursePercent);
+
+                    ImGui.SeparatorText("Stats Levels");
+                    ShowValue("Health (HP) Level:", stats.healthyLevel);
+                    ShowValue("Mana (MP) Level:", stats.manaLevel);
+                    ShowValue("Stamina Level:", stats.staminaLevel);
+                    ShowValue("Strength Level:", stats.strengthLevel);
+                    ShowValue("Intelligence Level:", stats.intelligenceLevel);
+                    ShowValue("Haste Level:", stats.dexterityLevel);
+
+                    ImGui.SeparatorText("Magic Levels");
+                    ShowValue("Arcane Level:", stats.secretMagicLevel);
+                    ShowValue("Ice Level:", stats.iceMagicLevel);
+                    ShowValue("Fire Level:", stats.fireMagicLevel);
+                    ShowValue("Thunder Level:", stats.thunderMagicLevel);
+                    ShowValue("Wind Level:", stats.windMagicLevel);
+                    ShowValue("Mana Absorb Level:", stats.manaAbsorbLevel);
+                }
+            }
+
+            if (ImGui.CollapsingHeader("Save Basic Data"))
+            {
+                if (UiGameSavePatches.CurrentGameSave?.basic is not { } basicData)
+                {
+                    ImGui.TextWrapped("No save loaded, load a save first...");
+                }
+                else
+                {
+                    ImGui.SeparatorText("General");
+
+                    ShowValue("Save Slot:", basicData.dataIndex);
+                    ShowValue("Difficulty:", basicData.difficulty);
+                    ShowValue("Game Cleared Times:", basicData.gameCleared);
+                    ShowValue("Gaming Time:", TimeSpan.FromSeconds(basicData.gamingTime).ToString(FormatUtils.TimeSpanSecondesFormat));
+                    ShowValue("Data Version:", Game.GameSave.dataVersion);
+                    ShowValue("Last Save:", new DateTime(basicData.timeStamp).ToLocalTime().ToString(FormatUtils.DateTimeFullDateLong));
+
+                    ImGui.SeparatorText("Stages");
+                    ShowValue("Stages Unlocked:", basicData.savePointMap.Count);
+                    ShowValue("Show Teleport Menu:", basicData.showTeleportMenu);
+                    ShowValue("Stage:", basicData.stage);
+                    ShowValue("Save Point:", basicData.savePoint);
+
+                    ImGui.SeparatorText("Save Points");
+                    var savePointMap = basicData.savePointMap;
+
+                    foreach (var savePoint in savePointMap)
+                    {
+                        ShowValue($"{savePoint.Key}:", $"{string.Join(", ", savePoint.Value._items)} ({savePoint.Value.Count} unlocked)");
+                    }
+                }
+            }
+
+            if (ImGui.CollapsingHeader("NobetaRuntimeData"))
             {
                 if (WizardGirlManagePatches.RuntimeData is not { } runtimeData)
                 {

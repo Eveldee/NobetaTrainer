@@ -6,6 +6,7 @@ using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using NobetaTrainer.Patches;
+using NobetaTrainer.Utils;
 using UnityEngine;
 
 namespace NobetaTrainer;
@@ -31,15 +32,11 @@ public class Plugin : BasePlugin
         Task.Run(TrainerOverlay.Run);
 
         // Apply patches
-        Harmony.CreateAndPatchAll(typeof(Plugin));
         Harmony.CreateAndPatchAll(typeof(WizardGirlManagePatches));
         Harmony.CreateAndPatchAll(typeof(GamePatches));
-    }
+        Harmony.CreateAndPatchAll(typeof(UiGameSavePatches));
+        Harmony.CreateAndPatchAll(typeof(TitleSceneManagerPatches));
 
-    [HarmonyPatch(typeof(UIPauseMenu), nameof(UIPauseMenu.Appear))]
-    [HarmonyPrefix]
-    static void PauseMenuOpenPrefix()
-    {
-        Log.LogInfo("Pause menu opened");
+        AddComponent<UnityMainThreadDispatcher>();
     }
 }
