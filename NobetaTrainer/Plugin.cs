@@ -35,8 +35,8 @@ public class Plugin : BasePlugin
         Harmony.CreateAndPatchAll(typeof(WizardGirlManagePatches));
         Harmony.CreateAndPatchAll(typeof(GamePatches));
         Harmony.CreateAndPatchAll(typeof(UiGameSavePatches));
-        Harmony.CreateAndPatchAll(typeof(TitleSceneManagerPatches));
 
+        // Add UnityMainThreadDispatcher
         AddComponent<UnityMainThreadDispatcher>();
     }
 }

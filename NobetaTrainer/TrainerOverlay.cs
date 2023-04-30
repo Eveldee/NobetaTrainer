@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using ClickableTransparentOverlay;
+using Humanizer;
 using Il2CppInterop.Runtime;
 using ImGuiNET;
 using NobetaTrainer.Patches;
@@ -223,9 +226,9 @@ namespace NobetaTrainer
                     ImGui.SeparatorText("Stats Levels");
                     ShowValue("Health (HP) Level:", stats.healthyLevel);
                     ShowValue("Mana (MP) Level:", stats.manaLevel);
-                    ShowValue("Stamina Level:", stats.staminaLevel);
-                    ShowValue("Strength Level:", stats.strengthLevel);
-                    ShowValue("Intelligence Level:", stats.intelligenceLevel);
+                    ShowValueExpression(stats.staminaLevel);
+                    ShowValueExpression(stats.strengthLevel);
+                    ShowValueExpression(stats.intelligenceLevel);
                     ShowValue("Haste Level:", stats.dexterityLevel);
 
                     ImGui.SeparatorText("Magic Levels");
@@ -247,31 +250,30 @@ namespace NobetaTrainer
                 else
                 {
                     ImGui.SeparatorText("General");
-
                     ShowValue("Save Slot:", basicData.dataIndex);
-                    ShowValue("Difficulty:", basicData.difficulty);
+                    ShowValueExpression(basicData.difficulty);
                     ShowValue("Game Cleared Times:", basicData.gameCleared);
                     ShowValue("Gaming Time:", TimeSpan.FromSeconds(basicData.gamingTime).ToString(FormatUtils.TimeSpanSecondesFormat));
-                    ShowValue("Data Version:", Game.GameSave.dataVersion);
-                    ShowValue("Last Save:", new DateTime(basicData.timeStamp).ToLocalTime().ToString(FormatUtils.DateTimeFullDateLong));
+                    ShowValueExpression(Game.GameSave.dataVersion);
+                    ShowValue("Last Save:", new DateTime(basicData.timeStamp).ToLocalTime().Humanize());
 
                     ImGui.SeparatorText("Stages");
+                    ShowValueExpression(basicData.stage);
                     ShowValue("Stages Unlocked:", basicData.savePointMap.Count);
-                    ShowValue("Show Teleport Menu:", basicData.showTeleportMenu);
-                    ShowValue("Stage:", basicData.stage);
-                    ShowValue("Save Point:", basicData.savePoint);
+                    ShowValueExpression(basicData.savePoint);
+                    ShowValueExpression(basicData.showTeleportMenu);
 
                     ImGui.SeparatorText("Save Points");
                     var savePointMap = basicData.savePointMap;
 
                     foreach (var savePoint in savePointMap)
                     {
-                        ShowValue($"{savePoint.Key}:", $"{string.Join(", ", savePoint.Value._items)} ({savePoint.Value.Count} unlocked)");
+                        ShowValue($"{savePoint.Key}:", $"{string.Join(", ", savePoint.Value._items.Take(savePoint.Value.Count))}");
                     }
                 }
             }
 
-            if (ImGui.CollapsingHeader("NobetaRuntimeData"))
+            if (ImGui.CollapsingHeader("NobetaRuntimeData".Humanize(LetterCasing.Title)))
             {
                 if (WizardGirlManagePatches.RuntimeData is not { } runtimeData)
                 {
@@ -280,21 +282,74 @@ namespace NobetaTrainer
                 else
                 {
                     ImGui.SeparatorText("Constants");
-                    ShowValue("Absorb CD Time Max:", NobetaRuntimeData.ABSORB_CD_TIME_MAX, help: "Delay between absorb status");
-                    ShowValue("Absorb Status Time Max:", NobetaRuntimeData.ABSORB_STATUS_TIME_MAX, help: "Duration of absorption");
-                    ShowValue("Absorb Time Max:", NobetaRuntimeData.ABSORB_TIME_MAX, help: "Duration of absorb time status (time in which getting hit triggers an absorption");
-                    ShowValue("Repulse Time Max:", NobetaRuntimeData.REPULSE_TIME_MAX);
-                    ShowValue("Full Timer Limit:", NobetaRuntimeData.FULL_TIMER_LIMIT);
+                    ShowValueExpression(NobetaRuntimeData.ABSORB_CD_TIME_MAX, help: "Delay between absorb status");
+                    ShowValueExpression(NobetaRuntimeData.ABSORB_STATUS_TIME_MAX, help: "Duration of absorption");
+                    ShowValueExpression(NobetaRuntimeData.ABSORB_TIME_MAX, help: "Duration of absorb time status (time in which getting hit triggers an absorption");
+                    ShowValueExpression(NobetaRuntimeData.REPULSE_TIME_MAX);
+                    ShowValueExpression(NobetaRuntimeData.FULL_TIMER_LIMIT);
+                    ShowValueExpression(NobetaRuntimeData.PRAYER_ATTACK_TIME_MAX);
 
                     ImGui.SeparatorText("Absorb");
-                    ShowValue("Absorb CD Timer:", runtimeData.AbsorbCDTimer);
-                    ShowValue("Absorb Status Timer:", runtimeData.AbsorbStatusTimer);
-                    ShowValue("Absorb Timer:", runtimeData.AbsorbTimer);
+                    ShowValueExpression(runtimeData.AbsorbCDTimer);
+                    ShowValueExpression(runtimeData.AbsorbStatusTimer);
+                    ShowValueExpression(runtimeData.AbsorbTimer);
 
-                    ImGui.SeparatorText("Movements");
-                    ShowValue("Jump Direction:", runtimeData.JumpDirection.Format());
-                    ShowValue("Move Direction:", runtimeData.moveDirection.Format());
-                    ShowValue("Previous Position:", runtimeData.previousPosition.Format());
+                    ImGui.SeparatorText("Movement");
+                    ShowValueExpression(runtimeData.moveDirection.Format());
+                    ShowValueExpression(runtimeData.JumpDirection.Format());
+                    ShowValueExpression(runtimeData.previousPosition.Format());
+                    ShowValueExpression(runtimeData.moveSpeed);
+                    ShowValueExpression(runtimeData.MoveSpeedScale);
+                    ShowValueExpression(runtimeData.RotationSpeed);
+                    ShowValueExpression(runtimeData.JumpMoveSpeed);
+                    ShowValueExpression(runtimeData.JumpForce);
+
+                    ImGui.SeparatorText("Physics");
+                    ShowValueExpression(runtimeData.FallSpeedMax);
+                    ShowValueExpression(runtimeData.FallTimer);
+                    ShowValueExpression(runtimeData.Gravity);
+                    ShowValueExpression(runtimeData.HardBody);
+                    ShowValueExpression(runtimeData.IsPond);
+                    ShowValueExpression(runtimeData.PondHeight);
+                    ShowValueExpression(runtimeData.IsSky);
+
+                    ImGui.SeparatorText("Combat");
+                    ShowValueExpression(runtimeData.NextAttack);
+                    ShowValueExpression(runtimeData.NextEndTime);
+                    ShowValueExpression(runtimeData.NextTime);
+                    ShowValueExpression(runtimeData.AimReadyWight);
+                    ShowValueExpression(runtimeData.AimTime);
+                    ShowValueExpression(runtimeData.AimWight);
+                    ShowValueExpression(runtimeData.airAttackTimer);
+                    ShowValueExpression(runtimeData.NextAirAttack);
+                    ShowValueExpression(runtimeData.damagedAirStayTimer);
+                    ShowValueExpression(runtimeData.DamageDodgeTimer);
+                    ShowValueExpression(runtimeData.DodgeDamage);
+                    ShowValueExpression(runtimeData.DodgeTimer);
+                    ShowValueExpression(runtimeData.HPRecovery);
+                    ShowValueExpression(runtimeData.MPRecovery);
+                    ShowValueExpression(runtimeData.MPRecoveryExternal);
+
+                    ImGui.SeparatorText("Magic");
+                    ShowValueExpression(runtimeData.ShotEffect);
+                    ShowValueExpression(runtimeData.ShotTime);
+                    ShowValueExpression(runtimeData.NoFireWaitTime);
+                    ShowValueExpression(runtimeData.HasMagicLockTargets);
+                    ShowValueExpression(runtimeData.HoldingShot);
+                    ShowValueExpression(runtimeData.IsChargeEnable);
+                    ShowValue("Lock Targets Count:", runtimeData.MagicLockTargets.Count);
+
+                    ImGui.SeparatorText("Others");
+                    ShowValueExpression(runtimeData.TimeScale);
+                    ShowValueExpression(runtimeData.WaitTime);
+                    ShowValueExpression(runtimeData.Controllable);
+                    ShowValueExpression(runtimeData.IsDead);
+                    ShowValueExpression(runtimeData.PrayerAttackTimer);
+                    ShowValueExpression(runtimeData.repulseTimer);
+                    ShowValueExpression(runtimeData.StaminaLossDash);
+                    ShowValueExpression(runtimeData.StaminaLossDodge);
+                    ShowValueExpression(runtimeData.StaminaLossFall);
+                    ShowValueExpression(runtimeData.StaminaLossJump);
                 }
             }
 
@@ -318,6 +373,19 @@ namespace NobetaTrainer
             if (help is not null)
             {
                 HelpMarker(help);
+            }
+        }
+
+        private static void ShowValueExpression(object value, string format = null, string help = null, [CallerArgumentExpression(nameof(value))] string valueExpression = default)
+        {
+            if (valueExpression!.EndsWith("Format()"))
+            {
+                valueExpression = valueExpression[..valueExpression.LastIndexOf('.')];
+                ShowValue($"{valueExpression![(valueExpression.LastIndexOf('.')+1)..].Humanize(LetterCasing.Title)}:", value, format, help);
+            }
+            else
+            {
+                ShowValue($"{valueExpression![(valueExpression.LastIndexOf('.')+1)..].Humanize(LetterCasing.Title)}:", value, format, help);
             }
         }
 
