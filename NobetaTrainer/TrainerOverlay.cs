@@ -53,47 +53,16 @@ namespace NobetaTrainer
             set => _soulsCount = value;
         }
 
+
         private int _arcaneMagicLevel;
-        public int ArcaneMagicLevel
-        {
-            get => _arcaneMagicLevel;
-            set => _arcaneMagicLevel = value;
-        }
-
         private int _iceMagicLevel;
-        public int IceMagicLevel
-        {
-            get => _iceMagicLevel;
-            set => _iceMagicLevel = value;
-        }
-
         private int _fireMagicLevel;
-        public int FireMagicLevel
-        {
-            get => _fireMagicLevel;
-            set => _fireMagicLevel = value;
-        }
-
         private int _thunderMagicLevel;
-        public int ThunderMagicLevel
-        {
-            get => _thunderMagicLevel;
-            set => _thunderMagicLevel = value;
-        }
-
         private int _windMagicLevel;
-        public int WindMagicLevel
-        {
-            get => _windMagicLevel;
-            set => _windMagicLevel = value;
-        }
-
         private int _absorbMagicLevel;
-        public int AbsorbMagicLevel
-        {
-            get => _absorbMagicLevel;
-            set => _absorbMagicLevel = value;
-        }
+
+        private bool _oneTapEnabled;
+        public bool OneTapEnabled => _oneTapEnabled;
 
         private bool _isToolVisible = true;
         private readonly string _assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
@@ -214,6 +183,14 @@ namespace NobetaTrainer
                     }
                 }
 
+            }
+
+            if (ImGui.CollapsingHeader("Combat"))
+            {
+                ImGui.SeparatorText("General");
+
+                ImGui.Checkbox("One Tap", ref _oneTapEnabled);
+                HelpMarker("Kill all enemies in one hit, effectively deals just a stupid amount of damage");
             }
 
             if (ImGui.CollapsingHeader("Others"))
