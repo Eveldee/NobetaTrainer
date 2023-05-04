@@ -11,6 +11,7 @@ using ImGuiNET;
 using NobetaTrainer.Patches;
 using NobetaTrainer.Utils;
 using UnityEngine;
+using Object = UnityEngine.Object;
 using Vector4 = System.Numerics.Vector4;
 
 namespace NobetaTrainer
@@ -195,6 +196,27 @@ namespace NobetaTrainer
 
             if (ImGui.CollapsingHeader("Others"))
             {
+                ImGui.SeparatorText("Environment");
+
+                if (ImGui.Button("Remove Lava"))
+                {
+                    var gameObjects = Object.FindObjectsOfType<GameObject>();
+
+                    foreach (var gameObject in gameObjects)
+                    {
+                        if (gameObject.name.Contains("Lava"))
+                        {
+                            Plugin.Log.LogDebug(gameObject.name);
+                        }
+
+                        // Visual Lava
+                        if (EnvironmentUtils.LavaTrapNamePrefix.Any(prefix => gameObject.name.StartsWith(prefix)))
+                        {
+                            Object.Destroy(gameObject);
+                        }
+                    }
+                }
+
                 ImGui.SeparatorText("Save");
 
                 if (UiGameSavePatches.CurrentGameSave is { } gameSave)
