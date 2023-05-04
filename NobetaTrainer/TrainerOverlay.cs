@@ -168,6 +168,7 @@ namespace NobetaTrainer
         private void ShowInspectWindow()
         {
             ImGui.Begin("NobetaTrainerInspector");
+            ImGui.PushTextWrapPos();
 
             if (ImGui.CollapsingHeader("ImGui"))
             {
@@ -273,7 +274,46 @@ namespace NobetaTrainer
                 }
             }
 
-            if (ImGui.CollapsingHeader("NobetaRuntimeData".Humanize(LetterCasing.Title)))
+            if (ImGui.CollapsingHeader("Wizard Girl Manage"))
+            {
+                if (WizardGirlManagePatches.Instance is not { } wizardGirl)
+                {
+                    ImGui.Text("No character loaded...");
+                }
+                else
+                {
+                    ImGui.SeparatorText("General");
+                    ShowValue("Position:", wizardGirl.g_PlayerCenter.position.Format());
+                    ShowValue("Center  :", wizardGirl.GetCenter().Format());
+                    ShowValue("AimTarget:", wizardGirl.aimTarget.position.Format());
+                    ShowValueExpression(wizardGirl.GetPlayerStatus());
+                    ShowValueExpression(wizardGirl.currentActiveSkin);
+                    ShowValueExpression(wizardGirl.GetIsChanging());
+                    ShowValue("Charging:", wizardGirl.IsChargeMax());
+                    ShowValue("Player Shot Effect:", wizardGirl.g_bPlayerShotEffect);
+                    ShowValue("Stealth:", wizardGirl.g_bStealth);
+                    ShowValueExpression(wizardGirl.GetIsDead());
+                    ShowValueExpression(wizardGirl.GetRadius());
+                    ShowValueExpression(wizardGirl.GetMagicType() == PlayerEffectPlay.Magic.Null ? "Arcane" : wizardGirl.GetMagicType());
+                    ShowValue("Item Slots:", wizardGirl.g_PlayerItem.g_iItemSize);
+                    ShowValue("Max Item Slots:", wizardGirl.g_PlayerItem.GetItemSizeMax());
+
+                    ShowValue("Hold Item:", wizardGirl.g_PlayerItem.g_HoldItem.Humanize());
+                    ShowValue("Item Using:", wizardGirl.g_PlayerItem.g_ItemUsing);
+
+                    ImGui.SeparatorText("Base Data")
+
+                    
+
+                    ImGui.SeparatorText("Magic Data");
+
+                    ImGui.SeparatorText("Character Controller");
+
+                    ImGui.SeparatorText("Camera");
+                }
+            }
+
+            if (ImGui.CollapsingHeader("NobetaRuntimeData"))
             {
                 if (WizardGirlManagePatches.RuntimeData is not { } runtimeData)
                 {
@@ -353,6 +393,7 @@ namespace NobetaTrainer
                 }
             }
 
+            ImGui.PushTextWrapPos();
             ImGui.End();
         }
 
@@ -378,6 +419,11 @@ namespace NobetaTrainer
 
         private static void ShowValueExpression(object value, string format = null, string help = null, [CallerArgumentExpression(nameof(value))] string valueExpression = default)
         {
+            // Remove .Get()
+            valueExpression = valueExpression!.Replace(".Is", ".");
+            valueExpression = valueExpression!.Replace(".GetIs", ".");
+            valueExpression = valueExpression!.Replace(".Get", ".");
+
             if (valueExpression!.EndsWith("Format()"))
             {
                 valueExpression = valueExpression[..valueExpression.LastIndexOf('.')];

@@ -12,8 +12,19 @@ public class WizardGirlManagePatches
     static void WizardGirlManageInitPostfix(WizardGirlManage __instance)
     {
         Plugin.Log.LogDebug($"New instance of {nameof(WizardGirlManage)} created");
+
         Instance = __instance;
         RuntimeData = Instance.playerController.runtimeData;
+    }
+
+    [HarmonyPatch(typeof(WizardGirlManage), nameof(WizardGirlManage.Dispose))]
+    [HarmonyPrefix]
+    static void WizardGirlManageDisposePrefix(WizardGirlManage __instance)
+    {
+        Plugin.Log.LogDebug($"{nameof(WizardGirlManage)} disposed");
+
+        Instance = null;
+        RuntimeData = null;
     }
 
     [HarmonyPatch(typeof(WizardGirlManage), nameof(WizardGirlManage.Hit))]
