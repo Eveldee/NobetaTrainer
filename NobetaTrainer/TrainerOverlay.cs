@@ -53,6 +53,47 @@ namespace NobetaTrainer
             set => _soulsCount = value;
         }
 
+        private int _arcaneMagicLevel;
+        public int ArcaneMagicLevel
+        {
+            get => _arcaneMagicLevel;
+            set => _arcaneMagicLevel = value;
+        }
+
+        private int _iceMagicLevel;
+        public int IceMagicLevel
+        {
+            get => _iceMagicLevel;
+            set => _iceMagicLevel = value;
+        }
+
+        private int _fireMagicLevel;
+        public int FireMagicLevel
+        {
+            get => _fireMagicLevel;
+            set => _fireMagicLevel = value;
+        }
+
+        private int _thunderMagicLevel;
+        public int ThunderMagicLevel
+        {
+            get => _thunderMagicLevel;
+            set => _thunderMagicLevel = value;
+        }
+
+        private int _windMagicLevel;
+        public int WindMagicLevel
+        {
+            get => _windMagicLevel;
+            set => _windMagicLevel = value;
+        }
+
+        private int _absorbMagicLevel;
+        public int AbsorbMagicLevel
+        {
+            get => _absorbMagicLevel;
+            set => _absorbMagicLevel = value;
+        }
 
         private bool _isToolVisible = true;
         private readonly string _assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
@@ -141,6 +182,37 @@ namespace NobetaTrainer
             // Magic options
             if (ImGui.CollapsingHeader("Magic"))
             {
+                if (UiGameSavePatches.CurrentGameSave is not { } gameSave)
+                {
+                    ImGui.Text("No save loaded...");
+                }
+                else
+                {
+                    if (ImGui.DragInt("Arcane Level", ref _arcaneMagicLevel, 0.1f, 1, 5))
+                    {
+                        gameSave.stats.secretMagicLevel = _arcaneMagicLevel;
+                    }
+                    if (ImGui.DragInt("Ice Level", ref _iceMagicLevel, 0.1f, 1, 5))
+                    {
+                        gameSave.stats.iceMagicLevel = _iceMagicLevel;
+                    }
+                    if (ImGui.DragInt("Fire Level", ref _fireMagicLevel, 0.1f, 1, 5))
+                    {
+                        gameSave.stats.fireMagicLevel = _fireMagicLevel;
+                    }
+                    if (ImGui.DragInt("Thunder Level", ref _thunderMagicLevel, 0.1f, 1, 5))
+                    {
+                        gameSave.stats.thunderMagicLevel = _thunderMagicLevel;
+                    }
+                    if (ImGui.DragInt("Wind Level", ref _windMagicLevel, 0.1f, 1, 5))
+                    {
+                        gameSave.stats.windMagicLevel = _windMagicLevel;
+                    }
+                    if (ImGui.DragInt("Absorption Level", ref _absorbMagicLevel, 0.1f, 1, 5))
+                    {
+                        gameSave.stats.manaAbsorbLevel = _absorbMagicLevel;
+                    }
+                }
 
             }
 
@@ -301,9 +373,7 @@ namespace NobetaTrainer
                     ShowValue("Hold Item:", wizardGirl.g_PlayerItem.g_HoldItem.Humanize());
                     ShowValue("Item Using:", wizardGirl.g_PlayerItem.g_ItemUsing);
 
-                    ImGui.SeparatorText("Base Data")
-
-                    
+                    ImGui.SeparatorText("Base Data");
 
                     ImGui.SeparatorText("Magic Data");
 
