@@ -72,4 +72,85 @@ public class WizardGirlManagePatches
             }
         }
     }
+
+    #region SkinManager
+
+    [HarmonyPatch(typeof(WizardGirlManage), nameof(WizardGirlManage.LoadSkin))]
+    [HarmonyPrefix]
+    static void LoadSkinPrefix()
+    {
+        Plugin.Log.LogDebug("LoadSkin");
+    }
+
+    [HarmonyPatch(typeof(WizardGirlManage), nameof(WizardGirlManage.PreloadSkin))]
+    [HarmonyPrefix]
+    static void PreloadSkinPrefix()
+    {
+        Plugin.Log.LogDebug("PreloadSkin");
+    }
+
+    [HarmonyPatch(typeof(WizardGirlManage), nameof(WizardGirlManage.UpdateSkin))]
+    [HarmonyPrefix]
+    static void UpdateSkinPrefix()
+    {
+        Plugin.Log.LogDebug("UpdateSkin");
+    }
+
+    [HarmonyPatch(typeof(WizardGirlManage), nameof(WizardGirlManage.ReplaceActiveSkin))]
+    [HarmonyPrefix]
+    static void ReplaceActiveSkinPrefix()
+    {
+        Plugin.Log.LogDebug("ReplaceActiveSkin");
+    }
+
+    [HarmonyPatch(typeof(WizardGirlManage), nameof(WizardGirlManage.UseActiveSkin))]
+    [HarmonyPrefix]
+    static void UseActiveSkinPrefix()
+    {
+        Plugin.Log.LogDebug("UseActiveSkin");
+    }
+
+    [HarmonyPatch(typeof(WizardGirlManage), nameof(WizardGirlManage.UseStorySkin))]
+    [HarmonyPrefix]
+    static void UseStorySkinPrefix()
+    {
+        Plugin.Log.LogDebug("UseStorySkin");
+    }
+
+    [HarmonyPatch(typeof(WizardGirlManage), nameof(WizardGirlManage.GetSkinAssetKey))]
+    [HarmonyPrefix]
+    static void GetSkinAssetKeyPrefix()
+    {
+        Plugin.Log.LogDebug("GetSkinAssetKey");
+    }
+
+    [HarmonyPatch(typeof(PlayerController), nameof(PlayerController.ChangeSkin))]
+    [HarmonyPrefix]
+    static void A()
+    {
+        Plugin.Log.LogDebug("PlayerController.ChangeSkin");
+    }
+
+    [HarmonyPatch(typeof(PlayerController), nameof(PlayerController.UpdateSkin))]
+    [HarmonyPrefix]
+    static void B()
+    {
+        Plugin.Log.LogDebug("PlayerController.UpdateSkin");
+    }
+
+    [HarmonyPatch(typeof(PlayerController), nameof(GameCollection.UpdateSkin))]
+    [HarmonyPrefix]
+    static void C()
+    {
+        Plugin.Log.LogDebug("GameColletion.UpdateSkin");
+    }
+
+    [HarmonyPatch(typeof(UISkin.__c), nameof(UISkin.__c._UpdateActiveSkins_b__41_0))]
+    [HarmonyPrefix]
+    static void D()
+    {
+        Plugin.Log.LogDebug("UISkin.__c._UpdateActiveSkins_b__41_0");
+    }
+
+    #endregion
 }

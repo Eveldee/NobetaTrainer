@@ -12,6 +12,7 @@ using ImGuiNET;
 using NobetaTrainer.Patches;
 using NobetaTrainer.Utils;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using Object = UnityEngine.Object;
 using Vector4 = System.Numerics.Vector4;
 
@@ -20,6 +21,9 @@ namespace NobetaTrainer
     public class TrainerOverlay : Overlay
     {
         private static readonly Vector4 ValueColor = new(252 / 255f, 161 / 255f, 3 / 255f, 1f);
+        private static readonly Vector4 InfoColor = new(3 / 255f, 148 / 255f, 252 / 255f, 1f);
+
+        private readonly string[] AvailableSkins = Enum.GetNames<GameSkin>();
 
         private bool _showImGuiAboutWindow;
         private bool _showImGuiStyleEditorWindow;
@@ -55,6 +59,7 @@ namespace NobetaTrainer
             set => _soulsCount = value;
         }
 
+        private int _activeSkinIndex;
 
         private int _arcaneMagicLevel;
         private int _iceMagicLevel;
@@ -144,6 +149,24 @@ namespace NobetaTrainer
                     {
                         Game.GameSave.stats.currentMoney = _soulsCount;
                         Game.UpdateMoney(_soulsCount);
+                    });
+                }
+
+                ImGui.SeparatorText("Appearance");
+
+                ImGui.Combo("Active Skin", ref _activeSkinIndex, AvailableSkins, AvailableSkins.Length);
+                if (ImGui.Button("Load Skin") && WizardGirlManagePatches.Instance is { } wizardGirlManage)
+                {
+                    var gameSkin = (GameSkin) _activeSkinIndex;
+
+                    UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                    {
+                        wizardGirlManage.PreloadSkin(gameSkin);
+                        var assetKey = wizardGirlManage.GetSkinAssetKey(gameSkin);
+
+                        var nobetaSkin = Addressables.LoadAsset<GameObject>(assetKey).WaitForCompletion();
+
+                        wizardGirlManage.ReplaceActiveSkin(gameSkin);
                     });
                 }
 
@@ -242,7 +265,7 @@ namespace NobetaTrainer
             ImGui.Begin("NobetaTrainerInspector");
             ImGui.PushTextWrapPos();
 
-            ImGui.Text("Notes:");
+            ImGui.TextColored(InfoColor, "Notes:");
             ImGui.Text("- Vectors are shown in (x, y, z) format");
 
             if (ImGui.CollapsingHeader("ImGui"))
