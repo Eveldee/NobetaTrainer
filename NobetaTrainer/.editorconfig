@@ -1,0 +1,5 @@
+﻿root = true
+
+# All files
+[*]
+resharper_inconsistent_naming_highlighting = none

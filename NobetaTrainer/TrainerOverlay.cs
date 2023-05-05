@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using ClickableTransparentOverlay;
+using EnumsNET;
 using Humanizer;
 using Il2CppInterop.Runtime;
 using ImGuiNET;
@@ -241,6 +242,9 @@ namespace NobetaTrainer
             ImGui.Begin("NobetaTrainerInspector");
             ImGui.PushTextWrapPos();
 
+            ImGui.Text("Notes:");
+            ImGui.Text("- Vectors are shown in (x, y, z) format");
+
             if (ImGui.CollapsingHeader("ImGui"))
             {
                 ImGui.SeparatorText("ImGui Windows");
@@ -353,32 +357,164 @@ namespace NobetaTrainer
                 }
                 else
                 {
-                    ImGui.SeparatorText("General");
-                    ShowValue("Position:", wizardGirl.g_PlayerCenter.position.Format());
-                    ShowValue("Center  :", wizardGirl.GetCenter().Format());
-                    ShowValue("AimTarget:", wizardGirl.aimTarget.position.Format());
-                    ShowValueExpression(wizardGirl.GetPlayerStatus());
-                    ShowValueExpression(wizardGirl.currentActiveSkin);
-                    ShowValueExpression(wizardGirl.GetIsChanging());
-                    ShowValue("Charging:", wizardGirl.IsChargeMax());
-                    ShowValue("Player Shot Effect:", wizardGirl.g_bPlayerShotEffect);
-                    ShowValue("Stealth:", wizardGirl.g_bStealth);
-                    ShowValueExpression(wizardGirl.GetIsDead());
-                    ShowValueExpression(wizardGirl.GetRadius());
-                    ShowValueExpression(wizardGirl.GetMagicType() == PlayerEffectPlay.Magic.Null ? "Arcane" : wizardGirl.GetMagicType());
-                    ShowValue("Item Slots:", wizardGirl.g_PlayerItem.g_iItemSize);
-                    ShowValue("Max Item Slots:", wizardGirl.g_PlayerItem.GetItemSizeMax());
+                    if (ImGui.TreeNode("General"))
+                    {
+                        ImGui.SeparatorText("Position");
+                        ShowValue("Position:", wizardGirl.g_PlayerCenter.position.Format());
+                        ShowValue("Center  :", wizardGirl.GetCenter().Format());
+                        ShowValue("AimTarget:", wizardGirl.aimTarget.position.Format());
 
-                    ShowValue("Hold Item:", wizardGirl.g_PlayerItem.g_HoldItem.Humanize());
-                    ShowValue("Item Using:", wizardGirl.g_PlayerItem.g_ItemUsing);
+                        ImGui.SeparatorText("Status");
+                        ShowValueExpression(wizardGirl.GetPlayerStatus());
+                        ShowValueExpression(wizardGirl.currentActiveSkin);
+                        ShowValueExpression(wizardGirl.GetIsDead());
+                        ShowValue("Stealth:", wizardGirl.g_bStealth);
+                        ShowValueExpression(wizardGirl.GetRadius());
 
-                    ImGui.SeparatorText("Base Data");
+                        ImGui.SeparatorText("Magic");
+                        ShowValueExpression(wizardGirl.GetMagicType() == PlayerEffectPlay.Magic.Null ? "Arcane" : wizardGirl.GetMagicType());
+                        ShowValue("Charging:", wizardGirl.GetIsChanging());
+                        ShowValueExpression(wizardGirl.IsChargeMax());
+                        ShowValue("Player Shot Effect:", wizardGirl.g_bPlayerShotEffect);
 
-                    ImGui.SeparatorText("Magic Data");
+                        ImGui.SeparatorText("Items");
+                        ShowValue("Item Slots:", wizardGirl.g_PlayerItem.g_iItemSize);
+                        ShowValue("Max Item Slots:", wizardGirl.g_PlayerItem.GetItemSizeMax());
 
-                    ImGui.SeparatorText("Character Controller");
+                        ShowValue("Hold Item:", wizardGirl.g_PlayerItem.g_HoldItem.Humanize());
+                        ShowValue("Item Using:", wizardGirl.g_PlayerItem.g_ItemUsing);
 
-                    ImGui.SeparatorText("Camera");
+                        ImGui.TreePop();
+                    }
+
+                    if (ImGui.TreeNode("Base Data"))
+                    {
+                        var basic = wizardGirl.BaseData;
+
+                        ImGui.SeparatorText("Charge");
+                        ShowValueExpression(basic.g_fCharge);
+                        ShowValueExpression(basic.g_bChargeing);
+                        ShowValueExpression(basic.g_bChargeFadeStop);
+                        ShowValueExpression(basic.g_fChargeAddVal);
+                        ShowValueExpression(basic.g_fChargeFade);
+                        ShowValueExpression(basic.g_fChargeMax);
+                        ShowValueExpression(basic.g_fChargeSpeed);
+                        ShowValueExpression(basic.g_fChargeWait);
+                        ShowValueExpression(basic.g_fChargeWaitVal);
+
+                        ImGui.SeparatorText("Status");
+                        ShowValueExpression(basic.isPlayer);
+                        ShowValueExpression(basic.g_bIsTired);
+                        ShowValueExpression(basic.NeedResetAppearanceTimer);
+
+                        ImGui.SeparatorText("Cooldowns");
+                        ShowValue("CD Arcane:", basic.g_fCDNull);
+                        ShowValueExpression(basic.g_fCDIce);
+                        ShowValueExpression(basic.g_fCDFire);
+                        ShowValueExpression(basic.g_fCDLightning);
+                        ShowValue("Arcane CD Scale:", basic.GetCDScale(PlayerEffectPlay.Magic.Null));
+                        ShowValue("Ice CD Scale:", basic.GetCDScale(PlayerEffectPlay.Magic.Ice));
+                        ShowValue("Fire CD Scale:", basic.GetCDScale(PlayerEffectPlay.Magic.Fire));
+                        ShowValue("Lightning CD Scale:", basic.GetCDScale(PlayerEffectPlay.Magic.Lightning));
+
+                        ImGui.SeparatorText("HP");
+                        ShowValueExpression(basic.g_fHealthPoints);
+                        ShowValueExpression(basic.g_fHP);
+                        ShowValueExpression(basic.g_fHPMax);
+                        ShowValueExpression(basic.g_fHPRecovery);
+                        ShowValueExpression(basic.g_fSecondMultipleEasyHP);
+                        ShowValueExpression(basic.g_fSecondMultipleHP);
+
+                        ImGui.SeparatorText("MP");
+                        ShowValueExpression(basic.g_fManaPoints);
+                        ShowValueExpression(basic.g_fMP);
+                        ShowValueExpression(basic.g_fMPMax);
+                        ShowValueExpression(basic.g_fMPRecovery);
+
+                        ImGui.SeparatorText("SP");
+                        ShowValueExpression(basic.g_fSP);
+                        ShowValueExpression(basic.g_fSPMax);
+                        ShowValueExpression(basic.g_fSPRecovery);
+                        ShowValueExpression(basic.g_fSPRecoveryStayTime);
+                        ShowValueExpression(basic.g_fSPRecoveryStayTimeVal);
+                        ShowValueExpression(basic.g_fStaminaPoints);
+
+                        ImGui.TreePop();
+                    }
+
+                    if (ImGui.TreeNode("Magic Data"))
+                    {
+                        var magic = wizardGirl.g_MData;
+
+                        ImGui.SeparatorText("General");
+                        ShowValue("Max Charge Fade:", magic.GetChargeMaxFade());
+
+                        ImGui.SeparatorText("Arcane");
+                        ShowValueExpression(magic.g_NullCD);
+                        ShowValueExpression(magic.g_NullCharge);
+                        ShowValueExpression(magic.g_NullChargeFade);
+                        ShowValueExpression(magic.g_NullNorExp);
+
+                        ImGui.SeparatorText("Ice");
+                        ShowValueExpression(magic.g_IceCD);
+                        ShowValueExpression(magic.g_IceCharge);
+                        ShowValueExpression(magic.g_IceChargeFade);
+                        ShowValueExpression(magic.g_IceNorExp);
+
+                        ImGui.SeparatorText("Fire");
+                        ShowValueExpression(magic.g_FireCD);
+                        ShowValueExpression(magic.g_FireCharge);
+                        ShowValueExpression(magic.g_FireChargeFade);
+                        ShowValueExpression(magic.g_FireNorExp);
+                        ShowValueExpression(magic.g_FireAttackExp);
+
+                        ImGui.SeparatorText("Thunder");
+                        ShowValueExpression(magic.g_LightningCD);
+                        ShowValueExpression(magic.g_LightningCharge);
+                        ShowValueExpression(magic.g_LightningChargeFade);
+                        ShowValueExpression(magic.g_LightningNorExp);
+                        ShowValueExpression(magic.g_LightningDodgeExp);
+
+                        ImGui.SeparatorText("Sky Dodge");
+                        ShowValueExpression(magic.g_SkyDodge);
+                        ShowValueExpression(magic.g_SkyJumpCD);
+                        ShowValueExpression(magic.g_SkyJumpCDTime);
+                        ShowValueExpression(magic.g_SkyJumpExp);
+
+                        ImGui.TreePop();
+                    }
+
+                    if (ImGui.TreeNode("Character Controller"))
+                    {
+                        var characterController = wizardGirl.characterController;
+                        ImGui.SeparatorText("General");
+
+                        ShowValueExpression(characterController.center.Format());
+                        ShowValueExpression(characterController.velocity.Format());
+
+                        ImGui.SeparatorText("Status");
+                        ShowValueExpression(FlagEnums.FormatFlags(characterController.collisionFlags));
+                        ShowValueExpression(characterController.isGrounded);
+                        ShowValueExpression(characterController.detectCollisions);
+                        ShowValueExpression(characterController.enableOverlapRecovery);
+
+                        ImGui.SeparatorText("Other");
+                        ShowValueExpression(characterController.minMoveDistance);
+                        ShowValueExpression(characterController.height);
+                        ShowValueExpression(characterController.radius);
+                        ShowValueExpression(characterController.skinWidth);
+                        ShowValueExpression(characterController.slopeLimit);
+                        ShowValueExpression(characterController.stepOffset);
+
+                        ImGui.TreePop();
+                    }
+
+                    if (ImGui.TreeNode("Camera"))
+                    {
+                        ImGui.SeparatorText("Camera");
+
+                        ImGui.TreePop();
+                    }
                 }
             }
 
@@ -488,10 +624,14 @@ namespace NobetaTrainer
 
         private static void ShowValueExpression(object value, string format = null, string help = null, [CallerArgumentExpression(nameof(value))] string valueExpression = default)
         {
-            // Remove .Get()
+            // Remove .Get .Is and g_[b|f]
             valueExpression = valueExpression!.Replace(".Is", ".");
             valueExpression = valueExpression!.Replace(".GetIs", ".");
             valueExpression = valueExpression!.Replace(".Get", ".");
+            valueExpression = valueExpression!.Replace(".g_f", ".");
+            valueExpression = valueExpression!.Replace(".g_b", ".");
+            valueExpression = valueExpression!.Replace(".g_", ".");
+            valueExpression = valueExpression!.Replace("Null", "Arcane");
 
             if (valueExpression!.EndsWith("Format()"))
             {
