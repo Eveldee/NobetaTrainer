@@ -164,9 +164,12 @@ namespace NobetaTrainer
                         wizardGirlManage.PreloadSkin(gameSkin);
                         var assetKey = wizardGirlManage.GetSkinAssetKey(gameSkin);
 
-                        var nobetaSkin = Addressables.LoadAsset<GameObject>(assetKey).WaitForCompletion();
+                        Addressables.LoadAsset<GameObject>(assetKey).WaitForCompletion();
 
                         wizardGirlManage.ReplaceActiveSkin(gameSkin);
+
+                        // Also update skin in GameCollection for reload
+                        Game.Collection.UpdateSkin(gameSkin);
                     });
                 }
 
