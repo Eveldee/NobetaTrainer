@@ -164,7 +164,8 @@ namespace NobetaTrainer
                         wizardGirlManage.PreloadSkin(gameSkin);
                         var assetKey = wizardGirlManage.GetSkinAssetKey(gameSkin);
 
-                        Addressables.LoadAsset<GameObject>(assetKey).WaitForCompletion();
+                        // Need to keep the object in a variable to avoid getting GC'd before the call to ReplaceActiveSkin
+                        var nobetaSkin = Addressables.LoadAsset<GameObject>(assetKey).WaitForCompletion();
 
                         wizardGirlManage.ReplaceActiveSkin(gameSkin);
 
