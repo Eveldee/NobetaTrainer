@@ -1,13 +1,12 @@
-﻿using System.Reflection;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using BepInEx;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
+using NobetaTrainer.Overlay;
 using NobetaTrainer.Patches;
 using NobetaTrainer.Utils;
-using UnityEngine;
 
 namespace NobetaTrainer;
 
@@ -31,11 +30,10 @@ public class Plugin : BasePlugin
         Task.Run(TrainerOverlay.Run);
 
         // Apply patches
-        Harmony.CreateAndPatchAll(typeof(WizardGirlManagePatches));
-        Harmony.CreateAndPatchAll(typeof(GamePatches));
-        Harmony.CreateAndPatchAll(typeof(UiGameSavePatches));
-        Harmony.CreateAndPatchAll(typeof(NpcManagePatches));
+        Harmony.CreateAndPatchAll(typeof(Singletons));
+        Harmony.CreateAndPatchAll(typeof(CharacterPatches));
         Harmony.CreateAndPatchAll(typeof(AppearancePatches));
+        Harmony.CreateAndPatchAll(typeof(OtherPatches));
 
         // Add UnityMainThreadDispatcher
         AddComponent<UnityMainThreadDispatcher>();

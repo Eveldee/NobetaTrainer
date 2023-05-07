@@ -1,271 +1,19 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using ClickableTransparentOverlay;
 using EnumsNET;
 using Humanizer;
-using Il2CppInterop.Runtime;
 using ImGuiNET;
 using NobetaTrainer.Patches;
 using NobetaTrainer.Utils;
 using UnityEngine;
-using Object = UnityEngine.Object;
-using Vector4 = System.Numerics.Vector4;
 
-namespace NobetaTrainer;
+namespace NobetaTrainer.Overlay;
 
-public class TrainerOverlay : Overlay
+public partial class TrainerOverlay
 {
-    private static readonly Vector4 ValueColor = new(252 / 255f, 161 / 255f, 3 / 255f, 1f);
-    private static readonly Vector4 InfoColor = new(3 / 255f, 148 / 255f, 252 / 255f, 1f);
-
-    private readonly string[] AvailableSkins = Enum.GetNames<GameSkin>();
-
-    private bool _showImGuiAboutWindow;
-    private bool _showImGuiStyleEditorWindow;
-    private bool _showImGuiDebugLogWindow;
-    private bool _showImGuiDemoWindow;
-    private bool _showImGuiMetricsWindow;
-    private bool _showImGuiUserGuideWindow;
-    private bool _showImGuiStackToolWindow;
-
-    private bool _noDamageEnabled;
-    public bool NoDamageEnabled => _noDamageEnabled;
-
-    private bool _infiniteHpEnabled;
-    public bool InfiniteHpEnabled => _infiniteHpEnabled;
-
-    private bool _infiniteManaEnabled;
-    public bool InfiniteManaEnabled => _infiniteManaEnabled;
-
-    private bool _infiniteStaminaEnabled;
-    public bool InfiniteStaminaEnabled => _infiniteStaminaEnabled;
-
-    private bool _forceShowTeleportMenu;
-    public bool ForceShowTeleportMenu
-    {
-        get => _forceShowTeleportMenu;
-        set => _forceShowTeleportMenu = value;
-    }
-
-    private int _soulsCount;
-    public int SoulsCount
-    {
-        get => _soulsCount;
-        set => _soulsCount = value;
-    }
-
-    private int _activeSkinIndex;
-
-    private int _arcaneMagicLevel;
-    private int _iceMagicLevel;
-    private int _fireMagicLevel;
-    private int _thunderMagicLevel;
-    private int _windMagicLevel;
-    private int _absorbMagicLevel;
-
-    private bool _oneTapEnabled;
-    public bool OneTapEnabled => _oneTapEnabled;
-
-    private bool _isToolVisible = true;
-    private readonly string _assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
-
-    protected override Task PostInitialized()
-    {
-        VSync = true;
-
-        IL2CPP.il2cpp_thread_attach(IL2CPP.il2cpp_domain_get());
-
-        return Task.CompletedTask;
-    }
-
-    protected override void Render()
-    {
-        if (_showImGuiAboutWindow)
-        {
-            ImGui.ShowAboutWindow();
-        }
-        if (_showImGuiDebugLogWindow)
-        {
-            ImGui.ShowDebugLogWindow();
-        }
-        if (_showImGuiDemoWindow)
-        {
-            ImGui.ShowDemoWindow();
-        }
-        if (_showImGuiMetricsWindow)
-        {
-            ImGui.ShowMetricsWindow();
-        }
-        if (_showImGuiStyleEditorWindow)
-        {
-            ImGui.ShowStyleEditor();
-        }
-        if (_showImGuiStackToolWindow)
-        {
-            ImGui.ShowStackToolWindow();
-        }
-        if (_showImGuiUserGuideWindow)
-        {
-            ImGui.ShowUserGuide();
-        }
-
-        ShowTrainerWindow();
-        ShowInspectWindow();
-    }
-
-    private void ShowTrainerWindow()
-    {
-        ImGui.Begin("NobetaTrainer", ref _isToolVisible);
-
-        ImGui.Text($"Welcome to NobetaTrainer v{_assemblyVersion}");
-
-        // Character options
-        if (ImGui.CollapsingHeader("Character", ImGuiTreeNodeFlags.DefaultOpen))
-        {
-            ImGui.SeparatorText("General");
-            ImGui.Checkbox("No Damage", ref _noDamageEnabled);
-            HelpMarker("Ignore damages, disabling any effect like knockback");
-
-            ImGui.Checkbox("Infinite HP", ref _infiniteHpEnabled);
-            HelpMarker("Regen HP anytime it goes below max");
-
-            ImGui.Checkbox("Infinite Mana", ref _infiniteManaEnabled);
-            HelpMarker("Regen Mana anytime it goes below max");
-
-            ImGui.Checkbox("Infinite Stamina", ref _infiniteStaminaEnabled);
-            HelpMarker("Regen Stamina anytime it goes below max");
-
-            ImGui.SeparatorText("Items");
-            ImGui.DragInt("Souls", ref _soulsCount, 10, 0, 99_999);
-            ImGui.SameLine();
-            if (ImGui.Button("Set") && WizardGirlManagePatches.Instance is not null)
-            {
-                UnityMainThreadDispatcher.Instance().Enqueue(() =>
-                {
-                    Game.GameSave.stats.currentMoney = _soulsCount;
-                    Game.UpdateMoney(_soulsCount);
-                });
-            }
-
-            ImGui.SeparatorText("Appearance");
-
-            ImGui.Combo("Selected skin", ref AppearancePatches.SelectedSkinIndex, AvailableSkins, AvailableSkins.Length);
-            if (ImGui.Button("Load Selected Skin"))
-            {
-                AppearancePatches.LoadSelectedSkin();
-            }
-
-            ImGui.NewLine();
-            if (ImGui.Checkbox("Hide Bag", ref AppearancePatches.HideBagEnabled))
-            {
-                AppearancePatches.UpdateAppearance();
-            }
-            if (ImGui.Checkbox("Hide Staff", ref AppearancePatches.HideStaffEnabled))
-            {
-                AppearancePatches.UpdateAppearance();
-            }
-            if (ImGui.Checkbox("Hide Hat", ref AppearancePatches.HideHatEnabled))
-            {
-                AppearancePatches.UpdateAppearance();
-            }
-
-            ImGui.SeparatorText("Actions");
-        }
-
-        // Magic options
-        if (ImGui.CollapsingHeader("Magic"))
-        {
-            if (UiGameSavePatches.CurrentGameSave is not { } gameSave)
-            {
-                ImGui.Text("No save loaded...");
-            }
-            else
-            {
-                if (ImGui.DragInt("Arcane Level", ref _arcaneMagicLevel, 0.1f, 1, 5))
-                {
-                    gameSave.stats.secretMagicLevel = _arcaneMagicLevel;
-                }
-                if (ImGui.DragInt("Ice Level", ref _iceMagicLevel, 0.1f, 1, 5))
-                {
-                    gameSave.stats.iceMagicLevel = _iceMagicLevel;
-                }
-                if (ImGui.DragInt("Fire Level", ref _fireMagicLevel, 0.1f, 1, 5))
-                {
-                    gameSave.stats.fireMagicLevel = _fireMagicLevel;
-                }
-                if (ImGui.DragInt("Thunder Level", ref _thunderMagicLevel, 0.1f, 1, 5))
-                {
-                    gameSave.stats.thunderMagicLevel = _thunderMagicLevel;
-                }
-                if (ImGui.DragInt("Wind Level", ref _windMagicLevel, 0.1f, 1, 5))
-                {
-                    gameSave.stats.windMagicLevel = _windMagicLevel;
-                }
-                if (ImGui.DragInt("Absorption Level", ref _absorbMagicLevel, 0.1f, 1, 5))
-                {
-                    gameSave.stats.manaAbsorbLevel = _absorbMagicLevel;
-                }
-            }
-
-        }
-
-        if (ImGui.CollapsingHeader("Combat"))
-        {
-            ImGui.SeparatorText("General");
-
-            ImGui.Checkbox("One Tap", ref _oneTapEnabled);
-            HelpMarker("Kill all enemies in one hit, effectively deals just a stupid amount of damage");
-        }
-
-        if (ImGui.CollapsingHeader("Others"))
-        {
-            ImGui.SeparatorText("Environment");
-
-            if (ImGui.Button("Remove Lava"))
-            {
-                var gameObjects = Object.FindObjectsOfType<GameObject>();
-
-                foreach (var gameObject in gameObjects)
-                {
-                    if (gameObject.name.Contains("Lava"))
-                    {
-                        Plugin.Log.LogDebug(gameObject.name);
-                    }
-
-                    // Visual Lava
-                    if (EnvironmentUtils.LavaTrapNamePrefix.Any(prefix => gameObject.name.StartsWith(prefix)))
-                    {
-                        Object.Destroy(gameObject);
-                    }
-                }
-            }
-
-            ImGui.SeparatorText("Save");
-
-            if (UiGameSavePatches.CurrentGameSave is { } gameSave)
-            {
-                if (ImGui.Checkbox("Show Teleport menu", ref _forceShowTeleportMenu))
-                {
-                    gameSave.basic.showTeleportMenu = _forceShowTeleportMenu;
-                    Plugin.Log.LogDebug(_forceShowTeleportMenu);
-                }
-            }
-            else
-            {
-                ImGui.Text("Please load a save first...");
-            }
-        }
-
-        ImGui.End();
-    }
-
     private void ShowInspectWindow()
     {
-        ImGui.Begin("NobetaTrainerInspector");
+        ImGui.Begin("NobetaTrainerInspector", ref _showInspectWindow);
         ImGui.PushTextWrapPos();
 
         ImGui.TextColored(InfoColor, "Notes:");
@@ -311,7 +59,7 @@ public class TrainerOverlay : Overlay
 
         if (ImGui.CollapsingHeader("PlayerStats"))
         {
-            if (UiGameSavePatches.CurrentGameSave?.stats is not { } stats)
+            if (Singletons.GameSave?.stats is not { } stats)
             {
                 ImGui.TextWrapped("No stats available, load a save first...");
             }
@@ -345,7 +93,7 @@ public class TrainerOverlay : Overlay
 
         if (ImGui.CollapsingHeader("Save Basic Data"))
         {
-            if (UiGameSavePatches.CurrentGameSave?.basic is not { } basicData)
+            if (Singletons.GameSave?.basic is not { } basicData)
             {
                 ImGui.TextWrapped("No save loaded, load a save first...");
             }
@@ -377,7 +125,7 @@ public class TrainerOverlay : Overlay
 
         if (ImGui.CollapsingHeader("Wizard Girl Manage"))
         {
-            if (WizardGirlManagePatches.Instance is not { } wizardGirl)
+            if (Singletons.WizardGirl is not { } wizardGirl)
             {
                 ImGui.Text("No character loaded...");
             }
@@ -546,7 +294,7 @@ public class TrainerOverlay : Overlay
 
         if (ImGui.CollapsingHeader("NobetaRuntimeData"))
         {
-            if (WizardGirlManagePatches.RuntimeData is not { } runtimeData)
+            if (Singletons.RuntimeData is not { } runtimeData)
             {
                 ImGui.TextWrapped("No runtime data available, load a character first...");
             }
@@ -626,72 +374,5 @@ public class TrainerOverlay : Overlay
 
         ImGui.PushTextWrapPos();
         ImGui.End();
-    }
-
-    private static void ShowValue(string title, object value, string format = null, string help = null)
-    {
-        ImGui.Text(title);
-        ImGui.SameLine();
-
-        if (format is null)
-        {
-            ImGui.TextColored(ValueColor, string.Format(CultureInfo.InvariantCulture, "{0}", value));
-        }
-        else
-        {
-            ImGui.TextColored(ValueColor, string.Format(CultureInfo.InvariantCulture, $"{{0:{format}}}", value));
-        }
-
-        if (help is not null)
-        {
-            HelpMarker(help);
-        }
-    }
-
-    private static void ShowValueExpression(object value, string format = null, string help = null, [CallerArgumentExpression(nameof(value))] string valueExpression = default)
-    {
-        // Remove .Get .Is and g_[b|f]
-        valueExpression = valueExpression!.Replace(".Is", ".");
-        valueExpression = valueExpression!.Replace(".GetIs", ".");
-        valueExpression = valueExpression!.Replace(".Get", ".");
-        valueExpression = valueExpression!.Replace(".g_f", ".");
-        valueExpression = valueExpression!.Replace(".g_b", ".");
-        valueExpression = valueExpression!.Replace(".g_", ".");
-        valueExpression = valueExpression!.Replace("Null", "Arcane");
-
-        if (valueExpression!.EndsWith("Format()"))
-        {
-            valueExpression = valueExpression[..valueExpression.LastIndexOf('.')];
-            ShowValue($"{valueExpression![(valueExpression.LastIndexOf('.')+1)..].Humanize(LetterCasing.Title)}:", value, format, help);
-        }
-        else
-        {
-            ShowValue($"{valueExpression![(valueExpression.LastIndexOf('.')+1)..].Humanize(LetterCasing.Title)}:", value, format, help);
-        }
-    }
-
-    private static void ToggleButton(string title, ref bool valueToToggle)
-    {
-        if (ImGui.Button(title))
-        {
-            valueToToggle = !valueToToggle;
-        }
-    }
-
-    private static void HelpMarker(string description, bool sameLine = true)
-    {
-        if (sameLine)
-        {
-            ImGui.SameLine();
-        }
-
-        ImGui.TextDisabled("(?)");
-        if (ImGui.IsItemHovered(ImGuiHoveredFlags.DelayShort) && ImGui.BeginTooltip())
-        {
-            ImGui.PushTextWrapPos(ImGui.GetFontSize() * 35.0f);
-            ImGui.TextUnformatted(description);
-            ImGui.PopTextWrapPos();
-            ImGui.EndTooltip();
-        }
     }
 }

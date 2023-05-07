@@ -90,7 +90,7 @@ public class UnityMainThreadDispatcher : MonoBehaviour {
 	}
 
 	[HideFromIl2Cpp]
-	IEnumerator ActionWrapper(Action a)
+	private IEnumerator ActionWrapper(Action a)
 	{
 		a();
 		yield return null;
@@ -102,24 +102,25 @@ public class UnityMainThreadDispatcher : MonoBehaviour {
 		return _instance != null;
 	}
 
-	public static UnityMainThreadDispatcher Instance() {
-		if (!Exists ()) {
-			throw new Exception ("UnityMainThreadDispatcher could not find the UnityMainThreadDispatcher object. Please ensure you have added the MainThreadExecutor Prefab to your scene.");
+	public static UnityMainThreadDispatcher Instance
+	{
+		get
+		{
+			if (!Exists ()) {
+				throw new Exception ("UnityMainThreadDispatcher could not find the UnityMainThreadDispatcher object. Please ensure you have added the MainThreadExecutor Prefab to your scene.");
+			}
+			return _instance;
 		}
-		return _instance;
 	}
 
-
-	void Awake() {
+	private void Awake() {
 		if (_instance == null) {
 			_instance = this;
 			DontDestroyOnLoad(this.gameObject);
 		}
 	}
 
-	void OnDestroy() {
+	private void OnDestroy() {
 		_instance = null;
 	}
-
-
 }
