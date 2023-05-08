@@ -1,6 +1,8 @@
 ﻿using HarmonyLib;
 using Il2CppInterop.Runtime;
 using NobetaTrainer.Utils;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace NobetaTrainer.Patches;
 
@@ -8,8 +10,12 @@ public static class Singletons
 {
     public static NobetaSkin NobetaSkin { get; private set; }
     public static WizardGirlManage WizardGirl { get; private set; }
-    public static NobetaRuntimeData RuntimeData { get; private set; }
+    public static PlayerController PlayerController => WizardGirl?.playerController;
+    public static PlayerInputController InputController => WizardGirl?.inputController;
+    public static CharacterController CharacterController => WizardGirl?.characterController;
+    public static NobetaRuntimeData RuntimeData => WizardGirl?.playerController?.runtimeData;
     public static GameSave GameSave { get; set; }
+    public static GameSettings GameSettings => Game.Config?.gameSettings;
     public static UnityMainThreadDispatcher Dispatcher => UnityMainThreadDispatcher.Instance;
 
     public static bool SaveLoaded => GameSave is not null;
@@ -42,7 +48,6 @@ public static class Singletons
         Plugin.Log.LogInfo("WizardGirlManage created");
 
         WizardGirl = __instance;
-        RuntimeData = WizardGirl.playerController.runtimeData;
     }
 
     [HarmonyPatch(typeof(WizardGirlManage), nameof(WizardGirlManage.Dispose))]
@@ -52,7 +57,6 @@ public static class Singletons
         Plugin.Log.LogInfo("WizardGirlManage disposed");
 
         WizardGirl = null;
-        RuntimeData = null;
     }
 
     [HarmonyPatch(typeof(UIGameSave), nameof(UIGameSave.StartGamePlay))]

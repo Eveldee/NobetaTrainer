@@ -34,6 +34,7 @@ public class Plugin : BasePlugin
         Harmony.CreateAndPatchAll(typeof(CharacterPatches));
         Harmony.CreateAndPatchAll(typeof(AppearancePatches));
         Harmony.CreateAndPatchAll(typeof(OtherPatches));
+        Harmony.CreateAndPatchAll(typeof(MovementPatches));
 
         // Add UnityMainThreadDispatcher
         AddComponent<UnityMainThreadDispatcher>();

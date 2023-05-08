@@ -60,7 +60,18 @@ public partial class TrainerOverlay
                 AppearancePatches.UpdateAppearance();
             }
 
-            ImGui.SeparatorText("Actions");
+            ImGui.SeparatorText("Movements");
+
+            if (ImGui.Checkbox("Enable NoClip", ref MovementPatches.NoClipEnabled))
+            {
+                MovementPatches.ToggleNoClip();
+            }
+            HelpMarker("Disable Nobeta collider, meaning that her hitbox is basically non-existent. Will allow to traverse walls but will also disable any trigger that works on her hitbox (map loading, fog, ...)");
+
+            ImGui.SameLine();
+            ImGui.Checkbox("Enable Glide", ref MovementPatches.GlideEnabled);
+            HelpMarker("Allows moving in any direction. Velocity specifies the speed. Use jump key to go up and dodge key to go down. Speed is doubled when dashing (sprint)");
+            ImGui.SliderFloat("Glide Velocity", ref MovementPatches.Glide, 0f, 20f);
         }
 
         // Magic options

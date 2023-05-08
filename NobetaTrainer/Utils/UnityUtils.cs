@@ -7,7 +7,11 @@ public static class UnityUtils
     public static string Format(this Vector3 vector3)
     {
         return $"({vector3.x:F3}, {vector3.y:F3}, {vector3.z:F3})";
-        // return $"{{ x: {vector3.x:F3}, y: {vector3.y:F3}, z: {vector3.z:F3} }}";
+    }
+
+    public static string Format(this Vector2 vector2)
+    {
+        return $"({vector2.x:F3}, {vector2.y:F3})";
     }
 
     public static string Format(this Transform transform)
