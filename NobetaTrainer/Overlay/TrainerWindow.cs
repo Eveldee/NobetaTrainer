@@ -129,6 +129,21 @@ public partial class TrainerOverlay
         {
             ImGui.SeparatorText("Environment");
 
+            if (ImGui.Checkbox("Bright Mode", ref OtherPatches.BrightMode))
+            {
+                OtherPatches.UpdateBrightMode();
+            }
+            ImGui.SameLine();
+            if (ImGui.DragFloat("", ref OtherPatches.BrightModeIntensity, 0.05f, 0f, 10f))
+            {
+                OtherPatches.UpdateBrightMode();
+            }
+            if (ImGui.ColorEdit3("Bright Mode Color", ref OtherPatches.BrightModeColor))
+            {
+                OtherPatches.UpdateBrightMode();
+            }
+            ImGui.NewLine();
+
             if (ImGui.Button("Remove Lava"))
             {
                 OtherPatches.RemoveLava();

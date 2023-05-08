@@ -74,4 +74,11 @@ public static class Singletons
     {
         GameSave = null;
     }
+
+    [HarmonyPatch(typeof(SceneManager), nameof(SceneManager.Enter))]
+    [HarmonyPostfix]
+    private static void EnterScenePostfix()
+    {
+        Plugin.Log.LogInfo("Entered scene");
+    }
 }

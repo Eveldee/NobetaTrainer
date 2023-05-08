@@ -7,6 +7,7 @@ using HarmonyLib;
 using NobetaTrainer.Overlay;
 using NobetaTrainer.Patches;
 using NobetaTrainer.Utils;
+using UnityEngine;
 
 namespace NobetaTrainer;
 
@@ -33,8 +34,8 @@ public class Plugin : BasePlugin
         Harmony.CreateAndPatchAll(typeof(Singletons));
         Harmony.CreateAndPatchAll(typeof(CharacterPatches));
         Harmony.CreateAndPatchAll(typeof(AppearancePatches));
-        Harmony.CreateAndPatchAll(typeof(OtherPatches));
         Harmony.CreateAndPatchAll(typeof(MovementPatches));
+        Harmony.CreateAndPatchAll(typeof(OtherPatches));
 
         // Add UnityMainThreadDispatcher
         AddComponent<UnityMainThreadDispatcher>();
