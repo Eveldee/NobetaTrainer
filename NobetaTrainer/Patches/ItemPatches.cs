@@ -48,8 +48,11 @@ public static class ItemPatches
     {
         Singletons.Dispatcher.Enqueue(() =>
         {
-            Singletons.WizardGirl.g_PlayerItem.g_iItemSize = ItemSlots;
+            var items = Singletons.WizardGirl.g_PlayerItem;
+
+            items.g_iItemSize = ItemSlots;
             Singletons.StageUi.itemBar.UpdateItemSize(ItemSlots);
+            Singletons.StageUi.itemBar.UpdateItemSprite(items.g_HoldItem);
         });
     }
 
