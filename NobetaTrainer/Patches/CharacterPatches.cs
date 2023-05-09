@@ -134,4 +134,19 @@ public static class CharacterPatches
             Data.g_fStrength = float.MaxValue;
         }
     }
+
+    // Update ItemSlots on load
+    [HarmonyPatch(typeof(WizardGirlManage), nameof(WizardGirlManage.Init))]
+    [HarmonyPostfix]
+    private static void WizardGirlManageInitPostfix(WizardGirlManage __instance)
+    {
+        var stats = __instance.GameSave.stats;
+
+        ArcaneMagicLevel = stats.secretMagicLevel;
+        IceMagicLevel = stats.iceMagicLevel;
+        FireMagicLevel = stats.fireMagicLevel;
+        ThunderMagicLevel = stats.thunderMagicLevel;
+        WindMagicLevel = stats.windMagicLevel;
+        AbsorbMagicLevel = stats.manaAbsorbLevel;
+    }
 }
