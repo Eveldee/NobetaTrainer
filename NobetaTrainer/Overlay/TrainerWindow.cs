@@ -82,6 +82,11 @@ public partial class TrainerOverlay
             }
 
             ImGui.NewLine();
+            if (ImGui.Checkbox("Use Nobeta Skin", ref AppearancePatches.UseNobetaSkin))
+            {
+                AppearancePatches.ToggleNobetaSkin();
+            }
+
             if (ImGui.Checkbox("Hide Bag", ref AppearancePatches.HideBagEnabled))
             {
                 AppearancePatches.UpdateAppearance();

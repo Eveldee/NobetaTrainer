@@ -14,6 +14,7 @@ public static class AppearancePatches
     public static bool HideBagEnabled;
     public static bool HideStaffEnabled;
     public static bool HideHatEnabled;
+    public static bool UseNobetaSkin;
 
     public static void LoadSelectedSkin()
     {
@@ -42,13 +43,13 @@ public static class AppearancePatches
     // Skin loader, hide bag, staff and hat
     public static void UpdateAppearance()
     {
-        if (Singletons.NobetaSkin is not { } skin)
-        {
-            return;
-        }
-
         Singletons.Dispatcher.Enqueue(() =>
         {
+            if (Singletons.NobetaSkin is not { } skin)
+            {
+                return;
+            }
+
             if (skin.bagMesh is not null)
             {
                 skin.bagMesh.enabled = !HideBagEnabled;
@@ -62,6 +63,22 @@ public static class AppearancePatches
             if (skin.storyHatMesh is not null)
             {
                 skin.storyHatMesh.enabled = !HideHatEnabled;
+            }
+        });
+    }
+
+    public static void ToggleNobetaSkin()
+    {
+        Singletons.Dispatcher.Enqueue(() =>
+        {
+            Singletons.WizardGirl.isNobeta = UseNobetaSkin;
+
+            if (Singletons.WizardGirl.currentActiveSkin == GameSkin.Witch)
+            {
+                SelectedSkinIndex = 1;
+                LoadSelectedSkin();
+                SelectedSkinIndex = 0;
+                LoadSelectedSkin();
             }
         });
     }
