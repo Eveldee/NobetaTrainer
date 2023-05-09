@@ -134,7 +134,8 @@ public partial class TrainerOverlay
                 if (ImGui.TreeNode("General"))
                 {
                     ImGui.SeparatorText("Position");
-                    ShowValue("Position:", wizardGirl.g_PlayerCenter.position.Format());
+                    ShowValue("Position:", wizardGirl.transform.position.Format());
+                    ShowValue("Rotation:", wizardGirl.transform.rotation.Format());
                     ShowValue("Center  :", wizardGirl.GetCenter().Format());
                     ShowValue("AimTarget:", wizardGirl.aimTarget.position.Format());
 

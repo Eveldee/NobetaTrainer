@@ -14,8 +14,11 @@ public static class Singletons
     public static PlayerInputController InputController => WizardGirl?.inputController;
     public static CharacterController CharacterController => WizardGirl?.characterController;
     public static NobetaRuntimeData RuntimeData => WizardGirl?.playerController?.runtimeData;
+    public static SceneManager SceneManager => Game.sceneManager;
+    public static ItemSystem ItemSystem => SceneManager?.itemSystem;
     public static GameSave GameSave { get; set; }
     public static GameSettings GameSettings => Game.Config?.gameSettings;
+    public static StageUIManager StageUi => Game.stageUI;
     public static UnityMainThreadDispatcher Dispatcher => UnityMainThreadDispatcher.Instance;
 
     public static bool SaveLoaded => GameSave is not null;

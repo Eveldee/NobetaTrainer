@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using NobetaTrainer.Patches;
+using NobetaTrainer.Utils;
 
 namespace NobetaTrainer.Overlay;
 
@@ -34,6 +35,42 @@ public partial class TrainerOverlay
             {
                 CharacterPatches.SetSouls();
             }
+
+            ImGui.NewLine();
+            if (ImGui.Button("Give ##HP"))
+            {
+                ItemPatches.GiveHPItem();
+            }
+            ImGui.SameLine();
+            ImGui.Combo("HP", ref ItemPatches.SelectedHPItemIndex, ItemUtils.HPItemNames, ItemUtils.HPItemNames.Length);
+
+            if (ImGui.Button("Give ##MP"))
+            {
+                ItemPatches.GiveMPItem();
+            }
+            ImGui.SameLine();
+            ImGui.Combo("MP", ref ItemPatches.SelectedMPItemIndex, ItemUtils.MPItemNames, ItemUtils.MPItemNames.Length);
+
+            if (ImGui.Button("Give ##Buff"))
+            {
+                ItemPatches.GiveBuffItem();
+            }
+            ImGui.SameLine();
+            ImGui.Combo("Buff", ref ItemPatches.SelectedBuffItemIndex, ItemUtils.BuffItemNames, ItemUtils.BuffItemNames.Length);
+
+            if (ImGui.Button("Spawn##Other"))
+            {
+                ItemPatches.SpawnOther();
+            }
+            ImGui.SameLine();
+            ImGui.Combo("Other", ref ItemPatches.SelectedOtherItemIndex, ItemUtils.OtherItemNames, ItemUtils.OtherItemNames.Length);
+
+            ImGui.NewLine();
+            if (ImGui.SliderInt("Item Slots", ref ItemPatches.ItemSlots, 4, 8))
+            {
+                ItemPatches.UpdateSlots();
+            }
+
 
             ImGui.SeparatorText("Appearance");
 
@@ -134,7 +171,7 @@ public partial class TrainerOverlay
                 OtherPatches.UpdateBrightMode();
             }
             ImGui.SameLine();
-            if (ImGui.DragFloat("", ref OtherPatches.BrightModeIntensity, 0.05f, 0f, 10f))
+            if (ImGui.DragFloat("##BrightModeIntensity", ref OtherPatches.BrightModeIntensity, 0.05f, 0f, 10f))
             {
                 OtherPatches.UpdateBrightMode();
             }
