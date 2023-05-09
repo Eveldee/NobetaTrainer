@@ -38,17 +38,10 @@ public static class MovementPatches
         // Change character direction only when moving forward
         if (GlideEnabled)
         {
-            return movement is { x: 0f, y: 1f };
+            return movement is { x: 0f, y: 1f } or { x: 0f, y: 0f };
         }
 
         return true;
-    }
-
-    [HarmonyPatch(typeof(PlayerInputController), nameof(PlayerInputController.Dodge))]
-    [HarmonyPrefix]
-    private static void DodgePrefix()
-    {
-
     }
 
     [HarmonyPatch(typeof(PlayerInputController), nameof(PlayerInputController.Dash))]
@@ -86,9 +79,9 @@ public static class MovementPatches
         // Set status to normal to keep control of the camera
         var wizardGirl = Singletons.WizardGirl;
         wizardGirl.playerController.Normal();
-        wizardGirl.GetMoveController().verticalForce = 0;
+        wizardGirl.GetMoveController().verticalForce = 0f;
 
-        // Infinite stamina while in Freecam
+        // Infinite stamina while in Glide Mode
         var data = wizardGirl.BaseData;
         if (data.g_fSP < data.g_fSPMax)
         {
