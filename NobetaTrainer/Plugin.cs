@@ -31,14 +31,19 @@ public class Plugin : BasePlugin
         Task.Run(TrainerOverlay.Run);
 
         // Apply patches
+        ApplyPatches();
+
+        // Add UnityMainThreadDispatcher
+        AddComponent<UnityMainThreadDispatcher>();
+    }
+
+    public static void ApplyPatches()
+    {
         Harmony.CreateAndPatchAll(typeof(Singletons));
         Harmony.CreateAndPatchAll(typeof(CharacterPatches));
         Harmony.CreateAndPatchAll(typeof(AppearancePatches));
         Harmony.CreateAndPatchAll(typeof(MovementPatches));
         Harmony.CreateAndPatchAll(typeof(OtherPatches));
         Harmony.CreateAndPatchAll(typeof(ItemPatches));
-
-        // Add UnityMainThreadDispatcher
-        AddComponent<UnityMainThreadDispatcher>();
     }
 }

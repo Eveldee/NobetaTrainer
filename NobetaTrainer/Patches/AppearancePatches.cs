@@ -1,6 +1,6 @@
 ﻿using System;
+using EnumsNET;
 using HarmonyLib;
-using NobetaTrainer.Utils;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -69,17 +69,21 @@ public static class AppearancePatches
 
     public static void ToggleNobetaSkin()
     {
+        if (Singletons.WizardGirl is null)
+        {
+            return;
+        }
+
         Singletons.Dispatcher.Enqueue(() =>
         {
             Singletons.WizardGirl.isNobeta = UseNobetaSkin;
 
-            if (Singletons.WizardGirl.currentActiveSkin == GameSkin.Witch)
-            {
-                SelectedSkinIndex = 1;
-                LoadSelectedSkin();
-                SelectedSkinIndex = 0;
-                LoadSelectedSkin();
-            }
+            var originalSkin = SelectedSkinIndex;
+
+            SelectedSkinIndex = (originalSkin + 1) % Enums.GetMemberCount<GameSkin>();
+            LoadSelectedSkin();
+            SelectedSkinIndex = originalSkin;
+            LoadSelectedSkin();
         });
     }
 
@@ -95,5 +99,12 @@ public static class AppearancePatches
     private static void StartGamePlayPostfix()
     {
         SelectedSkinIndex = (int) Game.Collection.currentSkin;
+    }
+
+    [HarmonyPatch(typeof(WizardGirlManage), nameof(WizardGirlManage.Init))]
+    [HarmonyPrefix]
+    private static void WizardGirlInitPrefix(WizardGirlManage __instance)
+    {
+        __instance.isNobeta = UseNobetaSkin;
     }
 }

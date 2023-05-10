@@ -28,6 +28,13 @@ public partial class TrainerOverlay
             ImGui.Checkbox("Infinite Stamina", ref CharacterPatches.InfiniteStaminaEnabled);
             HelpMarker("Regen Stamina anytime it goes below max");
 
+            ImGui.NewLine();
+            if (ImGui.Checkbox("Nobeta Moveset", ref AppearancePatches.UseNobetaSkin))
+            {
+                AppearancePatches.ToggleNobetaSkin();
+            }
+            HelpMarker("Enable Nobeta moveset that should only be usable in the second part of the game, also enable Nobeta skin as a side effect");
+
             ImGui.SeparatorText("Items");
             ImGui.DragInt("Souls", ref CharacterPatches.SoulsCount, 10, 0, 99_999);
             ImGui.SameLine();
@@ -82,11 +89,6 @@ public partial class TrainerOverlay
             }
 
             ImGui.NewLine();
-            if (ImGui.Checkbox("Use Nobeta Skin", ref AppearancePatches.UseNobetaSkin))
-            {
-                AppearancePatches.ToggleNobetaSkin();
-            }
-
             if (ImGui.Checkbox("Hide Bag", ref AppearancePatches.HideBagEnabled))
             {
                 AppearancePatches.UpdateAppearance();

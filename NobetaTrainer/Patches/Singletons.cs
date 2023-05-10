@@ -38,7 +38,7 @@ public static class Singletons
     {
         Plugin.Log.LogInfo("NobetaSkin disposed");
 
-        if (__instance.Pointer == NobetaSkin.Pointer)
+        if (__instance.Pointer == NobetaSkin?.Pointer)
         {
             NobetaSkin = null;
         }

@@ -145,6 +145,7 @@ public partial class TrainerOverlay
                     ShowValueExpression(wizardGirl.GetIsDead());
                     ShowValue("Stealth:", wizardGirl.g_bStealth);
                     ShowValueExpression(wizardGirl.GetRadius());
+                    ShowValueExpression(wizardGirl.isNobeta);
 
                     ImGui.SeparatorText("Magic");
                     ShowValueExpression(wizardGirl.GetMagicType() == PlayerEffectPlay.Magic.Null ? "Arcane" : wizardGirl.GetMagicType());
