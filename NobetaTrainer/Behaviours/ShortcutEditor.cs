@@ -97,17 +97,16 @@ public class ShortcutEditor : MonoBehaviour
         }
     }
 
-    public int SelectedCommandIndex;
-    public bool Initialized;
-
     public InputAction BuildingInputAction { get; private set; }
     public CommandAction BuildingCommandAction { get; private set; }
+    public Dictionary<InputAction, CommandAction> CommandActionsMap { get; } = new();
+    public int SelectedCommandIndex;
+    public bool Initialized;
 
     private readonly InputActionMap _inputActionMap = new("NobetaTrainer");
     private InputAction _ctrlModifierAction;
     private InputAction _altModifierAction;
     private InputAction _shiftModifierAction;
-    public Dictionary<InputAction, CommandAction> CommandActionsMap { get; } = new();
 
     public ShortcutEditor()
     {
@@ -149,6 +148,11 @@ public class ShortcutEditor : MonoBehaviour
 
     private void Init()
     {
+        if (Initialized)
+        {
+            return;
+        }
+
         // Wait for unity input management to start
         BuildingInputAction = _inputActionMap.AddAction("ShortcutEditorBuilding", InputActionType.Button);
         BuildingInputAction.AddBinding("<None>/None");

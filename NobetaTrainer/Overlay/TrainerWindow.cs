@@ -125,7 +125,7 @@ public partial class TrainerOverlay
             ImGui.SameLine();
             ImGui.Checkbox("Enable Glide", ref MovementPatches.GlideEnabled);
             HelpMarker("Allows moving in any direction. Velocity specifies the speed. Use jump key to go up and dodge key to go down. Speed is doubled when dashing (sprint)");
-            ImGui.SliderFloat("Glide Velocity", ref MovementPatches.Glide, 0f, 20f);
+            ImGui.SliderFloat("Glide Velocity", ref MovementPatches.GlideVelocity, 0f, 20f);
         }
 
         // Magic options

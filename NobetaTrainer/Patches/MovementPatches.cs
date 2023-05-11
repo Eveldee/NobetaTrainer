@@ -1,15 +1,19 @@
 ﻿using System;
 using HarmonyLib;
+using NobetaTrainer.Config;
 using NobetaTrainer.Utils;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace NobetaTrainer.Patches;
 
+[Section("Trainer.Movement")]
 public static class MovementPatches
 {
+    [Bind(false)]
     public static bool GlideEnabled;
-    public static float Glide = 10f;
+    [Bind(10f, key: "Velocity", description: "Set Glide Velocity")]
+    public static float GlideVelocity = 10f;
 
     public static bool NoClipEnabled;
 
@@ -92,7 +96,7 @@ public static class MovementPatches
 
         var normalized = new Vector2(_moveDirection.x, _moveDirection.y);
         normalized.Normalize();
-        normalized *= Time.deltaTime * Glide;
+        normalized *= Time.deltaTime * GlideVelocity;
 
         if (_dashing)
         {
@@ -109,11 +113,11 @@ public static class MovementPatches
 
         if (InputUtils.JumpAction.phase == InputActionPhase.Performed)
         {
-            verticalVelocity = Time.deltaTime * Glide;
+            verticalVelocity = Time.deltaTime * GlideVelocity;
         }
         else if (InputUtils.DodgeAction.phase == InputActionPhase.Performed)
         {
-            verticalVelocity = -Time.deltaTime * Glide;
+            verticalVelocity = -Time.deltaTime * GlideVelocity;
         }
 
         controller.transform.Translate(normalized.x, verticalVelocity, normalized.y);
