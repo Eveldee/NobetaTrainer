@@ -4,3 +4,4 @@
 [*]
 resharper_inconsistent_naming_highlighting = none
 dotnet_diagnostic.CA2211.severity = none
+ClassNeverInstantiated.Global = none

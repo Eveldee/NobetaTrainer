@@ -1,9 +1,11 @@
-﻿using System.Threading;
+﻿using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using BepInEx;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
+using NobetaTrainer.Behaviours;
 using NobetaTrainer.Overlay;
 using NobetaTrainer.Patches;
 using NobetaTrainer.Utils;
@@ -26,6 +28,10 @@ public class Plugin : BasePlugin
 
         Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
 
+        // Fetch Nobeta process early to get game window handle
+        NobetaProcessUtils.NobetaProcess = Process.GetProcessesByName("LittleWitchNobeta")[0];
+        NobetaProcessUtils.GameWindowHandle = NobetaProcessUtils.NobetaProcess.MainWindowHandle;
+
         // Create and show overlay
         TrainerOverlay = new TrainerOverlay();
         Task.Run(TrainerOverlay.Run);
@@ -35,6 +41,7 @@ public class Plugin : BasePlugin
 
         // Add UnityMainThreadDispatcher
         AddComponent<UnityMainThreadDispatcher>();
+        Singletons.ShortcutEditor = AddComponent<ShortcutEditor>();
     }
 
     public static void ApplyPatches()
@@ -45,5 +52,6 @@ public class Plugin : BasePlugin
         Harmony.CreateAndPatchAll(typeof(MovementPatches));
         Harmony.CreateAndPatchAll(typeof(OtherPatches));
         Harmony.CreateAndPatchAll(typeof(ItemPatches));
+        Harmony.CreateAndPatchAll(typeof(ShortcutEditor));
     }
 }

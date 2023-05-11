@@ -10,7 +10,17 @@ public partial class TrainerOverlay
     {
         ImGui.Begin("NobetaTrainer", ref _showTrainerWindow);
 
-        ImGui.Text($"Welcome to NobetaTrainer v{_assemblyVersion}");
+        ImGui.TextColored(TitleColor, $"Welcome to NobetaTrainer v{_assemblyVersion}");
+
+        // Window options
+        if (ImGui.CollapsingHeader("Windows", ImGuiTreeNodeFlags.DefaultOpen))
+        {
+            ImGui.Checkbox("Inspector", ref _showInspectWindow);
+            ImGui.SameLine();
+            ImGui.Checkbox("Teleportation", ref _showTeleportationWindow);
+            ImGui.SameLine();
+            ImGui.Checkbox("Shortcut Editor", ref _showShortcutEditorWindow);
+        }
 
         // Character options
         if (ImGui.CollapsingHeader("Character", ImGuiTreeNodeFlags.DefaultOpen))

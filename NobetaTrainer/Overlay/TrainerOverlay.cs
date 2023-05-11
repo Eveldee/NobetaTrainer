@@ -14,6 +14,8 @@ public partial class TrainerOverlay : ClickableTransparentOverlay.Overlay
 {
     private static readonly Vector4 ValueColor = new(252 / 255f, 161 / 255f, 3 / 255f, 1f);
     private static readonly Vector4 InfoColor = new(3 / 255f, 148 / 255f, 252 / 255f, 1f);
+    private static readonly Vector4 WarningColor = new(252 / 255f, 211 / 255f, 3 / 255f, 1f);
+    private static readonly Vector4 TitleColor = new(173 / 255f, 3 / 255f, 252 / 255f, 1f);
 
     private bool _showImGuiAboutWindow;
     private bool _showImGuiStyleEditorWindow;
@@ -22,6 +24,8 @@ public partial class TrainerOverlay : ClickableTransparentOverlay.Overlay
     private bool _showImGuiMetricsWindow;
     private bool _showImGuiUserGuideWindow;
     private bool _showImGuiStackToolWindow;
+    public bool _showShortcutEditorWindow;
+    private bool _showTeleportationWindow;
 
     private bool _showTrainerWindow = true;
     private bool _showInspectWindow = true;
@@ -75,6 +79,10 @@ public partial class TrainerOverlay : ClickableTransparentOverlay.Overlay
         if (_showInspectWindow)
         {
            ShowInspectWindow();
+        }
+        if (_showShortcutEditorWindow)
+        {
+            ShowShortcutEditorWindow();
         }
     }
 

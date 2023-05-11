@@ -13,7 +13,7 @@ public partial class TrainerOverlay
 {
     private void ShowInspectWindow()
     {
-        ImGui.Begin("NobetaTrainerInspector", ref _showInspectWindow);
+        ImGui.Begin("Inspector", ref _showInspectWindow);
         ImGui.PushTextWrapPos();
 
         ImGui.TextColored(InfoColor, "Notes:");
