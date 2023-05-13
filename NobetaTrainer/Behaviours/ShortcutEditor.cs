@@ -7,11 +7,11 @@ using Il2CppInterop.Runtime.Attributes;
 using Il2CppInterop.Runtime.Injection;
 using Il2CppSystem.IO;
 using NobetaTrainer.Commands;
+using NobetaTrainer.Config;
 using NobetaTrainer.Patches;
 using NobetaTrainer.Utils;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using ConfigPatches = NobetaTrainer.Config.ConfigPatches;
 using File = System.IO.File;
 
 namespace NobetaTrainer.Behaviours;
@@ -161,10 +161,10 @@ public class ShortcutEditor : MonoBehaviour
     public void SaveShortcuts()
     {
         // Store into managed List that is serializable
-        var commandActions = new List<ConfigPatches.SavableCommandAction>();
+        var commandActions = new List<SavableCommandAction>();
         foreach (var keyValuePair in CommandActionsMap)
         {
-            commandActions.Add(new ConfigPatches.SavableCommandAction(keyValuePair.Value));
+            commandActions.Add(new SavableCommandAction(keyValuePair.Value));
         }
 
         File.WriteAllText(CommandsSavePath,  SerializeUtils.SerializeIndented(commandActions));
@@ -206,7 +206,7 @@ public class ShortcutEditor : MonoBehaviour
             {
                 // Try load shortcuts from them
                 var commandsJson = File.ReadAllText(CommandsSavePath);
-                var commands = JsonSerializer.Deserialize<List<ConfigPatches.SavableCommandAction>>(commandsJson);
+                var commands = JsonSerializer.Deserialize<List<SavableCommandAction>>(commandsJson);
 
                 // For each saved command, add it to commands list and recreate InputAction and InputBinding
                 foreach (var commandAction in commands)

@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using BepInEx;
 using BepInEx.Configuration;
@@ -15,7 +14,6 @@ using NobetaTrainer.Overlay;
 using NobetaTrainer.Patches;
 using NobetaTrainer.Utils;
 using UnityEngine;
-using ConfigPatches = NobetaTrainer.Config.ConfigPatches;
 
 namespace NobetaTrainer;
 

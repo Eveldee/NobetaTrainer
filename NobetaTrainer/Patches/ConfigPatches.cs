@@ -9,6 +9,7 @@ public static class ConfigPatches
     [HarmonyPostfix]
     public static void WriteGameSavePostfix()
     {
+        Plugin.Log.LogDebug("Triggered Config save on Game save");
         Plugin.SaveConfigs();
     }
 }
