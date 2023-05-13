@@ -11,6 +11,7 @@ using NobetaTrainer.Patches;
 using NobetaTrainer.Utils;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using ConfigPatches = NobetaTrainer.Config.ConfigPatches;
 using File = System.IO.File;
 
 namespace NobetaTrainer.Behaviours;
@@ -84,11 +85,14 @@ public class ShortcutEditor : MonoBehaviour
             InputAction = inputAction;
         }
 
-        public void UpdateDisplay()
+        public void UpdatePathAndId()
         {
+            ControlPath = InputAction.bindings.Count > 0
+                ? InputAction.bindings[0].effectivePath
+                : "<None>/None";
             HumanReadablePath = InputAction.bindings.Count > 0
                 ? InputControlPath.ToHumanReadableString(InputAction.bindings[0].effectivePath)
-                : "<None> [None]";
+                : "None [None]";
             ActionId = InputAction.id;
         }
     }
@@ -207,20 +211,21 @@ public class ShortcutEditor : MonoBehaviour
                 // For each saved command, add it to commands list and recreate InputAction and InputBinding
                 foreach (var commandAction in commands)
                 {
-                    CommandActionsMap[commandAction.ActionId.ToUnmanaged()] =
-                        new CommandAction(CommandUtils.TrainerCommands[commandAction.CommandType], _inputActionMap[commandAction.ActionId.ToString()])
+                    // Recreate InputAction and InputBinding
+                    var inputAction = _inputActionMap.AddAction($"{commandAction.CommandType}({Guid.NewGuid()})", InputActionType.Button);
+                    inputAction.AddBinding(commandAction.ControlPath);
+
+                    // Add command
+                    CommandActionsMap[inputAction.id] =
+                        new CommandAction(CommandUtils.TrainerCommands[commandAction.CommandType], inputAction)
                         {
                             NeedCtrlModifier = commandAction.NeedCtrlModifier,
                             NeedAltModifier = commandAction.NeedAltModifier,
                             NeedShiftModifier = commandAction.NeedShiftModifier,
-                            ActionId = commandAction.ActionId.ToUnmanaged(),
+                            ActionId = inputAction.id,
                             HumanReadablePath = commandAction.HumanReadablePath,
                             ControlPath = commandAction.ControlPath
                         };
-
-                    // Recreate InputAction and InputBinding
-                    var action = _inputActionMap.AddAction($"{commandAction.CommandType}({Guid.NewGuid()})", InputActionType.Button);
-                    action.AddBinding(commandAction.ControlPath);
                 }
 
                 Plugin.Log.LogMessage("Loaded shortcuts and commands from saved config");

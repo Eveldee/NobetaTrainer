@@ -15,6 +15,7 @@ using NobetaTrainer.Overlay;
 using NobetaTrainer.Patches;
 using NobetaTrainer.Utils;
 using UnityEngine;
+using ConfigPatches = NobetaTrainer.Config.ConfigPatches;
 
 namespace NobetaTrainer;
 

@@ -25,7 +25,7 @@ public partial class TrainerOverlay
                 commandAction = Singletons.ShortcutEditor.BuildingCommandAction;
             }
 
-            commandAction.UpdateDisplay();
+            commandAction.UpdatePathAndId();
 
             operation.Dispose();
         }
