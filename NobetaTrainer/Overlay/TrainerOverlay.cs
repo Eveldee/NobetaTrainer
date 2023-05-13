@@ -6,17 +6,13 @@ using System.Threading.Tasks;
 using Humanizer;
 using Il2CppInterop.Runtime;
 using ImGuiNET;
+using NobetaTrainer.Utils;
 using Vector4 = System.Numerics.Vector4;
 
 namespace NobetaTrainer.Overlay;
 
 public partial class TrainerOverlay : ClickableTransparentOverlay.Overlay
 {
-    private static readonly Vector4 ValueColor = new(252 / 255f, 161 / 255f, 3 / 255f, 1f);
-    private static readonly Vector4 InfoColor = new(3 / 255f, 148 / 255f, 252 / 255f, 1f);
-    private static readonly Vector4 WarningColor = new(252 / 255f, 211 / 255f, 3 / 255f, 1f);
-    private static readonly Vector4 TitleColor = new(173 / 255f, 3 / 255f, 252 / 255f, 1f);
-
     private bool _showImGuiAboutWindow;
     private bool _showImGuiStyleEditorWindow;
     private bool _showImGuiDebugLogWindow;
@@ -144,5 +140,20 @@ public partial class TrainerOverlay : ClickableTransparentOverlay.Overlay
             ImGui.PopTextWrapPos();
             ImGui.EndTooltip();
         }
+    }
+
+    private bool ButtonColored(Vector4 color, string label, float gradientStep = 0.1f)
+    {
+        var gradient = color.IntensityGradient(gradientStep, 3);
+
+        ImGui.PushStyleColor(ImGuiCol.Button, gradient[0]);
+        ImGui.PushStyleColor(ImGuiCol.ButtonHovered, gradient[1]);
+        ImGui.PushStyleColor(ImGuiCol.ButtonActive, gradient[2]);
+
+        var result = ImGui.Button(label);
+
+        ImGui.PopStyleColor(3);
+
+        return result;
     }
 }

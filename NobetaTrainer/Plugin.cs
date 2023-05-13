@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using BepInEx;
@@ -34,6 +35,7 @@ public class Plugin : BasePlugin
         Log = base.Log;
         Log.LogMessage($"Plugin {MyPluginInfo.PLUGIN_GUID} is loading...");
 
+        // Fix ImGUI task preventing the game from closing
         Application.quitting += (Action) (() =>
         {
             TrainerOverlay.Close();
@@ -41,10 +43,11 @@ public class Plugin : BasePlugin
         });
 
         // Plugin startup logic
-        ConfigFile = Config;
-        ConfigDirectory = new DirectoryInfo(Path.GetDirectoryName(Config.ConfigFilePath)!);
+        ConfigDirectory = new DirectoryInfo(Path.Combine(Path.GetDirectoryName(Config.ConfigFilePath)!, "NobetaTrainer"));
+        ConfigDirectory.Create();
+        ConfigFile = new ConfigFile(Path.Combine(ConfigDirectory.FullName, "NobetaTrainer.cfg"), true, GetType().GetCustomAttribute<BepInPlugin>());
 
-        AutoConfigManager = new AutoConfigManager(Config);
+        AutoConfigManager = new AutoConfigManager(ConfigFile);
         AutoConfigManager.LoadValuesToFields();
 
         // Fetch Nobeta process early to get game window handle
@@ -58,7 +61,7 @@ public class Plugin : BasePlugin
         // Apply patches
         ApplyPatches();
 
-        // Add UnityMainThreadDispatcher
+        // Add required Components
         AddComponent<UnityMainThreadDispatcher>();
         Singletons.ShortcutEditor = AddComponent<ShortcutEditor>();
 
@@ -69,8 +72,7 @@ public class Plugin : BasePlugin
     {
         Log.LogMessage($"Plugin {MyPluginInfo.PLUGIN_GUID} unloading...");
 
-        AutoConfigManager.FetchValuesFromFields();
-        Config.Save();
+        SaveConfigs();
 
         Log.LogMessage($"Plugin {MyPluginInfo.PLUGIN_GUID} successfully unloaded");
 
@@ -81,7 +83,8 @@ public class Plugin : BasePlugin
     {
         Log.LogInfo("Saving configs...");
 
-        // TODO Save shortcuts
+        // Save shortcuts
+        Singletons.ShortcutEditor.SaveShortcuts();
 
         // Save BepInEx config
         AutoConfigManager.FetchValuesFromFields();

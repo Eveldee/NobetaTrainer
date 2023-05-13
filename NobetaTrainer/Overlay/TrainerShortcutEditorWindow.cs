@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Humanizer;
 using Il2CppInterop.Runtime;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using ImGuiNET;
 using NobetaTrainer.Behaviours;
+using NobetaTrainer.Commands;
 using NobetaTrainer.Patches;
 using NobetaTrainer.Utils;
 using UnityEngine.InputSystem;
@@ -18,7 +20,7 @@ public partial class TrainerOverlay
         void OnCompleteRebind(InputActionRebindingExtensions.RebindingOperation operation)
         {
             // Update associated command action
-            if (!Singletons.ShortcutEditor.CommandActionsMap.TryGetValue(operation.action, out var commandAction))
+            if (!Singletons.ShortcutEditor.CommandActionsMap.TryGetValue(operation.action.id, out var commandAction))
             {
                 commandAction = Singletons.ShortcutEditor.BuildingCommandAction;
             }
@@ -28,11 +30,11 @@ public partial class TrainerOverlay
             operation.Dispose();
         }
 
-        void DisplayCommandAction(ShortcutEditor.CommandAction commandAction)
+        void DisplayCommandAction(ShortcutEditor.CommandAction commandAction, bool deleteButton = true)
         {
-            if (!string.IsNullOrWhiteSpace(commandAction.TrainerCommand.Name))
+            if (commandAction.TrainerCommand.CommandType != CommandType.None)
             {
-                ImGui.TextColored(ValueColor, commandAction.TrainerCommand.Name);
+                ImGui.TextColored(ValueColor, commandAction.TrainerCommand.CommandType.Humanize(LetterCasing.Title));
                 ImGui.SameLine();
             }
 
@@ -57,13 +59,25 @@ public partial class TrainerOverlay
             ImGui.Checkbox($"Alt##{commandAction.ActionId}", ref commandAction.NeedAltModifier);
             ImGui.SameLine();
             ImGui.Checkbox($"Shift##{commandAction.ActionId}", ref commandAction.NeedShiftModifier);
+
+            if (deleteButton)
+            {
+                ImGui.SameLine();
+                if (ButtonColored(ErrorButtonColor, $"Delete##{commandAction.ActionId}"))
+                {
+                    Singletons.Dispatcher.Enqueue(() =>
+                    {
+                        Singletons.ShortcutEditor.DeleteCommandAction(commandAction);
+                    });
+                }
+            }
         }
 
         ImGui.Begin("Shortcut Editor", ref _showShortcutEditorWindow);
         ImGui.PushTextWrapPos();
 
         ImGui.TextColored(InfoColor, "Here you can assign shortcuts to NobetaTrainer commands");
-        ImGui.TextColored(WarningColor, "Shortcuts are deactivated while this window is shown");
+        ImGui.TextColored(ErrorColor, "!! Shortcuts are deactivated while this window is shown !!");
 
         var editor = Singletons.ShortcutEditor;
 
@@ -92,9 +106,9 @@ public partial class TrainerOverlay
                     ImGui.Combo("Command", ref editor.SelectedCommandIndex, CommandUtils.TrainerCommandNames,
                         CommandUtils.TrainerCommandNames.Length);
 
-                    DisplayCommandAction(editor.BuildingCommandAction);
+                    DisplayCommandAction(editor.BuildingCommandAction, deleteButton: false);
 
-                    if (ImGui.Button("Create"))
+                    if (ButtonColored(PrimaryButtonColor, "Create"))
                     {
                         editor.CreateShortcut();
                     }
