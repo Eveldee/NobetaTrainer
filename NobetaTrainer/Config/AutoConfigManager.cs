@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using BepInEx.Configuration;
 
@@ -8,17 +9,42 @@ namespace NobetaTrainer.Config;
 
 public class AutoConfigManager
 {
+    private record BindEntry(ConfigEntryBase Entry, IBindConverter BindConverter = null);
+
     private readonly ConfigFile _configFile;
-    private readonly Dictionary<FieldInfo, ConfigEntryBase> _bindEntries;
+    private readonly Dictionary<FieldInfo, BindEntry> _bindEntries;
     private bool _initDone;
 
     private readonly MethodInfo _genericBindMethod =
         typeof(ConfigFile).GetMethods().Single(method => method.Name == nameof(ConfigFile.Bind) && method.GetParameters().Length == 3);
 
+    private readonly ISet<Type> _supportedTypes = new HashSet<Type>
+    {
+        typeof(string),
+        typeof(bool),
+        typeof(byte),
+        typeof(sbyte),
+        typeof(short),
+        typeof(ushort),
+        typeof(int),
+        typeof(uint),
+        typeof(long),
+        typeof(ulong),
+        typeof(float),
+        typeof(double),
+        typeof(decimal),
+        typeof(Enum)
+    };
+
+    private readonly Dictionary<Type, IBindConverter> _converters = new()
+    {
+        { typeof(Vector3), new Vector3BindConverter() }
+    };
+
     public AutoConfigManager(ConfigFile configFile)
     {
         _configFile = configFile;
-        _bindEntries = new Dictionary<FieldInfo, ConfigEntryBase>();
+        _bindEntries = new Dictionary<FieldInfo, BindEntry>();
     }
 
     private void Init()
@@ -57,13 +83,38 @@ public class AutoConfigManager
                 // Create and save bind for later use
                 var configDefinition = new ConfigDefinition(sectionName, key);
 
-                var bindMethod = _genericBindMethod.MakeGenericMethod(fieldType);
-                var entryBase = (ConfigEntryBase)bindMethod.Invoke(_configFile, new[]
+                // Check if field type is a supported type
+                IBindConverter bindConverter = null;
+                if (!_supportedTypes.Contains(fieldType))
                 {
-                    configDefinition, defaultValue, new ConfigDescription(description)
-                });
+                    // Needs a converter
+                    if (!_converters.TryGetValue(fieldType, out bindConverter))
+                    {
+                        throw new BindUnsupportedTypeException(targetField);
+                    }
+                }
 
-                _bindEntries[targetField] = entryBase;
+                ConfigEntryBase entryBase;
+
+                // Store a a string if a converter is used
+                if (bindConverter is not null)
+                {
+                    var bindMethod = _genericBindMethod.MakeGenericMethod(typeof(string));
+                    entryBase = (ConfigEntryBase)bindMethod.Invoke(_configFile, new[]
+                    {
+                        configDefinition, (object)bindConverter.Serialize(defaultValue), new ConfigDescription(description)
+                    });
+                }
+                else
+                {
+                    var bindMethod = _genericBindMethod.MakeGenericMethod(fieldType);
+                    entryBase = (ConfigEntryBase)bindMethod.Invoke(_configFile, new[]
+                    {
+                        configDefinition, defaultValue, new ConfigDescription(description)
+                    });
+                }
+
+                _bindEntries[targetField] = new BindEntry(entryBase, bindConverter);
             }
         }
 
@@ -79,10 +130,18 @@ public class AutoConfigManager
         }
 
         // Set value from config to target fields
-        foreach (var (targetField, entry) in _bindEntries)
+        foreach (var (targetField, bindEntry) in _bindEntries)
         {
             // Read value in config
-            var value = entry.BoxedValue;
+            object value;
+            if (bindEntry.BindConverter is { } bindConverter)
+            {
+                value = bindConverter.Deserialize((string)bindEntry.Entry.BoxedValue);
+            }
+            else
+            {
+                value = bindEntry.Entry.BoxedValue;
+            }
 
             SetValueToField(targetField, value);
         }
@@ -96,10 +155,16 @@ public class AutoConfigManager
         }
 
         // Set value from config to target fields
-        foreach (var (targetField, entry) in _bindEntries)
+        foreach (var (targetField, bindEntry) in _bindEntries)
         {
             // Read value from field
-            entry.BoxedValue = GetValueFromField(targetField);
+            object value = GetValueFromField(targetField);
+            if (bindEntry.BindConverter is { } bindConverter)
+            {
+                value = bindConverter.Serialize(value);
+            }
+
+            bindEntry.Entry.BoxedValue = value;
         }
     }
 
