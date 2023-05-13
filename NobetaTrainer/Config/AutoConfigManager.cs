@@ -25,11 +25,17 @@ public class AutoConfigManager
     {
         // Find class that contains a section attribute
         var sectionClasses = Assembly.GetExecutingAssembly().DefinedTypes
-            .Where(t => t is { IsClass: true, IsSealed: true, IsAbstract: true })
+            .Where(t => t.IsClass)
             .Where(t => Attribute.IsDefined(t, typeof(SectionAttribute)));
 
         foreach (var sectionClass in sectionClasses)
         {
+            // Check that the class is static
+            if (sectionClass is not { IsSealed: true, IsAbstract: true})
+            {
+                throw new AutoConfigStaticException(sectionClass);
+            }
+
             // Get section name
             var sectionName = sectionClass.GetCustomAttribute<SectionAttribute>()!.SectionName;
 
@@ -43,7 +49,7 @@ public class AutoConfigManager
                 var bindAttribute = targetField.GetCustomAttribute<BindAttribute>()!;
 
                 // Fetch values and handle not specified cases
-                var defaultValue = bindAttribute.DefaultValue;
+                var defaultValue = bindAttribute.DefaultValue ?? GetValueFromField(targetField);
                 var key = bindAttribute.Key ?? targetField.Name;
                 var description = bindAttribute.Description ?? "No description provided";
                 var fieldType = targetField.FieldType;
@@ -99,21 +105,11 @@ public class AutoConfigManager
 
     private object GetValueFromField(FieldInfo fieldInfo)
     {
-        if (!fieldInfo.IsStatic)
-        {
-            throw new AutoConfigStaticException(fieldInfo);
-        }
-
         return fieldInfo.GetValue(null);
     }
 
     private void SetValueToField(FieldInfo fieldInfo, object value)
     {
-        if (!fieldInfo.IsStatic)
-        {
-            throw new AutoConfigStaticException(fieldInfo);
-        }
-
         fieldInfo.SetValue(null, value);
     }
 }

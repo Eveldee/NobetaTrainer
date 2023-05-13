@@ -3,7 +3,7 @@ using HarmonyLib;
 
 namespace NobetaTrainer.Patches;
 
-public static partial class ConfigPatches
+public static class ConfigPatches
 {
     [HarmonyPatch(typeof(Game), nameof(Game.WriteGameSave), new Type[]{ })]
     [HarmonyPostfix]

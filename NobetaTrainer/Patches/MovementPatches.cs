@@ -10,9 +10,9 @@ namespace NobetaTrainer.Patches;
 [Section("Trainer.Movement")]
 public static class MovementPatches
 {
-    [Bind(false)]
+    [Bind]
     public static bool GlideEnabled;
-    [Bind(10f, key: "Velocity", description: "Set Glide Velocity")]
+    [Bind]
     public static float GlideVelocity = 10f;
 
     public static bool NoClipEnabled;

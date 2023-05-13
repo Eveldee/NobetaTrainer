@@ -4,7 +4,7 @@ namespace NobetaTrainer.Config;
 
 public class AutoConfigStaticException : AutoConfigException
 {
-    public AutoConfigStaticException(FieldInfo fieldInfo) : base($"The field '{fieldInfo.Name}' in '{fieldInfo.DeclaringType}' must be static")
+    public AutoConfigStaticException(TypeInfo typeInfo) : base($"The class '{typeInfo.Name}' must be static when annotated with SectionAttribute")
     {
 
     }
