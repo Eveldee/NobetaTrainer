@@ -58,7 +58,8 @@ public class ShortcutEditor : MonoBehaviour
     {
         public TrainerCommand TrainerCommand { get; }
         public InputAction InputAction { get; }
-        public string ControlPath { get; set; }
+        public string HumanReadablePath { get; set; }
+        public required string ControlPath { get; set; }
         public Il2CppSystem.Guid ActionId { get; set; }
 
         public required bool NeedCtrlModifier;
@@ -85,15 +86,14 @@ public class ShortcutEditor : MonoBehaviour
 
         public void UpdateDisplay()
         {
-            ControlPath = InputAction.bindings.Count > 0
+            HumanReadablePath = InputAction.bindings.Count > 0
                 ? InputControlPath.ToHumanReadableString(InputAction.bindings[0].effectivePath)
                 : "<None> [None]";
             ActionId = InputAction.id;
         }
     }
 
-    public string ShortcutsSavePath { get; } = Path.Combine(Plugin.ConfigDirectory.FullName, "Shortcuts.json");
-    public string CommandsSavePath { get; } = Path.Combine(Plugin.ConfigDirectory.FullName, "Commands.json");
+    public string CommandsSavePath { get; } = Path.Combine(Plugin.ConfigDirectory.FullName, "ShortcutCommands.json");
 
     public Il2CppSystem.Collections.Generic.Dictionary<Il2CppSystem.Guid, CommandAction> CommandActionsMap { get; private set; }
     public CommandAction BuildingCommandAction { get; private set; }
@@ -127,7 +127,8 @@ public class ShortcutEditor : MonoBehaviour
             NeedAltModifier = BuildingCommandAction.NeedAltModifier,
             NeedShiftModifier = BuildingCommandAction.NeedShiftModifier,
             ActionId = inputAction.id,
-            ControlPath = InputControlPath.ToHumanReadableString(controlPath)
+            HumanReadablePath = InputControlPath.ToHumanReadableString(controlPath),
+            ControlPath = controlPath
         };
         CommandActionsMap[inputAction.id] = commandAction;
 
@@ -155,9 +156,7 @@ public class ShortcutEditor : MonoBehaviour
 
     public void SaveShortcuts()
     {
-        File.WriteAllText(ShortcutsSavePath, _inputActionMap.ToJson());
-
-        // Create managed dictionary
+        // Store into managed List that is serializable
         var commandActions = new List<ConfigPatches.SavableCommandAction>();
         foreach (var keyValuePair in CommandActionsMap)
         {
@@ -174,52 +173,38 @@ public class ShortcutEditor : MonoBehaviour
 
     private void Init()
     {
-        void NewMap()
-        {
-            _inputActionMap = new InputActionMap("NobetaTrainer");
-
-            // Build action
-            BuildingInputAction = _inputActionMap.AddAction(BuildingInputActionName, InputActionType.Button);
-            BuildingInputAction.AddBinding("<None>/None");
-
-            // Modifier Actions
-            _ctrlModifierAction = _inputActionMap.AddAction(CtrlModifierActionName, InputActionType.Button);
-            _ctrlModifierAction.AddBinding("<Keyboard>/ctrl");
-            _altModifierAction = _inputActionMap.AddAction(AltModifierActionName, InputActionType.Button);
-            _altModifierAction.AddBinding("<Keyboard>/alt");
-            _shiftModifierAction = _inputActionMap.AddAction(ShiftModifierActionName, InputActionType.Button);
-            _shiftModifierAction.AddBinding("<Keyboard>/shift");
-
-            CommandActionsMap = new Il2CppSystem.Collections.Generic.Dictionary<Il2CppSystem.Guid, CommandAction>();
-        }
-
         if (Initialized)
         {
             return;
         }
 
+        // Init map
+        _inputActionMap = new InputActionMap("NobetaTrainer");
+
+        // Build action
+        BuildingInputAction = _inputActionMap.AddAction(BuildingInputActionName, InputActionType.Button);
+        BuildingInputAction.AddBinding("<None>/None");
+
+        // Modifier Actions
+        _ctrlModifierAction = _inputActionMap.AddAction(CtrlModifierActionName, InputActionType.Button);
+        _ctrlModifierAction.AddBinding("<Keyboard>/ctrl");
+        _altModifierAction = _inputActionMap.AddAction(AltModifierActionName, InputActionType.Button);
+        _altModifierAction.AddBinding("<Keyboard>/alt");
+        _shiftModifierAction = _inputActionMap.AddAction(ShiftModifierActionName, InputActionType.Button);
+        _shiftModifierAction.AddBinding("<Keyboard>/shift");
+
+        CommandActionsMap = new Il2CppSystem.Collections.Generic.Dictionary<Il2CppSystem.Guid, CommandAction>();
+
         // Check if there is saved shortcuts
-        if (File.Exists(ShortcutsSavePath) && File.Exists(CommandsSavePath))
+        if (File.Exists(CommandsSavePath))
         {
             try
             {
                 // Try load shortcuts from them
-                var actionMapJson = File.ReadAllText(ShortcutsSavePath);
                 var commandsJson = File.ReadAllText(CommandsSavePath);
-
-                var savedMap = InputActionMap.FromJson(actionMapJson)[0];
-
-                _inputActionMap = savedMap;
-
-                BuildingInputAction = _inputActionMap[BuildingInputActionName];
-                _ctrlModifierAction = _inputActionMap[CtrlModifierActionName];
-                _shiftModifierAction = _inputActionMap[ShiftModifierActionName];
-                _altModifierAction = _inputActionMap[AltModifierActionName];
-
-                // Also load commands
                 var commands = JsonSerializer.Deserialize<List<ConfigPatches.SavableCommandAction>>(commandsJson);
 
-                CommandActionsMap = new Il2CppSystem.Collections.Generic.Dictionary<Il2CppSystem.Guid, CommandAction>();
+                // For each saved command, add it to commands list and recreate InputAction and InputBinding
                 foreach (var commandAction in commands)
                 {
                     CommandActionsMap[commandAction.ActionId.ToUnmanaged()] =
@@ -229,25 +214,27 @@ public class ShortcutEditor : MonoBehaviour
                             NeedAltModifier = commandAction.NeedAltModifier,
                             NeedShiftModifier = commandAction.NeedShiftModifier,
                             ActionId = commandAction.ActionId.ToUnmanaged(),
+                            HumanReadablePath = commandAction.HumanReadablePath,
                             ControlPath = commandAction.ControlPath
                         };
+
+                    // Recreate InputAction and InputBinding
+                    var action = _inputActionMap.AddAction($"{commandAction.CommandType}({Guid.NewGuid()})", InputActionType.Button);
+                    action.AddBinding(commandAction.ControlPath);
                 }
 
                 Plugin.Log.LogMessage("Loaded shortcuts and commands from saved config");
             }
             catch (Exception e)
             {
-                Plugin.Log.LogError("Couldn't load saved shortcuts, using new shortcut map.");
+                Plugin.Log.LogError("Couldn't load saved shortcuts, using empty shortcut map.");
                 Plugin.Log.LogError(e.Message);
                 Plugin.Log.LogError(e.StackTrace);
-
-                NewMap();
             }
         }
         else
         {
-            Plugin.Log.LogInfo("No shortcuts found, using new shortcut map.");
-            NewMap();
+            Plugin.Log.LogInfo("No shortcuts found, using empty shortcut map.");
         }
 
         BuildingCommandAction = new CommandAction(new(CommandType.None, () => { }), BuildingInputAction)
@@ -256,7 +243,8 @@ public class ShortcutEditor : MonoBehaviour
             NeedAltModifier = false,
             NeedShiftModifier = false,
             ActionId = BuildingInputAction.id,
-            ControlPath = InputControlPath.ToHumanReadableString(BuildingInputAction.bindings[0].effectivePath)
+            HumanReadablePath = InputControlPath.ToHumanReadableString(BuildingInputAction.bindings[0].effectivePath),
+            ControlPath = BuildingInputAction.bindings[0].effectivePath
         };
 
         // Enable all actions and bindings

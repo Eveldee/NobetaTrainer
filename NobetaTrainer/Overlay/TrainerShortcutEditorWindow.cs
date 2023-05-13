@@ -38,7 +38,7 @@ public partial class TrainerOverlay
                 ImGui.SameLine();
             }
 
-            if (ImGui.Button($"{commandAction.ControlPath}##{commandAction.ActionId}"))
+            if (ImGui.Button($"{commandAction.HumanReadablePath}##{commandAction.ActionId}"))
             {
                 NobetaProcessUtils.FocusNobetaWindow();
 

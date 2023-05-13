@@ -13,6 +13,7 @@ public static class ConfigPatches
     public class SavableCommandAction
     {
         public required CommandType CommandType { get; init; }
+        public required string HumanReadablePath { get; init; }
         public required string ControlPath { get; init; }
         public required Guid ActionId { get; init; }
 
@@ -31,6 +32,7 @@ public static class ConfigPatches
         {
             CommandType = commandAction.TrainerCommand.CommandType;
             ControlPath = commandAction.ControlPath;
+            HumanReadablePath = commandAction.HumanReadablePath;
             ActionId = commandAction.ActionId.ToManaged();
 
             NeedCtrlModifier = commandAction.NeedCtrlModifier;
