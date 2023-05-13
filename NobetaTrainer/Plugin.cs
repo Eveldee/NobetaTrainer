@@ -52,7 +52,7 @@ public class Plugin : BasePlugin
 
         // Fetch Nobeta process early to get game window handle
         NobetaProcessUtils.NobetaProcess = Process.GetProcessesByName("LittleWitchNobeta")[0];
-        NobetaProcessUtils.GameWindowHandle = NobetaProcessUtils.NobetaProcess.MainWindowHandle;
+        NobetaProcessUtils.GameWindowHandle = NobetaProcessUtils.FindWindow(null, "Little Witch Nobeta");
 
         // Create and show overlay
         TrainerOverlay = new TrainerOverlay();

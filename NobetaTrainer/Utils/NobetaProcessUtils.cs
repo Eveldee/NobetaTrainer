@@ -87,6 +87,9 @@ public static class NobetaProcessUtils
     [DllImport("user32.dll")]
     internal static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+    public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
     public static Process NobetaProcess { get; set; }
     public static IntPtr GameWindowHandle { get; set; }
 

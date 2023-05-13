@@ -295,7 +295,7 @@ public class ShortcutEditor : MonoBehaviour
             {
                 // If a modifier is enabled, it implies that the modifier state must be on (Need => State)
                 // As known, the boolean expression for (A => B) is (!A | B)
-                // We do this for all the modifiers
+                // We do this for each modifiers
                 var modifiersValid = (!commandAction.NeedCtrlModifier || _ctrlModifierAction.inProgress)
                                         && (!commandAction.NeedAltModifier || _altModifierAction.inProgress)
                                         && (!commandAction.NeedShiftModifier || _shiftModifierAction.inProgress);
