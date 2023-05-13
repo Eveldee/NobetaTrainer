@@ -1,15 +1,22 @@
 ﻿using System;
 using HarmonyLib;
+using NobetaTrainer.Config;
 using NobetaTrainer.Utils;
 
 namespace NobetaTrainer.Patches;
 
+[Section("Character.General")]
 public static class CharacterPatches
 {
+    [Bind]
     public static bool NoDamageEnabled;
+    [Bind]
     public static bool InfiniteHpEnabled;
+    [Bind]
     public static bool InfiniteManaEnabled;
+    [Bind]
     public static bool InfiniteStaminaEnabled;
+    [Bind]
     public static bool OneTapEnabled;
 
     public static int SoulsCount;

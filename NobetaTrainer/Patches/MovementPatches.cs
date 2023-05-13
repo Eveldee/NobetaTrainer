@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 namespace NobetaTrainer.Patches;
 
-[Section("Trainer.Movement")]
+[Section("Character.Movements")]
 public static class MovementPatches
 {
     [Bind]
@@ -15,6 +15,7 @@ public static class MovementPatches
     [Bind]
     public static float GlideVelocity = 10f;
 
+    [Bind]
     public static bool NoClipEnabled;
 
     private static bool _dashing;

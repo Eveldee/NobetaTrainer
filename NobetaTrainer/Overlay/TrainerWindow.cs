@@ -39,7 +39,7 @@ public partial class TrainerOverlay
             HelpMarker("Regen Stamina anytime it goes below max");
 
             ImGui.NewLine();
-            if (ImGui.Checkbox("Nobeta Moveset", ref AppearancePatches.UseNobetaSkin))
+            if (ImGui.Checkbox("Nobeta Moveset", ref AppearancePatches.UseNobetaMoveset))
             {
                 AppearancePatches.ToggleNobetaSkin();
             }

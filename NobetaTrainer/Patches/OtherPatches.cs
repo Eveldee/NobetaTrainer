@@ -1,17 +1,22 @@
 ﻿using System.Linq;
 using HarmonyLib;
+using NobetaTrainer.Config;
 using NobetaTrainer.Utils;
 using UnityEngine;
 using Vector3 = System.Numerics.Vector3;
 
 namespace NobetaTrainer.Patches;
 
+[Section("Others")]
 public static class OtherPatches
 {
     public static bool ForceShowTeleportMenu;
 
+    [Bind]
     public static bool BrightMode;
+    [Bind]
     public static float BrightModeIntensity = 1f;
+    [Bind]
     public static Vector3 BrightModeColor = new(1f, 1f, 1f);
 
     private static Light _light;

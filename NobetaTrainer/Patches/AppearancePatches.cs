@@ -1,20 +1,26 @@
 ﻿using System;
 using EnumsNET;
 using HarmonyLib;
+using NobetaTrainer.Config;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace NobetaTrainer.Patches;
 
+[Section("Character.Appearance")]
 public static class AppearancePatches
 {
     public static int SelectedSkinIndex;
     public static readonly string[] AvailableSkins = Enum.GetNames<GameSkin>();
 
+    [Bind]
     public static bool HideBagEnabled;
+    [Bind]
     public static bool HideStaffEnabled;
+    [Bind]
     public static bool HideHatEnabled;
-    public static bool UseNobetaSkin;
+    [Bind]
+    public static bool UseNobetaMoveset;
 
     public static void LoadSelectedSkin()
     {
@@ -76,7 +82,7 @@ public static class AppearancePatches
 
         Singletons.Dispatcher.Enqueue(() =>
         {
-            Singletons.WizardGirl.isNobeta = UseNobetaSkin;
+            Singletons.WizardGirl.isNobeta = UseNobetaMoveset;
 
             var originalSkin = SelectedSkinIndex;
 
@@ -105,6 +111,6 @@ public static class AppearancePatches
     [HarmonyPrefix]
     private static void WizardGirlInitPrefix(WizardGirlManage __instance)
     {
-        __instance.isNobeta = UseNobetaSkin;
+        __instance.isNobeta = UseNobetaMoveset;
     }
 }
