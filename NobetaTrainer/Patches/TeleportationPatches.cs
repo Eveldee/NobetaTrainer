@@ -9,7 +9,8 @@ namespace NobetaTrainer.Patches;
 public static class TeleportationPatches
 {
     public static bool IsGameScene;
-    public static IEnumerable<SavePoint> SavePoints;
+    public static IEnumerable<SavePoint> SavePoints { get; private set; }
+    public static IEnumerable<TreasureBox> TreasureBoxes { get; private set; }
 
     public static void TeleportToTarget(Transform targetTransform, Vector3 teleporationOffset, Quaternion rotationOffset)
     {
@@ -34,6 +35,7 @@ public static class TeleportationPatches
         Plugin.Log.LogDebug($"New scene init complete: {Game.sceneManager.stageName}");
 
         SavePoints = UnityUtils.FindComponentsByTypeForced<SavePoint>().OrderBy(savePoint => savePoint.name);
+        TreasureBoxes = UnityUtils.FindComponentsByTypeForced<TreasureBox>();
 
         IsGameScene = true;
     }

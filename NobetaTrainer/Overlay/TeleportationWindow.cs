@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using ImGuiNET;
 using NobetaTrainer.Patches;
 using NobetaTrainer.Utils;
@@ -36,7 +37,7 @@ public partial class TrainerOverlay
         ImGui.SameLine();
         ImGui.TextColored(ValueColor, $"{Game.sceneManager.stageName}");
 
-        if (ImGui.CollapsingHeader("Save Points", ImGuiTreeNodeFlags.DefaultOpen))
+        if (ImGui.CollapsingHeader("Save Points"))
         {
             foreach (var savePoint in TeleportationPatches.SavePoints)
             {
@@ -46,10 +47,19 @@ public partial class TrainerOverlay
 
         if (ImGui.CollapsingHeader("Chests"))
         {
+            foreach (var treasureBox in TeleportationPatches.TreasureBoxes)
+            {
+                var rotation = treasureBox.transform.rotation.ToEulerAngles();
+                var wantedDirection = rotation.y;
+                var positionOffset = Quaternion.Euler(0f, wantedDirection * 360/(2 * (float)Math.PI), 0f) * new Vector3(0f, 0f, -.7f);
 
+                Vector3.RotateTowards(positionOffset, rotation, -1, -1);
+
+                ShowTeleportTarget($"{treasureBox.name}_{treasureBox.ItemType}_{(treasureBox.hasOpened ? "Opened" :  "Closed")}", treasureBox.transform, positionOffset, Quaternion.identity);
+            }
         }
 
-        if (ImGui.CollapsingHeader("Custom"))
+        if (ImGui.CollapsingHeader("Custom", ImGuiTreeNodeFlags.DefaultOpen))
         {
 
         }
