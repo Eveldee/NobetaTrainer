@@ -102,5 +102,6 @@ public class Plugin : BasePlugin
         Harmony.CreateAndPatchAll(typeof(ItemPatches));
         Harmony.CreateAndPatchAll(typeof(ShortcutEditor));
         Harmony.CreateAndPatchAll(typeof(ConfigPatches));
+        Harmony.CreateAndPatchAll(typeof(TeleportationPatches));
     }
 }

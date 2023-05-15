@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using UnityEngine;
 
 namespace NobetaTrainer.Utils;
@@ -40,10 +41,15 @@ public static class UnityUtils
             .FirstOrDefault(gameObject => gameObject.name == name);
     }
 
-    public static T FindComponentByNameForced<T>(string name)
+    public static Il2CppArrayBase<TComponent> FindComponentsByTypeForced<TComponent>() where TComponent : Component
+    {
+        return Object.FindObjectsOfType<TComponent>(true);
+    }
+
+    public static TComponent FindComponentByNameForced<TComponent>(string name)
     {
         var gameObject = FindGameObjectByNameForced(name);
 
-        return gameObject is not null ? FindGameObjectByNameForced(name).GetComponent<T>() : default;
+        return gameObject is not null ? gameObject.GetComponent<TComponent>() : default;
     }
 }
