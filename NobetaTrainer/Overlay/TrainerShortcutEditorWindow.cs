@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using Humanizer;
 using Il2CppInterop.Runtime;
@@ -93,10 +94,12 @@ public partial class TrainerOverlay
                 var array = new Il2CppReferenceArray<ShortcutEditor.CommandAction>(editor.CommandActionsMap.Count);
                 editor.CommandActionsMap.Values.CopyTo(array, 0);
 
+                ImGui.BeginChild("Commands", new Vector2(0, 190f), true, ImGuiWindowFlags.AlwaysVerticalScrollbar | ImGuiWindowFlags.HorizontalScrollbar);
                 foreach (var commandAction in array)
                 {
                     DisplayCommandAction(commandAction);
                 }
+                ImGui.EndChild();
             }
 
             if (ImGui.CollapsingHeader("Create Shortcut", ImGuiTreeNodeFlags.DefaultOpen))
