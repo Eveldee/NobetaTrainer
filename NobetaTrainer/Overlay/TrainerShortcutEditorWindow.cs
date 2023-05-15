@@ -74,7 +74,7 @@ public partial class TrainerOverlay
             }
         }
 
-        ImGui.Begin("Shortcut Editor", ref _showShortcutEditorWindow);
+        ImGui.Begin("Shortcut Editor", ref OverlayState.ShowShortcutEditorWindow);
         ImGui.PushTextWrapPos();
 
         ImGui.TextColored(InfoColor, "Here you can assign shortcuts to NobetaTrainer commands");

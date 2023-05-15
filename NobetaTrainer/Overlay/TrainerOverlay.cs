@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -20,11 +19,6 @@ public partial class TrainerOverlay : ClickableTransparentOverlay.Overlay
     private bool _showImGuiMetricsWindow;
     private bool _showImGuiUserGuideWindow;
     private bool _showImGuiStackToolWindow;
-    public bool _showShortcutEditorWindow;
-    private bool _showTeleportationWindow;
-
-    private bool _showTrainerWindow = true;
-    private bool _showInspectWindow = true;
 
     private readonly string _assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
 
@@ -39,6 +33,11 @@ public partial class TrainerOverlay : ClickableTransparentOverlay.Overlay
 
     protected override void Render()
     {
+        if (!OverlayState.ShowOverlay)
+        {
+            return;
+        }
+
         if (_showImGuiAboutWindow)
         {
             ImGui.ShowAboutWindow();
@@ -68,17 +67,22 @@ public partial class TrainerOverlay : ClickableTransparentOverlay.Overlay
             ImGui.ShowUserGuide();
         }
 
-        if (_showTrainerWindow)
+        if (OverlayState.ShowOverlay)
         {
             ShowTrainerWindow();
         }
-        if (_showInspectWindow)
+        if (OverlayState.ShowInspectWindow)
         {
            ShowInspectWindow();
         }
-        if (_showShortcutEditorWindow)
+        if (OverlayState.ShowShortcutEditorWindow)
         {
             ShowShortcutEditorWindow();
+        }
+
+        if (OverlayState.ShowTeleportationWindow)
+        {
+            ShowTeleportationWindow();
         }
     }
 

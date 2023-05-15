@@ -4,6 +4,7 @@ using System.Linq;
 using EnumsNET;
 using Humanizer;
 using NobetaTrainer.Behaviours;
+using NobetaTrainer.Overlay;
 using NobetaTrainer.Patches;
 using static NobetaTrainer.Commands.CommandType;
 
@@ -13,6 +14,7 @@ public static class CommandUtils
 {
     public static readonly Dictionary<CommandType, ShortcutEditor.TrainerCommand> TrainerCommands = new()
     {
+        { ToggleOverlay, new ShortcutEditor.TrainerCommand(ToggleOverlay, () => Toggle(ref OverlayState.ShowOverlay)) },
         { ToggleNoDamage, new ShortcutEditor.TrainerCommand(ToggleNoDamage, () => Toggle(ref CharacterPatches.NoDamageEnabled)) },
         { ToggleInfiniteHP, new ShortcutEditor.TrainerCommand(ToggleInfiniteHP, () => Toggle(ref CharacterPatches.InfiniteHpEnabled)) },
         { ToggleInfiniteMana, new ShortcutEditor.TrainerCommand(ToggleInfiniteMana, () => Toggle(ref CharacterPatches.InfiniteManaEnabled)) },

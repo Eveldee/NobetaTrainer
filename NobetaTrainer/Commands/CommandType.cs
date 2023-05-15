@@ -3,17 +3,18 @@
 public enum CommandType
 {
     None = 0,
-    ToggleNoDamage,
-    ToggleInfiniteHP,
-    ToggleInfiniteMana,
-    ToggleInfiniteStamina,
-    ToggleNobetaMoveset,
-    GiveHPItem,
-    GiveMPItem,
-    GiveBuffItem,
-    SpawnOtherItem,
-    ToggleNoClip,
-    ToggleGlide,
-    ToggleOneTap,
-    ToggleBrightMode
+    ToggleNoDamage = 1,
+    ToggleInfiniteHP = 2,
+    ToggleInfiniteMana = 3,
+    ToggleInfiniteStamina = 4,
+    ToggleNobetaMoveset = 5,
+    GiveHPItem = 6,
+    GiveMPItem = 7,
+    GiveBuffItem = 8,
+    SpawnOtherItem = 9,
+    ToggleNoClip = 10,
+    ToggleGlide = 11,
+    ToggleOneTap = 12,
+    ToggleBrightMode = 13,
+    ToggleOverlay = 14
 }

@@ -8,6 +8,7 @@ using Il2CppInterop.Runtime.Injection;
 using Il2CppSystem.IO;
 using NobetaTrainer.Commands;
 using NobetaTrainer.Config;
+using NobetaTrainer.Overlay;
 using NobetaTrainer.Patches;
 using NobetaTrainer.Utils;
 using UnityEngine;
@@ -263,14 +264,14 @@ public class ShortcutEditor : MonoBehaviour
     private void Update()
     {
         // Disable action map if Shortcut Editor window is visible
-        if (_inputActionMap?.enabled == true && Plugin.TrainerOverlay._showShortcutEditorWindow)
+        if (_inputActionMap?.enabled == true && OverlayState.ShowShortcutEditorWindow)
         {
             _inputActionMap.Disable();
 
             return;
         }
 
-        if (_inputActionMap?.enabled == false && !Plugin.TrainerOverlay._showShortcutEditorWindow)
+        if (_inputActionMap?.enabled == false && !OverlayState.ShowShortcutEditorWindow)
         {
             _inputActionMap.Enable();
         }
