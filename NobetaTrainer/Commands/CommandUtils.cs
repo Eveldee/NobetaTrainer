@@ -17,6 +17,30 @@ public static class CommandUtils
         { ToggleInfiniteHP, new ShortcutEditor.TrainerCommand(ToggleInfiniteHP, () => Toggle(ref CharacterPatches.InfiniteHpEnabled)) },
         { ToggleInfiniteMana, new ShortcutEditor.TrainerCommand(ToggleInfiniteMana, () => Toggle(ref CharacterPatches.InfiniteManaEnabled)) },
         { ToggleInfiniteStamina, new ShortcutEditor.TrainerCommand(ToggleInfiniteStamina, () => Toggle(ref CharacterPatches.InfiniteStaminaEnabled)) },
+        { ToggleNobetaMoveset, new ShortcutEditor.TrainerCommand(ToggleNobetaMoveset, () =>
+            {
+                Toggle(ref AppearancePatches.UseNobetaMoveset);
+                AppearancePatches.ToggleNobetaSkin();
+            })
+        },
+        { GiveHPItem, new ShortcutEditor.TrainerCommand(GiveHPItem, ItemPatches.GiveHPItem) },
+        { GiveMPItem, new ShortcutEditor.TrainerCommand(GiveMPItem, ItemPatches.GiveMPItem) },
+        { GiveBuffItem, new ShortcutEditor.TrainerCommand(GiveBuffItem, ItemPatches.GiveBuffItem) },
+        { SpawnOtherItem, new ShortcutEditor.TrainerCommand(SpawnOtherItem, ItemPatches.SpawnOther) },
+        { ToggleNoClip, new ShortcutEditor.TrainerCommand(ToggleNoClip, () =>
+            {
+                Toggle(ref MovementPatches.NoClipEnabled);
+                MovementPatches.ToggleNoClip();
+            })
+        },
+        { ToggleGlide, new ShortcutEditor.TrainerCommand(ToggleGlide, () => Toggle(ref MovementPatches.GlideEnabled)) },
+        { ToggleOneTap, new ShortcutEditor.TrainerCommand(ToggleOneTap, () => Toggle(ref CharacterPatches.OneTapEnabled)) },
+        { ToggleBrightMode, new ShortcutEditor.TrainerCommand(ToggleBrightMode, () =>
+            {
+                Toggle(ref OtherPatches.BrightMode);
+                OtherPatches.UpdateBrightMode();
+            })
+        }
     };
     public static string[] TrainerCommandNames { get; } = Enum.GetValues<CommandType>().Skip(1).Select(type => type.Humanize(LetterCasing.Title)).ToArray();
 

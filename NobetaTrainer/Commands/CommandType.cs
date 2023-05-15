@@ -6,5 +6,14 @@ public enum CommandType
     ToggleNoDamage,
     ToggleInfiniteHP,
     ToggleInfiniteMana,
-    ToggleInfiniteStamina
+    ToggleInfiniteStamina,
+    ToggleNobetaMoveset,
+    GiveHPItem,
+    GiveMPItem,
+    GiveBuffItem,
+    SpawnOtherItem,
+    ToggleNoClip,
+    ToggleGlide,
+    ToggleOneTap,
+    ToggleBrightMode
 }
