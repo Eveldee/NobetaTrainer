@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using Il2CppInterop.Runtime;
 using NobetaTrainer.Behaviours;
+using NobetaTrainer.Config;
 using NobetaTrainer.Utils;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -22,6 +23,7 @@ public static class Singletons
     public static StageUIManager StageUi => Game.stageUI;
     public static UnityMainThreadDispatcher Dispatcher => UnityMainThreadDispatcher.Instance;
     public static ShortcutEditor ShortcutEditor { get; set; }
+    public static TeleportationManager TeleportationManager { get; set; }
 
     public static bool SaveLoaded => GameSave is not null;
 

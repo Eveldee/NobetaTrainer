@@ -23,11 +23,8 @@ public static class UnityUtils
 
     public static string Format(this Quaternion quaternion)
     {
-        return $"({quaternion.x:F3}, {quaternion.y:F3}, {quaternion.z:F3}), {quaternion.w:F3})";
+        return $"({quaternion.x:F3}, {quaternion.y:F3}, {quaternion.z:F3}, {quaternion.w:F3})";
     }
-
-    public static Color ToColor(this System.Numerics.Vector3 vector3) => new(vector3.X, vector3.Y, vector3.Z);
-    public static System.Numerics.Vector3 ToVector3(this Color color) => new(color.r, color.g, color.b);
 
     public static bool ToBool(this int value) => value switch
     {

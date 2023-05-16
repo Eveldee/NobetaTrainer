@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Numerics;
+using UnityEngine;
+using Vector4 = System.Numerics.Vector4;
 
 namespace NobetaTrainer.Utils;
 
@@ -52,4 +53,13 @@ public static class VectorUtils
 
         return gradient;
     }
+
+    public static Color ToColor(this System.Numerics.Vector3 vector3) => new(vector3.X, vector3.Y, vector3.Z);
+    public static System.Numerics.Vector3 ToVector3(this Color color) => new(color.r, color.g, color.b);
+
+    public static Vector3 ToUnity(this System.Numerics.Vector3 vector3) => new(vector3.X, vector3.Y, vector3.Z);
+    public static Quaternion ToUnity(this System.Numerics.Quaternion quaternion) => new(quaternion.X, quaternion.Y, quaternion.Z, quaternion.W);
+
+    public static System.Numerics.Vector3 ToNumerics(this Vector3 vector3) => new(vector3.x, vector3.y, vector3.z);
+    public static System.Numerics.Quaternion ToNumerics(this Quaternion quaternion) => new(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
 }

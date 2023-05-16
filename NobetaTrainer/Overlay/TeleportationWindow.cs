@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
+using BepInEx;
 using ImGuiNET;
+using NobetaTrainer.Config;
 using NobetaTrainer.Patches;
 using NobetaTrainer.Utils;
 using UnityEngine;
@@ -21,6 +24,22 @@ public partial class TrainerOverlay
             ImGui.TextColored(InfoColor, name);
             ImGui.SameLine();
             ImGui.TextColored(ValueColor, targetObject.position.Format());
+        }
+        void ShowTeleportPoint(TeleportationPoint teleportationPoint, int index)
+        {
+            if (ImGui.Button($"Teleport##{index}"))
+            {
+                Singletons.Dispatcher.Enqueue(() => TeleportationPatches.TeleportToPoint(teleportationPoint));
+            }
+            ImGui.SameLine();
+            if (ButtonColored(ErrorButtonColor, $"Delete##{index}"))
+            {
+                Singletons.TeleportationManager.RemovePoint(teleportationPoint);
+            }
+            ImGui.SameLine();
+            ImGui.TextColored(InfoColor, teleportationPoint.PointName);
+            ImGui.SameLine();
+            ImGui.TextColored(ValueColor, teleportationPoint.Position.Format());
         }
 
         ImGui.Begin("Teleportation", ref OverlayState.ShowTeleportationWindow);
@@ -61,7 +80,34 @@ public partial class TrainerOverlay
 
         if (ImGui.CollapsingHeader("Custom", ImGuiTreeNodeFlags.DefaultOpen))
         {
+            int index = 0;
+            foreach (var teleportationPoint in Singletons.TeleportationManager.TeleportationPoints.ToArray())
+            {
+                ShowTeleportPoint(teleportationPoint, index++);
+            }
+        }
 
+        if (ImGui.CollapsingHeader("Create", ImGuiTreeNodeFlags.DefaultOpen))
+        {
+            // Point builder
+            var transform = Singletons.WizardGirl.transform;
+
+            ShowValue("Position:", transform.position.Format());
+            ShowValue("Rotation:", transform.rotation.Format());
+
+            ImGui.NewLine();
+            ImGui.InputText("Name", ref TeleportationPatches.BuildingPointName, 40);
+            if (ImGui.Button("Create##Button") && !TeleportationPatches.BuildingPointName.IsNullOrWhiteSpace())
+            {
+                var areaCheck = SceneUtils.FindLastAreaCheck();
+
+                Singletons.TeleportationManager.AddPoint(new TeleportationPoint(
+                    TeleportationPatches.BuildingPointName,
+                    transform.position,
+                    transform.rotation,
+                    areaCheck.name
+                ));
+            }
         }
 
         ImGui.End();

@@ -10,6 +10,7 @@ using NobetaTrainer.Commands;
 using NobetaTrainer.Config;
 using NobetaTrainer.Overlay;
 using NobetaTrainer.Patches;
+using NobetaTrainer.Serialization;
 using NobetaTrainer.Utils;
 using UnityEngine;
 using UnityEngine.InputSystem;

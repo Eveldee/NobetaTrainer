@@ -63,6 +63,7 @@ public class Plugin : BasePlugin
         // Add required Components
         AddComponent<UnityMainThreadDispatcher>();
         Singletons.ShortcutEditor = AddComponent<ShortcutEditor>();
+        Singletons.TeleportationManager = new TeleportationManager();
 
         Log.LogMessage($"Plugin {MyPluginInfo.PLUGIN_GUID} successfully loaded!");
     }
