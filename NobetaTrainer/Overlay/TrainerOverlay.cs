@@ -27,6 +27,8 @@ public partial class TrainerOverlay : ClickableTransparentOverlay.Overlay
         VSync = true;
 
         IL2CPP.il2cpp_thread_attach(IL2CPP.il2cpp_domain_get());
+        NobetaProcessUtils.OverlayWindowHandle = NobetaProcessUtils.FindWindow(null, "Overlay");
+        NobetaProcessUtils.HideOverlayFromTaskbar();
 
         return Task.CompletedTask;
     }

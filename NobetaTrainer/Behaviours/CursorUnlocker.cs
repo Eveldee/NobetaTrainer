@@ -54,7 +54,6 @@ public class CursorUnlocker : MonoBehaviour
     {
         if (!_currentlySettingCursor)
         {
-            Plugin.Log.LogDebug(value);
             _lastLockMode = value;
 
             if (IsCursorUnlocked)
@@ -70,7 +69,6 @@ public class CursorUnlocker : MonoBehaviour
     {
         if (!_currentlySettingCursor)
         {
-            Plugin.Log.LogDebug(value);
             _lastVisibleState = value;
 
             if (IsCursorUnlocked)
