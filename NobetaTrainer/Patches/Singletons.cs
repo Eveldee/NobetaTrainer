@@ -22,6 +22,7 @@ public static class Singletons
     public static GameSettings GameSettings => Game.Config?.gameSettings;
     public static StageUIManager StageUi => Game.stageUI;
     public static UnityMainThreadDispatcher Dispatcher => UnityMainThreadDispatcher.Instance;
+    public static CursorUnlocker UnlockCursor { get; set; }
     public static ShortcutEditor ShortcutEditor { get; set; }
     public static TeleportationManager TeleportationManager { get; set; }
 

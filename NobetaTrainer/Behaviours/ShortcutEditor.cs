@@ -102,13 +102,18 @@ public class ShortcutEditor : MonoBehaviour
     public string CommandsSavePath { get; } = Path.Combine(Plugin.ConfigDirectory.FullName, "ShortcutCommands.json");
 
     public Il2CppSystem.Collections.Generic.Dictionary<Il2CppSystem.Guid, CommandAction> CommandActionsMap { get; private set; }
-    public CommandAction BuildingCommandAction { get; private set; }
     public int SelectedCommandIndex;
     public bool Initialized;
 
     private InputActionMap _inputActionMap;
+
+    public CommandAction BuildingCommandAction { get; private set; }
     public InputAction BuildingInputAction { get; private set; }
     public const string BuildingInputActionName = "ShortcutEditorBuilding";
+
+    public CommandAction CursorUnlockCommandAction;
+    private InputAction _cursorUnlockAction;
+    private const string _cursorUnlockActionName = "CursorUnlock";
 
     private InputAction _ctrlModifierAction;
     private InputAction _altModifierAction;
@@ -191,6 +196,10 @@ public class ShortcutEditor : MonoBehaviour
         BuildingInputAction = _inputActionMap.AddAction(BuildingInputActionName, InputActionType.Button);
         BuildingInputAction.AddBinding("<None>/None");
 
+        // Unlock cursor action
+        _cursorUnlockAction = _inputActionMap.AddAction(_cursorUnlockActionName, InputActionType.Button);
+        _cursorUnlockAction.AddBinding(CursorUnlocker.ControlPath);
+
         // Modifier Actions
         _ctrlModifierAction = _inputActionMap.AddAction(CtrlModifierActionName, InputActionType.Button);
         _ctrlModifierAction.AddBinding("<Keyboard>/ctrl");
@@ -244,6 +253,7 @@ public class ShortcutEditor : MonoBehaviour
             Plugin.Log.LogInfo("No shortcuts found, using empty shortcut map.");
         }
 
+        // CommandActions
         BuildingCommandAction = new CommandAction(new(CommandType.None, () => { }), BuildingInputAction)
         {
             NeedCtrlModifier = true,
@@ -252,6 +262,16 @@ public class ShortcutEditor : MonoBehaviour
             ActionId = BuildingInputAction.id,
             HumanReadablePath = InputControlPath.ToHumanReadableString(BuildingInputAction.bindings[0].effectivePath),
             ControlPath = BuildingInputAction.bindings[0].effectivePath
+        };
+
+        CursorUnlockCommandAction = new CommandAction(new(CommandType.UnlockCursor, () => CommandUtils.Toggle(ref CursorUnlocker.IsCursorUnlocked)), _cursorUnlockAction)
+        {
+            NeedCtrlModifier = false,
+            NeedAltModifier = false,
+            NeedShiftModifier = false,
+            ActionId = _cursorUnlockAction.id,
+            HumanReadablePath = InputControlPath.ToHumanReadableString(_cursorUnlockAction.bindings[0].effectivePath),
+            ControlPath = _cursorUnlockAction.bindings[0].effectivePath
         };
 
         // Enable all actions and bindings
@@ -275,6 +295,19 @@ public class ShortcutEditor : MonoBehaviour
         if (_inputActionMap?.enabled == false && !OverlayState.ShowShortcutEditorWindow)
         {
             _inputActionMap.Enable();
+        }
+
+        // Unlock cursor
+        if (_cursorUnlockAction?.triggered == true)
+        {
+            var modifiersValid = (!CursorUnlocker.NeedCtrlModifier || _ctrlModifierAction.inProgress)
+                                 && (!CursorUnlocker.NeedAltModifier || _altModifierAction.inProgress)
+                                 && (!CursorUnlocker.NeedShiftModifier || _shiftModifierAction.inProgress);
+
+            if (modifiersValid)
+            {
+                CursorUnlockCommandAction.TrainerCommand.Execute.Invoke();
+            }
         }
 
         // Check all actions

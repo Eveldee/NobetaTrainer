@@ -17,5 +17,6 @@ public enum CommandType
     ToggleOneTap = 12,
     ToggleBrightMode = 13,
     ToggleOverlay = 14,
-    TeleportToLastPoint = 15
+    TeleportToLastPoint = 15,
+    UnlockCursor = 16
 }

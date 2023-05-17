@@ -55,6 +55,11 @@ public partial class TrainerOverlay
             ShowValue("DeltaTime:", Time.deltaTime);
             ShowValue("Fixed DeltaTime:", Time.fixedDeltaTime);
             ShowValue("Maximum DeltaTime:", Time.maximumDeltaTime);
+            ShowValueExpression(Time.timeScale);
+
+            ImGui.SeparatorText("Cursor");
+            ShowValueExpression(Cursor.visible);
+            ShowValueExpression(Cursor.lockState);
         }
 
         if (ImGui.CollapsingHeader("PlayerStats"))

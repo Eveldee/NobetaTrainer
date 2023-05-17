@@ -33,6 +33,11 @@ public partial class TrainerOverlay
 
         void DisplayCommandAction(ShortcutEditor.CommandAction commandAction, bool deleteButton = true)
         {
+            DisplayCommandActionCustom(commandAction, ref commandAction.NeedCtrlModifier, ref commandAction.NeedAltModifier, ref commandAction.NeedShiftModifier, OnCompleteRebind, deleteButton);
+        }
+
+        void DisplayCommandActionCustom(ShortcutEditor.CommandAction commandAction, ref bool ctrlModifier, ref bool altModifier, ref bool shiftModifier, Action<InputActionRebindingExtensions.RebindingOperation> customAction, bool deleteButton = true)
+        {
             if (commandAction.TrainerCommand.CommandType != CommandType.None)
             {
                 ImGui.TextColored(ValueColor, commandAction.TrainerCommand.CommandType.Humanize(LetterCasing.Title));
@@ -48,18 +53,18 @@ public partial class TrainerOverlay
                     var rebind = commandAction.InputAction.PerformInteractiveRebinding()
                         .WithCancelingThrough("<Keyboard>/escape");
 
-                    rebind.OnComplete((Action<InputActionRebindingExtensions.RebindingOperation>) OnCompleteRebind);
+                    rebind.OnComplete(customAction);
 
                     rebind.Start();
                 });
             }
 
             ImGui.SameLine();
-            ImGui.Checkbox($"Ctrl##{commandAction.ActionId}", ref commandAction.NeedCtrlModifier);
+            ImGui.Checkbox($"Ctrl##{commandAction.ActionId}", ref ctrlModifier);
             ImGui.SameLine();
-            ImGui.Checkbox($"Alt##{commandAction.ActionId}", ref commandAction.NeedAltModifier);
+            ImGui.Checkbox($"Alt##{commandAction.ActionId}", ref altModifier);
             ImGui.SameLine();
-            ImGui.Checkbox($"Shift##{commandAction.ActionId}", ref commandAction.NeedShiftModifier);
+            ImGui.Checkbox($"Shift##{commandAction.ActionId}", ref shiftModifier);
 
             if (deleteButton)
             {
@@ -100,6 +105,22 @@ public partial class TrainerOverlay
                     DisplayCommandAction(commandAction);
                 }
                 ImGui.EndChild();
+            }
+
+            if (ImGui.CollapsingHeader("Unlock Cursor"))
+            {
+                DisplayCommandActionCustom(
+                    editor.CursorUnlockCommandAction,
+                    ref CursorUnlocker.NeedCtrlModifier,
+                    ref CursorUnlocker.NeedAltModifier,
+                    ref CursorUnlocker.NeedShiftModifier,
+                    operation =>
+                    {
+                        CursorUnlocker.ControlPath = operation.action.bindings[0].effectivePath;
+                        editor.CursorUnlockCommandAction.UpdatePathAndId();
+                        operation.Dispose();
+                    }, false
+                );
             }
 
             if (ImGui.CollapsingHeader("Create Shortcut", ImGuiTreeNodeFlags.DefaultOpen))

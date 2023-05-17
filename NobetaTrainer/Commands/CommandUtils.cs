@@ -47,7 +47,7 @@ public static class CommandUtils
     };
     public static string[] TrainerCommandNames { get; } = Enum.GetValues<CommandType>().Skip(1).Select(type => type.Humanize(LetterCasing.Title)).ToArray();
 
-    private static void Toggle(ref bool toggleValue)
+    public static void Toggle(ref bool toggleValue)
     {
         toggleValue = !toggleValue;
     }
