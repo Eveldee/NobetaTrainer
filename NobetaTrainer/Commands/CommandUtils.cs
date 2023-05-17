@@ -43,7 +43,7 @@ public static class CommandUtils
                 OtherPatches.UpdateBrightMode();
             })
         },
-        { TeleportLastPoint, new ShortcutEditor.TrainerCommand(TeleportLastPoint, () => TeleportationPatches.TeleportLastPoint()) }
+        { TeleportToLastPoint, new ShortcutEditor.TrainerCommand(TeleportToLastPoint, TeleportationPatches.TeleportLastPoint) }
     };
     public static string[] TrainerCommandNames { get; } = Enum.GetValues<CommandType>().Skip(1).Select(type => type.Humanize(LetterCasing.Title)).ToArray();
 

@@ -68,6 +68,7 @@ public static class TeleportationPatches
             transform.rotation = rotation * rotationOffset;
 
             Singletons.WizardGirl.GetCamera().ResetCameraTeleport();
+            Singletons.WizardGirl.GetCamera().CameraReset();
         }
     }
 
