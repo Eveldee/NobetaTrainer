@@ -54,7 +54,7 @@ This window shows a lot informations about the game and the engine used. All tho
 
 ### Teleportation
 
-![](2023-05-18-01-00-09.png)
+![](Screenshots/PreviewTeleportation.png)
 
 This window allows you to teleport to the level save points *(statues)* and treasure chests. In addition, you can create your **own teleportation** points in the "custom" section, those are saved permanently and can be reused after restarting the game.
 
