@@ -56,21 +56,21 @@ public class AutoConfigManager
 
         foreach (var sectionClass in sectionClasses)
         {
-            // Check that the class is static
-            if (sectionClass is not { IsSealed: true, IsAbstract: true})
-            {
-                throw new AutoConfigStaticException(sectionClass);
-            }
-
             // Get section name
             var sectionName = sectionClass.GetCustomAttribute<SectionAttribute>()!.SectionName;
 
             // Get all fields that have ConfigBindAttribute
             var targetFields = sectionClass.DeclaredFields
-                .Where(f => f.IsStatic && f.IsDefined(typeof(BindAttribute)));
+                .Where(field => field.IsDefined(typeof(BindAttribute)));
 
             foreach (var targetField in targetFields)
             {
+                // Check that field is static
+                if (!targetField.IsStatic)
+                {
+                    throw new AutoConfigStaticException(targetField);
+                }
+
                 // Get associate attribute
                 var bindAttribute = targetField.GetCustomAttribute<BindAttribute>()!;
 
