@@ -2,7 +2,23 @@
 
 ![Preview](Screenshots/PreviewAllWindows.png)
 
-> A **Little Witch Nobeta** tool to help train speedrunning and discovering how the game works
+> A **Little Witch Nobeta** tool to help train speedrunning and discovering how the mechanics game work
+
+# Documentation
+
+- [Installation](#installation)
+- [Features](#features)
+  - [Trainer](#trainer)
+  - [Inspector](#inspector)
+  - [Teleportation](#teleportation)
+  - [Timer](#timer)
+  - [Shortcuts](#shortcuts)
+  - [ImGUI tips](#imgui-tips)
+- [Bug report and help](#bug-report-and-help)
+- [Contributing](#contributing)
+- [Used libraries](#used-libraries)
+- [Licence](#licence)
+
 
 ## Installation
 
