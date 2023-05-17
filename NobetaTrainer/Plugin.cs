@@ -86,6 +86,9 @@ public class Plugin : BasePlugin
         // Save shortcuts
         Singletons.ShortcutEditor.SaveShortcuts();
 
+        // Save Teleportation points
+        Singletons.TeleportationManager.SavePoints();
+
         // Save BepInEx config
         AutoConfigManager.FetchValuesFromFields();
         ConfigFile.Save();

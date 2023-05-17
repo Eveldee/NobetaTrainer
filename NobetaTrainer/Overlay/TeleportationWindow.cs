@@ -18,7 +18,7 @@ public partial class TrainerOverlay
         {
             if (ImGui.Button($"Teleport##{targetObject.name}"))
             {
-                Singletons.Dispatcher.Enqueue(() => TeleportationPatches.TeleportToTarget(targetObject, teleportationOffset, rotationOffset));
+                TeleportationPatches.TeleportToTarget(targetObject, teleportationOffset, rotationOffset);
             }
             ImGui.SameLine();
             ImGui.TextColored(InfoColor, name);
@@ -29,7 +29,7 @@ public partial class TrainerOverlay
         {
             if (ImGui.Button($"Teleport##{index}"))
             {
-                Singletons.Dispatcher.Enqueue(() => TeleportationPatches.TeleportToPoint(teleportationPoint));
+                TeleportationPatches.TeleportToPoint(teleportationPoint);
             }
             ImGui.SameLine();
             if (ButtonColored(ErrorButtonColor, $"Delete##{index}"))
