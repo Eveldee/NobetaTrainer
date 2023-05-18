@@ -3,7 +3,6 @@ using EnumsNET;
 using HarmonyLib;
 using NobetaTrainer.Config;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace NobetaTrainer.Patches;
 
@@ -33,6 +32,12 @@ public static class AppearancePatches
 
         Singletons.Dispatcher.Enqueue(() =>
         {
+            #if V1031
+            wizardGirlManage.UpdateSkin(gameSkin);
+
+            // Also update skin in GameCollection for reload
+            Game.Collection.UpdateSkin(gameSkin);
+            #else
             wizardGirlManage.PreloadSkin(gameSkin);
             var assetKey = wizardGirlManage.GetSkinAssetKey(gameSkin);
 
@@ -43,6 +48,7 @@ public static class AppearancePatches
 
             // Also update skin in GameCollection for reload
             Game.Collection.UpdateSkin(gameSkin);
+            #endif
         });
     }
 

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
+using Il2CppInterop.Runtime;
 using NobetaTrainer.Config;
 using NobetaTrainer.Utils;
 using UnityEngine;
@@ -27,7 +28,11 @@ public static class TeleportationPatches
             TeleportTo(targetTransform.position, targetTransform.rotation, teleportationOffset, rotationOffset);
 
             // Find Scene where this object is defined
+            #if V1031
+            var scene = targetTransform.gameObject.GetComponentInParent(Il2CppType.Of<SceneIsHide>()).gameObject;
+            #else
             var scene = targetTransform.gameObject.GetComponentInParent<SceneIsHide>().gameObject;
+            #endif
 
             // Find first AreaCheck that loads this Scene
             foreach (var areaCheck in AreaChecks)

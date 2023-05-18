@@ -146,7 +146,9 @@ public partial class TrainerOverlay
 
                     ImGui.SeparatorText("Status");
                     ShowValueExpression(wizardGirl.GetPlayerStatus());
+                    #if !V1031
                     ShowValueExpression(wizardGirl.currentActiveSkin);
+                    #endif
                     ShowValueExpression(wizardGirl.GetIsDead());
                     ShowValue("Stealth:", wizardGirl.g_bStealth);
                     ShowValueExpression(wizardGirl.GetRadius());
@@ -257,7 +259,9 @@ public partial class TrainerOverlay
                     ShowValueExpression(magic.g_LightningDodgeExp);
 
                     ImGui.SeparatorText("Sky Dodge");
+                    #if !V1031
                     ShowValueExpression(magic.g_SkyDodge);
+                    #endif
                     ShowValueExpression(magic.g_SkyJumpCD);
                     ShowValueExpression(magic.g_SkyJumpCDTime);
                     ShowValueExpression(magic.g_SkyJumpExp);

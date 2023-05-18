@@ -12,6 +12,10 @@ public partial class TrainerOverlay
 
         ImGui.TextColored(TitleColor, $"Welcome to NobetaTrainer v{_assemblyVersion}");
 
+        #if V1031
+        ImGui.TextColored(ValueColor, "Using v1.0.3.1 compatibility fix");
+        #endif
+
         // Window options
         if (ImGui.CollapsingHeader("Windows", ImGuiTreeNodeFlags.DefaultOpen))
         {
