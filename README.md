@@ -14,7 +14,7 @@
   - [Teleportation](#teleportation)
   - [Timer](#timer)
   - [Shortcuts](#shortcuts)
-  - [ImGUI tips](#imgui-tips)
+  - [ImGui tips](#imgui-tips)
 - [Bug report and help](#bug-report-and-help)
 - [Contributing](#contributing)
 - [Used libraries](#used-libraries)
@@ -72,7 +72,7 @@ This is the main Trainer window, from here you can open the other windows *(Insp
 
 This window shows a lot informations about the game and the engine used. All those values are taken directly from the game code and updated in **real time**.
 
-> *From here you can also get access to internal ImGUI windows for debug purposes*
+> *From here you can also get access to internal ImGui windows for debug purposes*
 
 ### Teleportation
 
@@ -99,7 +99,7 @@ This is also where you can change the `Unlock Cursor` keybinding and add a `Togg
 > 
 > *Using a gamepad to execute commands should work too but it has not been tested*
 
-### ImGUI tips
+### ImGui tips
 
 This Trainer use [ImGui](https://github.com/ocornut/imgui) for the graphic part, here are some handy shortcuts/tips that can be used:
 - To resize a window, hold left click on the little blue triangle in bottom-right corner of any window
