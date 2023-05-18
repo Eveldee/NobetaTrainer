@@ -4,6 +4,10 @@ using HarmonyLib;
 using NobetaTrainer.Config;
 using UnityEngine;
 
+#if !V1031
+using UnityEngine.AddressableAssets;
+#endif
+
 namespace NobetaTrainer.Patches;
 
 [Section("Character.Appearance")]

@@ -10,7 +10,7 @@ public partial class TrainerOverlay
     {
         ImGui.Begin("NobetaTrainer", ref OverlayState.ShowOverlay);
 
-        ImGui.TextColored(TitleColor, $"Welcome to NobetaTrainer v{_assemblyVersion}");
+        ImGui.TextColored(TitleColor, $"Welcome to NobetaTrainer v{MyPluginInfo.PLUGIN_VERSION}");
 
         #if V1031
         ImGui.TextColored(ValueColor, "Using v1.0.3.1 compatibility fix");
