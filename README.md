@@ -26,7 +26,9 @@ This plugin modifies the game using [BepInEx](https://github.com/BepInEx/BepInEx
 - Find the installation directory of the game *(Usually in `steamapps/common`, you can find this from the game properties in steam -> local files -> browse...)*
 - **/!\ Do a copy of your game installation and rename it `Little Witch Nobeta - Trainer`** *(The changes are reversible but a pain to do, furthermore it's easier to have two versions of the game, one with the trainer and the base one)*
 - You should know have at least two folders in the `steamapps/common` directory: `Little Witch Nobeta` *(base game)* and `Little Witch Nobeta - Trainer` *(will be modded with the Trainer)*
-- Download latest version of the Trainer: [`NobetaTrainer.zip`](/../../releases/latest/download/NobetaTrainer.zip)
+- Download corresponding version of the Trainer
+  - For game version >= 1.0.5: [`NobetaTrainer.zip`](/../../releases/latest/download/NobetaTrainer.zip)
+  - For game version 1.0.3.1 and 1.0.3.3: [`NobetaTrainer_v1.0.3.1.zip`](/../../releases/latest/download/NobetaTrainer_v1.0.3.1.zip)
 - Copy all the files from the archive inside the game directory *(Where there is `LittleWitchNobeta.exe`)*
 - Now you should see a file named `imgui.ini` just next to `LittleWitchNobeta.exe`
 - Create a shortcut to `LittleWitchNobeta.exe`, name it as you want, run the game and enjoy!
