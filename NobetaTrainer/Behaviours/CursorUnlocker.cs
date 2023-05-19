@@ -28,6 +28,9 @@ public class CursorUnlocker : MonoBehaviour
 
         _lastLockMode = Cursor.lockState;
         _lastVisibleState = Cursor.visible;
+
+        // Fix shortcuts and display in fullscreen mode and force borderless
+        Display.displays[0].Activate();
     }
 
     private void Update()

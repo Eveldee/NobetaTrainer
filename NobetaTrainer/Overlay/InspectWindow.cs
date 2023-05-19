@@ -60,6 +60,16 @@ public partial class TrainerOverlay
             ImGui.SeparatorText("Cursor");
             ShowValueExpression(Cursor.visible);
             ShowValueExpression(Cursor.lockState);
+
+            ImGui.SeparatorText("Screen");
+            ShowValueExpression(Screen.fullScreen);
+            ShowValueExpression(Screen.fullScreenMode);
+            ShowValueExpression(Screen.height);
+            ShowValueExpression(Screen.width);
+            ShowValueExpression(Screen.brightness);
+            ShowValueExpression(Screen.dpi);
+            ShowValueExpression(Screen.orientation);
+            ShowValueExpression(Screen.currentResolution);
         }
 
         if (ImGui.CollapsingHeader("PlayerStats"))

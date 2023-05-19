@@ -20,8 +20,6 @@ public partial class TrainerOverlay : ClickableTransparentOverlay.Overlay
     private bool _showImGuiUserGuideWindow;
     private bool _showImGuiStackToolWindow;
 
-    private readonly string _assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
-
     protected override Task PostInitialized()
     {
         VSync = true;
