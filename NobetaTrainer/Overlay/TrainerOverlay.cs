@@ -74,25 +74,25 @@ public partial class TrainerOverlay : ClickableTransparentOverlay.Overlay
             ImGui.ShowUserGuide();
         }
 
-        if (OverlayState.ShowTimersConfigWindow)
+        if (OverlayState.ShowOverlay)
         {
-            ShowTimersConfigWindow();
-        }
-        if (OverlayState.ShowShortcutEditorWindow)
-        {
-            ShowShortcutEditorWindow();
-        }
-        if (OverlayState.ShowTeleportationWindow)
-        {
-            ShowTeleportationWindow();
+            ShowTrainerWindow();
         }
         if (OverlayState.ShowInspectWindow)
         {
            ShowInspectWindow();
         }
-        if (OverlayState.ShowOverlay)
+        if (OverlayState.ShowTeleportationWindow)
         {
-            ShowTrainerWindow();
+            ShowTeleportationWindow();
+        }
+        if (OverlayState.ShowShortcutEditorWindow)
+        {
+            ShowShortcutEditorWindow();
+        }
+        if (OverlayState.ShowTimersConfigWindow)
+        {
+            ShowTimersConfigWindow();
         }
     }
 

@@ -58,6 +58,7 @@ public class Timers : MonoBehaviour
 
     public void Resume()
     {
+        _realTimeTimer.Start();
         _lastLoadTimer.Start();
         _lastSaveTimer.Start();
         _lastTeleportTimer.Start();
@@ -78,6 +79,14 @@ public class Timers : MonoBehaviour
 
     public void ResetTeleportTimer()
     {
+        _lastTeleportTimer.Reset();
+    }
+
+    public void ResetTimers()
+    {
+        _realTimeTimer.Reset();
+        _lastLoadTimer.Reset();
+        _lastSaveTimer.Reset();
         _lastTeleportTimer.Reset();
     }
 }
