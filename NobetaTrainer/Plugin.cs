@@ -64,6 +64,7 @@ public class Plugin : BasePlugin
         AddComponent<UnityMainThreadDispatcher>();
         Singletons.UnlockCursor = AddComponent<CursorUnlocker>();
         Singletons.ShortcutEditor = AddComponent<ShortcutEditor>();
+        Singletons.Timers = AddComponent<Timers>();
         Singletons.TeleportationManager = new TeleportationManager();
 
         Log.LogMessage($"Plugin {MyPluginInfo.PLUGIN_GUID} successfully loaded!");
@@ -109,5 +110,6 @@ public class Plugin : BasePlugin
         Harmony.CreateAndPatchAll(typeof(ConfigPatches));
         Harmony.CreateAndPatchAll(typeof(TeleportationPatches));
         Harmony.CreateAndPatchAll(typeof(CursorUnlocker));
+        Harmony.CreateAndPatchAll(typeof(TimersPatches));
     }
 }

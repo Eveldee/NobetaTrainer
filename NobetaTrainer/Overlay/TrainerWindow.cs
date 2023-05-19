@@ -19,9 +19,11 @@ public partial class TrainerOverlay
         // Window options
         if (ImGui.CollapsingHeader("Windows", ImGuiTreeNodeFlags.DefaultOpen))
         {
-            ImGui.Checkbox("Inspector", ref OverlayState.ShowInspectWindow);
+            ImGui.Checkbox("Inspector    ", ref OverlayState.ShowInspectWindow);
             ImGui.SameLine();
             ImGui.Checkbox("Teleportation", ref OverlayState.ShowTeleportationWindow);
+
+            ImGui.Checkbox("Timers Config", ref OverlayState.ShowTimersConfigWindow);
             ImGui.SameLine();
             ImGui.Checkbox("Shortcut Editor", ref OverlayState.ShowShortcutEditorWindow);
         }

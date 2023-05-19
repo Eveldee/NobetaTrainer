@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Humanizer;
 using Il2CppInterop.Runtime;
 using ImGuiNET;
+using NobetaTrainer.Behaviours;
 using NobetaTrainer.Utils;
 using Vector4 = System.Numerics.Vector4;
 
@@ -33,6 +34,12 @@ public partial class TrainerOverlay : ClickableTransparentOverlay.Overlay
 
     protected override void Render()
     {
+        // Timers are always visible when activated, even if overlay is hidden
+        if (Timers.ShowTimers)
+        {
+            ShowTimersWindow();
+        }
+
         if (!OverlayState.ShowOverlay)
         {
             return;
@@ -67,22 +74,25 @@ public partial class TrainerOverlay : ClickableTransparentOverlay.Overlay
             ImGui.ShowUserGuide();
         }
 
-        if (OverlayState.ShowOverlay)
+        if (OverlayState.ShowTimersConfigWindow)
         {
-            ShowTrainerWindow();
-        }
-        if (OverlayState.ShowInspectWindow)
-        {
-           ShowInspectWindow();
+            ShowTimersConfigWindow();
         }
         if (OverlayState.ShowShortcutEditorWindow)
         {
             ShowShortcutEditorWindow();
         }
-
         if (OverlayState.ShowTeleportationWindow)
         {
             ShowTeleportationWindow();
+        }
+        if (OverlayState.ShowInspectWindow)
+        {
+           ShowInspectWindow();
+        }
+        if (OverlayState.ShowOverlay)
+        {
+            ShowTrainerWindow();
         }
     }
 

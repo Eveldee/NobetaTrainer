@@ -2,20 +2,20 @@
 using System.Globalization;
 using System.Numerics;
 
-namespace NobetaTrainer.Config;
+namespace NobetaTrainer.Config.BindConverters;
 
-public class Vector3BindConverter : IBindConverter
+public class Vector4BindConverter : IBindConverter
 {
     private static string GroupSeparator => NumberFormatInfo.CurrentInfo.NumberGroupSeparator;
 
     public string Serialize(object value)
     {
-        if (value is not Vector3 vector3)
+        if (value is not Vector4 vector4)
         {
             throw new ConvertUnsupportedTypeException(this, value.GetType());
         }
 
-        return vector3.ToString();
+        return vector4.ToString();
     }
 
     public object Deserialize(string text)
@@ -25,7 +25,6 @@ public class Vector3BindConverter : IBindConverter
 
         var vector = span[1..^1];
         var nextSeparatorIndex = vector.IndexOf(GroupSeparator);
-
         var x = float.Parse(vector[..nextSeparatorIndex]);
 
         vector = vector[(nextSeparatorIndex + 1)..];
@@ -33,8 +32,12 @@ public class Vector3BindConverter : IBindConverter
         var y = float.Parse(vector[..nextSeparatorIndex]);
 
         vector = vector[(nextSeparatorIndex + 1)..];
-        var z = float.Parse(vector);
+        nextSeparatorIndex = vector.IndexOf(GroupSeparator);
+        var z = float.Parse(vector[..nextSeparatorIndex]);
 
-        return new Vector3(x, y, z);
+        vector = vector[(nextSeparatorIndex + 1)..];
+        var w = float.Parse(vector);
+
+        return new Vector4(x, y, z, w);
     }
 }

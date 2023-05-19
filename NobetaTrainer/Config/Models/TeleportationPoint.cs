@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using UnityEngine;
 
-namespace NobetaTrainer.Config;
+namespace NobetaTrainer.Config.Models;
 
 public class TeleportationPoint
 {

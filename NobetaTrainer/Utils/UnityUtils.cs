@@ -33,6 +33,12 @@ public static class UnityUtils
         _ => true
     };
 
+    public static int ToInt(this bool value) => value switch
+    {
+        false => 0,
+        _ => 1
+    };
+
     public static GameObject FindGameObjectByNameForced(string name)
     {
         #if V1031

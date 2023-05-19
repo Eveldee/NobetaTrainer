@@ -4,6 +4,7 @@ using System.Linq;
 using BepInEx;
 using ImGuiNET;
 using NobetaTrainer.Config;
+using NobetaTrainer.Config.Models;
 using NobetaTrainer.Patches;
 using NobetaTrainer.Utils;
 using UnityEngine;

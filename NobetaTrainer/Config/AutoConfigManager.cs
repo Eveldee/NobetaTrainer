@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using BepInEx.Configuration;
+using NobetaTrainer.Config.BindConverters;
 
 namespace NobetaTrainer.Config;
 
@@ -38,7 +39,9 @@ public class AutoConfigManager
 
     private readonly Dictionary<Type, IBindConverter> _converters = new()
     {
-        { typeof(Vector3), new Vector3BindConverter() }
+        { typeof(Vector2), new Vector2BindConverter() },
+        { typeof(Vector3), new Vector3BindConverter() },
+        { typeof(Vector4), new Vector4BindConverter() }
     };
 
     public AutoConfigManager(ConfigFile configFile)

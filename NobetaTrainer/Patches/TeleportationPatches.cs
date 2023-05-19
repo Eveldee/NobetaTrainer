@@ -5,6 +5,7 @@ using System.Linq;
 using HarmonyLib;
 using Il2CppInterop.Runtime;
 using NobetaTrainer.Config;
+using NobetaTrainer.Config.Models;
 using NobetaTrainer.Utils;
 using UnityEngine;
 
@@ -84,6 +85,8 @@ public static class TeleportationPatches
             transform.position = position + teleportationOffset;
             transform.rotation = rotation * rotationOffset;
         }
+
+        Singletons.Timers.ResetTeleportTimer();
     }
 
     public static void ResetCamera()

@@ -24,6 +24,7 @@ public static class Singletons
     public static UnityMainThreadDispatcher Dispatcher => UnityMainThreadDispatcher.Instance;
     public static CursorUnlocker UnlockCursor { get; set; }
     public static ShortcutEditor ShortcutEditor { get; set; }
+    public static Timers Timers { get; set; }
     public static TeleportationManager TeleportationManager { get; set; }
 
     public static bool SaveLoaded => GameSave is not null;
