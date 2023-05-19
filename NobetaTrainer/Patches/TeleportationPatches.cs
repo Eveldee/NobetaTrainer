@@ -23,16 +23,18 @@ public static class TeleportationPatches
 
     public static void TeleportToTarget(Transform targetTransform, Vector3 teleportationOffset, Quaternion rotationOffset)
     {
-        Singletons.Dispatcher.Enqueue(() =>
+        IEnumerator Task()
         {
             TeleportTo(targetTransform.position, targetTransform.rotation, teleportationOffset, rotationOffset);
 
             // Find Scene where this object is defined
-            #if V1031
+#if V1031
             var scene = targetTransform.gameObject.GetComponentInParent(Il2CppType.Of<SceneIsHide>()).gameObject;
-            #else
+#else
             var scene = targetTransform.gameObject.GetComponentInParent<SceneIsHide>().gameObject;
-            #endif
+#endif
+
+            yield return new WaitForEndOfFrame();
 
             // Find first AreaCheck that loads this Scene
             foreach (var areaCheck in AreaChecks)
@@ -44,7 +46,11 @@ public static class TeleportationPatches
                     break;
                 }
             }
-        });
+
+            ResetCamera();
+        }
+
+        Singletons.Dispatcher.Enqueue(Task());
 
         // Save for command use
         LastTeleportationAction = () => TeleportToTarget(targetTransform, teleportationOffset, rotationOffset);
@@ -52,14 +58,20 @@ public static class TeleportationPatches
 
     public static void TeleportToPoint(TeleportationPoint teleportationPoint)
     {
-        Singletons.Dispatcher.Enqueue(() =>
+        IEnumerator Task()
         {
             TeleportTo(teleportationPoint.Position, teleportationPoint.Rotation, Vector3.zero, Quaternion.identity);
+
+            yield return new WaitForEndOfFrame();
 
             // Find AreaCheck with specified name and load associated areas
             var areaCheck = UnityUtils.FindComponentByNameForced<AreaCheck>(teleportationPoint.AreaCheckName);
             areaCheck.OpenEvent();
-        });
+
+            ResetCamera();
+        }
+
+        Singletons.Dispatcher.Enqueue(Task());
 
         // Save for command use
         LastTeleportationAction = () => TeleportToPoint(teleportationPoint);
@@ -71,10 +83,13 @@ public static class TeleportationPatches
         {
             transform.position = position + teleportationOffset;
             transform.rotation = rotation * rotationOffset;
-
-            Singletons.WizardGirl.GetCamera().ResetCameraTeleport();
-            Singletons.WizardGirl.GetCamera().CameraReset();
         }
+    }
+
+    public static void ResetCamera()
+    {
+        Singletons.WizardGirl.GetCamera().ResetCameraTeleport();
+        Singletons.WizardGirl.GetCamera().CameraReset();
     }
 
     public static void TeleportLastPoint()
