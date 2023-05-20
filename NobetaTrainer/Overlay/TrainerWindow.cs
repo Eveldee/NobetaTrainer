@@ -184,6 +184,19 @@ public partial class TrainerOverlay
             HelpMarker("Kill all enemies in one hit, effectively deals just a stupid amount of damage");
         }
 
+        // Colliders options
+        if (ImGui.CollapsingHeader("Colliders"))
+        {
+            ImGui.SeparatorText("Lines");
+
+            if (ImGui.Checkbox("Draw Lines", ref CollidersRenderPatches.DrawLines))
+            {
+                CollidersRenderPatches.UpdateDrawLines();
+            }
+
+            ImGui.SeparatorText("Surfaces");
+        }
+
         // Other options
         if (ImGui.CollapsingHeader("Others"))
         {

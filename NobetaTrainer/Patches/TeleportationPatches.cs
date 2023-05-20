@@ -122,5 +122,7 @@ public static class TeleportationPatches
         IsGameScene = false;
 
         SavePoints = null;
+        TreasureBoxes = null;
+        AreaChecks = null;
     }
 }

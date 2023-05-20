@@ -111,5 +111,6 @@ public class Plugin : BasePlugin
         Harmony.CreateAndPatchAll(typeof(TeleportationPatches));
         Harmony.CreateAndPatchAll(typeof(CursorUnlocker));
         Harmony.CreateAndPatchAll(typeof(TimersPatches));
+        Harmony.CreateAndPatchAll(typeof(CollidersRenderPatches));
     }
 }
