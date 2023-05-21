@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using NobetaTrainer.Config.Models;
 using NobetaTrainer.Prefabs;
 using NobetaTrainer.Utils;
 using UnityEngine;
-using Vector4 = System.Numerics.Vector4;
+using Object = UnityEngine.Object;
+using Type = Il2CppSystem.Type;
 
 namespace NobetaTrainer.Patches;
 
@@ -13,8 +16,10 @@ public static class CollidersRenderPatches
 {
     public static bool ShowColliders;
     public static GameObject RenderersContainer;
+    public static IGrouping<string, SceneEvent>[] CollidingSceneEvents;
 
     private static readonly List<BoxColliderRenderer> _boxColliderRenderers = new();
+    private static Il2CppArrayBase<SceneEvent> _sceneEvents;
 
     public static void ToggleShowColliders()
     {
@@ -68,7 +73,9 @@ public static class CollidersRenderPatches
                 AddRenderer(loadScript.transform, loadScript.g_BC, ColliderType.LoadScript);
             }
         }
-        foreach (var sceneEvent in UnityUtils.FindComponentsByTypeForced<SceneEvent>())
+
+        _sceneEvents = UnityUtils.FindComponentsByTypeForced<SceneEvent>();
+        foreach (var sceneEvent in _sceneEvents)
         {
             if (sceneEvent is AreaCheck or MagicWall or LoadScript)
             {
@@ -100,11 +107,26 @@ public static class CollidersRenderPatches
     private static void EnterLoaderScenePostfix()
     {
         Object.Destroy(RenderersContainer);
-        // foreach (var colliderRenderer in _boxColliderRenderers)
-        // {
-        //     colliderRenderer.Destroy();
-        // }
 
         _boxColliderRenderers.Clear();
+        _sceneEvents = null;
+        CollidingSceneEvents = null;
+    }
+
+    [HarmonyPatch(typeof(WizardGirlManage), nameof(WizardGirlManage.Update))]
+    [HarmonyPrefix]
+    private static void WizardGirlManageUpdatePostfix(WizardGirlManage __instance)
+    {
+        if (_sceneEvents == null)
+        {
+            return;
+        }
+
+        // Get all scene events that Nobeta is colliding with
+        var nobetaPosition = __instance.g_PlayerCenter.position;
+
+        CollidingSceneEvents = _sceneEvents
+            .Where(sceneEvent => sceneEvent.g_BC != null && sceneEvent.g_BC.ContainsBox(nobetaPosition))
+            .GroupBy(sceneEvent => sceneEvent.GetIl2CppType().Name).ToArray();
     }
 }

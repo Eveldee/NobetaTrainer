@@ -1,4 +1,6 @@
-﻿using Humanizer;
+﻿using System.Linq;
+using System.Numerics;
+using Humanizer;
 using ImGuiNET;
 using NobetaTrainer.Patches;
 using NobetaTrainer.Utils;
@@ -194,6 +196,38 @@ public partial class TrainerOverlay
             {
                 CollidersRenderPatches.ToggleShowColliders();
             }
+
+            ImGui.SeparatorText($"Colliding Scene Events ({CollidersRenderPatches.CollidingSceneEvents?.Sum(group => group.Count()) ?? 0})");
+            ImGui.PushStyleColor(ImGuiCol.Text, InfoColor);
+            if (ImGui.BeginChild("Colliding Scene Events#Child", new Vector2(0, 200), true, ImGuiWindowFlags.AlwaysVerticalScrollbar))
+            {
+                if (CollidersRenderPatches.CollidingSceneEvents is {  } collidingSceneEvents)
+                {
+                    foreach (var collidingSceneEventGroup in collidingSceneEvents)
+                    {
+                        if (ImGui.TreeNodeEx($"{collidingSceneEventGroup.Key}##{collidingSceneEventGroup.Key}", ImGuiTreeNodeFlags.DefaultOpen))
+                        {
+                            foreach (var sceneEvent in collidingSceneEventGroup)
+                            {
+                                ImGui.TextColored(ValueColor, $"{sceneEvent.name}");
+                                if (sceneEvent.g_bOpenEvent)
+                                {
+                                    ImGui.SameLine();
+                                    ImGui.TextColored(WarningColor, "(Open)");
+                                }
+                                if (sceneEvent.g_bReleaseEvent)
+                                {
+                                    ImGui.SameLine();
+                                    ImGui.TextColored(WarningColor, "(Release)");
+                                }
+                            }
+                            ImGui.TreePop();
+                        }
+                    }
+                }
+            }
+            ImGui.EndChild();
+            ImGui.PopStyleColor(1);
 
             ImGui.SeparatorText("Styles");
 
