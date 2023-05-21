@@ -1,0 +1,122 @@
+{
+  "AreaCheck": {
+    "Enable": true,
+    "DrawLines": true,
+    "DrawSurfaces": true,
+    "LineWidth": 0.05,
+    "LineStartColor": {
+      "X": 0.44117594,
+      "Y": 0,
+      "Z": 1,
+      "W": 1
+    },
+    "LineEndColor": {
+      "X": 1,
+      "Y": 0,
+      "Z": 0.5882354,
+      "W": 1
+    },
+    "SurfaceColor": {
+      "X": 1,
+      "Y": 0,
+      "Z": 0.76470613,
+      "W": 0.078431375
+    }
+  },
+  "MagicWall": {
+    "Enable": true,
+    "DrawLines": true,
+    "DrawSurfaces": true,
+    "LineWidth": 0.05,
+    "LineStartColor": {
+      "X": 1,
+      "Y": 0.32352936,
+      "Z": 0,
+      "W": 1
+    },
+    "LineEndColor": {
+      "X": 1,
+      "Y": 0.9411765,
+      "Z": 0,
+      "W": 1
+    },
+    "SurfaceColor": {
+      "X": 0.9882353,
+      "Y": 0.84313726,
+      "Z": 0.011764706,
+      "W": 0.078431375
+    }
+  },
+  "LoadScript": {
+    "Enable": true,
+    "DrawLines": true,
+    "DrawSurfaces": true,
+    "LineWidth": 0.05,
+    "LineStartColor": {
+      "X": 0,
+      "Y": 1,
+      "Z": 0.14705873,
+      "W": 1
+    },
+    "LineEndColor": {
+      "X": 0.7647059,
+      "Y": 1,
+      "Z": 0,
+      "W": 1
+    },
+    "SurfaceColor": {
+      "X": 0.15686275,
+      "Y": 0.9882353,
+      "Z": 0.011764706,
+      "W": 0.078431375
+    }
+  },
+  "SceneEvent": {
+    "Enable": true,
+    "DrawLines": true,
+    "DrawSurfaces": true,
+    "LineWidth": 0.05,
+    "LineStartColor": {
+      "X": 0,
+      "Y": 0.7647059,
+      "Z": 1,
+      "W": 0.19607843
+    },
+    "LineEndColor": {
+      "X": 0.11764717,
+      "Y": 0,
+      "Z": 1,
+      "W": 0.19607843
+    },
+    "SurfaceColor": {
+      "X": 0.011764706,
+      "Y": 0.6431373,
+      "Z": 0.9882353,
+      "W": 0.039215688
+    }
+  },
+  "Other": {
+    "Enable": true,
+    "DrawLines": true,
+    "DrawSurfaces": false,
+    "LineWidth": 0.020000007,
+    "LineStartColor": {
+      "X": 1,
+      "Y": 0,
+      "Z": 0,
+      "W": 1
+    },
+    "LineEndColor": {
+      "X": 1,
+      "Y": 1,
+      "Z": 1,
+      "W": 1
+    },
+    "SurfaceColor": {
+      "X": 1,
+      "Y": 0,
+      "Z": 0,
+      "W": 0.039215688
+    }
+  }
+}

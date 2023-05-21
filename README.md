@@ -12,7 +12,8 @@
   - [Trainer](#trainer)
   - [Inspector](#inspector)
   - [Teleportation](#teleportation)
-  - [Timer](#timer)
+  - [Timers](#timers)
+  - [Colliders Renderer](#colliders-renderer)
   - [Shortcuts](#shortcuts)
   - [ImGui tips](#imgui-tips)
 - [Bug report and help](#bug-report-and-help)
@@ -84,9 +85,25 @@ This window allows you to teleport to the level save points *(statues)* and trea
 > 
 > Teleportation points also takes rotation into account, you can see a preview of the position and rotation that will be saved when creating a custom teleportation point
 
-### Timer
+### Timers
 
-> Not implemented as of now
+![](Screenshots/PreviewTimers.png)
+
+This feature allows you to see different timers that can be paused while opening the menu, they always start on player inputs except for the `Real Time` one.
+
+They can be configured in the `Timers Config` window.
+
+![](Screenshots/PreviewTimersConfig.png)
+
+### Colliders Renderer
+
+This features allows to display **borders and surfaces** of different types of colliders used in the game. As of now, only **BoxColliders** are rendered, it includes most of the scene objects and all scene events *(triggers)* in the game like cutscene and magic wall triggers. The next step is to render [CharacterController](https://docs.unity3d.com/Manual/class-CharacterController.html) colliders *(Nobeta and enemies)*.
+
+![](Screenshots/PreviwerColliderRenderer.png)
+
+> It is possible to change the colors and what is displayed for each type of collider
+>
+> The config for the colors used in the example above can be  [downloaded here](SampleConfigs/ColliderRenderers.json) (replace the default file in `game_root\BepInEx\config\NobetaTrainer\`)
 
 ### Shortcuts
 
