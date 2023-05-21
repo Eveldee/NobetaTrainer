@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using NobetaTrainer.Config;
 using NobetaTrainer.Config.Models;
 using NobetaTrainer.Prefabs;
 using NobetaTrainer.Utils;
@@ -12,9 +13,12 @@ using Type = Il2CppSystem.Type;
 
 namespace NobetaTrainer.Patches;
 
+[Section("Colliders")]
 public static class CollidersRenderPatches
 {
+    [Bind]
     public static bool ShowColliders;
+
     public static GameObject RenderersContainer;
     public static IGrouping<string, SceneEvent>[] CollidingSceneEvents;
 
@@ -27,6 +31,7 @@ public static class CollidersRenderPatches
         {
             RenderersContainer.SetActive(ShowColliders);
         });
+        UpdateDrawLines(ColliderType.Other);
     }
 
     public static void UpdateDrawLines(ColliderType colliderType)
@@ -50,7 +55,7 @@ public static class CollidersRenderPatches
         }
 
         RenderersContainer = new GameObject("ColliderRenderer_Container");
-        RenderersContainer.SetActive(true);
+        RenderersContainer.SetActive(ShowColliders);
 
         foreach (var areaCheck in UnityUtils.FindComponentsByTypeForced<AreaCheck>())
         {
@@ -97,9 +102,10 @@ public static class CollidersRenderPatches
             AddRenderer(boxCollider.transform, boxCollider, ColliderType.Other);
         }
 
-        UpdateDrawLines(ColliderType.AreaCheck);
-        UpdateDrawLines(ColliderType.SceneEvent);
-        UpdateDrawLines(ColliderType.Other);
+        foreach (var colliderType in Enum.GetValues<ColliderType>())
+        {
+            UpdateDrawLines(colliderType);
+        }
     }
 
     [HarmonyPatch(typeof(Game), nameof(Game.EnterLoaderScene))]

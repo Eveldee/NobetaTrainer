@@ -11,6 +11,8 @@ public class BoxColliderRenderer
 {
     public ColliderType ColliderType { get; }
 
+    private readonly GameObject _parent;
+
     private readonly GameObject _downFace;
     private readonly GameObject _upFace;
 
@@ -52,6 +54,14 @@ public class BoxColliderRenderer
 
         _rendererConfig = rendererConfig;
         ColliderType = colliderType;
+
+        // Parent is a global container for everything except others which are contained in their respective scenes,
+        // this allow dynamically loading them to avoid lag
+        _parent = CollidersRenderPatches.RenderersContainer;
+        if (ColliderType == ColliderType.Other && target.GetComponentInParent<SceneIsHide>()?.transform is { } parent)
+        {
+            _parent = parent.gameObject;
+        }
 
         var center = boxCollider.center;
         var xExtent = boxCollider.extents.x;
@@ -138,7 +148,7 @@ public class BoxColliderRenderer
     {
         foreach (var face in _faces)
         {
-            face.SetActive(_rendererConfig.Enable);
+            face.SetActive(IsActive());
         }
 
         foreach (var lineRenderer in _lineRenderers)
@@ -154,6 +164,17 @@ public class BoxColliderRenderer
             meshRenderer.enabled = _rendererConfig.DrawSurfaces;
             meshRenderer.material.color = _rendererConfig.SurfaceColor.ToColor();
         }
+    }
+
+    private bool IsActive()
+    {
+        // If it's an object in a scene it's active if the scene is active
+        if (ColliderType == ColliderType.Other && _parent.GetComponent<SceneIsHide>() is { } sceneIsHide)
+        {
+            return !sceneIsHide.g_bIsHide && CollidersRenderPatches.ShowColliders && _rendererConfig.Enable;
+        }
+
+        return _parent.active && _rendererConfig.Enable;
     }
 
     public void Destroy()
@@ -172,14 +193,13 @@ public class BoxColliderRenderer
         {
             transform =
             {
-                parent = CollidersRenderPatches.RenderersContainer.transform
+                parent = _parent.transform
             }
         };
 
         // Create line renderer for borders
         var lineRenderer = gameObject.AddComponent<LineRenderer>();
 
-        // Avoid lags for less important objects
         lineRenderer.material = sharedLineMaterial;
 
         lineRenderer.widthMultiplier = _rendererConfig.LineWidth;
@@ -209,7 +229,9 @@ public class BoxColliderRenderer
         meshFilter.mesh = mesh;
 
         // Activate object
-        gameObject.SetActive(_rendererConfig.Enable);
+        lineRenderer.enabled = _rendererConfig.DrawLines;
+        meshRenderer.enabled = _rendererConfig.DrawSurfaces;
+        gameObject.SetActive(IsActive());
 
         return gameObject;
     }
