@@ -40,7 +40,14 @@ public static class CommandUtils
         },
         { TeleportToLastPoint, new ShortcutEditor.TrainerCommand(TeleportToLastPoint, TeleportationPatches.TeleportLastPoint) },
         { ToggleTimers, new ShortcutEditor.TrainerCommand(ToggleTimers, () => Toggle(ref Timers.ShowTimers)) },
-        { ResetTimers, new ShortcutEditor.TrainerCommand(ResetTimers, () => Singletons.Timers.ResetTimers()) }
+        { ResetTimers, new ShortcutEditor.TrainerCommand(ResetTimers, () => Singletons.Timers.ResetTimers()) },
+        { ToggleColliders, new ShortcutEditor.TrainerCommand(ToggleColliders,
+            () =>
+            {
+                Toggle(ref CollidersRenderPatches.ShowColliders);
+                CollidersRenderPatches.ToggleShowColliders();
+            })
+        }
     };
     public static string[] TrainerCommandNames { get; } = Enum.GetValues<CommandType>().Skip(1).Select(type => type.Humanize(LetterCasing.Title)).ToArray();
 

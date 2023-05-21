@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
@@ -9,7 +8,6 @@ using NobetaTrainer.Prefabs;
 using NobetaTrainer.Utils;
 using UnityEngine;
 using Object = UnityEngine.Object;
-using Type = Il2CppSystem.Type;
 
 namespace NobetaTrainer.Patches;
 
@@ -102,9 +100,9 @@ public static class CollidersRenderPatches
             AddRenderer(boxCollider.transform, boxCollider, ColliderType.Other);
         }
 
-        foreach (var colliderType in Enum.GetValues<ColliderType>())
+        foreach (var boxColliderRenderer in _boxColliderRenderers)
         {
-            UpdateDrawLines(colliderType);
+            boxColliderRenderer.UpdateDisplay();
         }
     }
 

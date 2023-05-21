@@ -20,5 +20,6 @@ public enum CommandType
     TeleportToLastPoint = 15,
     UnlockCursor = 16,
     ToggleTimers = 17,
-    ResetTimers = 18
+    ResetTimers = 18,
+    ToggleColliders = 19
 }
