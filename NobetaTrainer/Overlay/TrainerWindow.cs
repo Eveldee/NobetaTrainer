@@ -193,6 +193,18 @@ public partial class TrainerOverlay
             {
                 CollidersRenderPatches.UpdateDrawLines();
             }
+            if (ImGui.InputFloat("Line width", ref CollidersRenderPatches.LineWidth, 0.01f, 0.1f, "%.2f"))
+            {
+                CollidersRenderPatches.UpdateDrawLines();
+            }
+            if (ImGui.ColorEdit4("Start Color", ref CollidersRenderPatches.LineStartColor))
+            {
+                CollidersRenderPatches.UpdateDrawLines();
+            }
+            if (ImGui.ColorEdit4("End Color", ref CollidersRenderPatches.LineEndColor))
+            {
+                CollidersRenderPatches.UpdateDrawLines();
+            }
 
             ImGui.SeparatorText("Surfaces");
         }

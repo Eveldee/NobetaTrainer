@@ -1,5 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using NobetaTrainer.Patches;
+using NobetaTrainer.Utils;
 using UnityEngine;
+using Vector4 = System.Numerics.Vector4;
 
 namespace NobetaTrainer.Prefabs;
 
@@ -16,11 +20,19 @@ public class BoxColliderRenderer
     private readonly GameObject _leftFace;
     private readonly GameObject _rightFace;
 
+    private IEnumerable<GameObject> _faces;
+    private IEnumerable<LineRenderer> _lines;
+
     public BoxColliderRenderer(string name, Transform parent, BoxCollider boxCollider)
     {
+        Vector3 OffsetPointWithRotation(Vector3 point)
+        {
+            return (parent.rotation * point) + parent.position;
+        }
+
         _parent = parent;
 
-        var center = parent.position + boxCollider.center;
+        var center = boxCollider.center;
         var xExtent = boxCollider.extents.x;
         var yExtent = boxCollider.extents.y;
         var zExtent = boxCollider.extents.z;
@@ -33,60 +45,61 @@ public class BoxColliderRenderer
         var zMax = center.z + zExtent;
 
         // Faces clockwise from down to sides to up
+        var rotation = parent.rotation;
 
         // Down
-        var downPoints = new Vector3[]
+        var downPoints = new[]
         {
-            new(xMin, yMin, zMax),
-            new(xMin, yMin, zMin),
-            new(xMax, yMin, zMin),
-            new(xMax, yMin, zMax),
-            new(xMin, yMin, zMax)
+            OffsetPointWithRotation(new Vector3(xMin, yMin, zMax)),
+            OffsetPointWithRotation(new Vector3(xMin, yMin, zMin)),
+            OffsetPointWithRotation(new Vector3(xMax, yMin, zMin)),
+            OffsetPointWithRotation(new Vector3(xMax, yMin, zMax)),
+            OffsetPointWithRotation(new Vector3(xMin, yMin, zMax))
         };
         // Up
-        var upPoints = new Vector3[]
+        var upPoints = new[]
         {
-            new(xMin, yMax, zMin),
-            new(xMin, yMax, zMax),
-            new(xMax, yMax, zMax),
-            new(xMax, yMax, zMin),
-            new(xMin, yMax, zMin)
+            OffsetPointWithRotation(new Vector3(xMin, yMax, zMin)),
+            OffsetPointWithRotation(new Vector3(xMin, yMax, zMax)),
+            OffsetPointWithRotation(new Vector3(xMax, yMax, zMax)),
+            OffsetPointWithRotation(new Vector3(xMax, yMax, zMin)),
+            OffsetPointWithRotation(new Vector3(xMin, yMax, zMin))
         };
         // Front
-        var frontPoints = new Vector3[]
+        var frontPoints = new[]
         {
-            new(xMin, yMin, zMin),
-            new(xMin, yMax, zMin),
-            new(xMax, yMax, zMin),
-            new(xMax, yMin, zMin),
-            new(xMin, yMin, zMin)
+            OffsetPointWithRotation(new Vector3(xMin, yMin, zMin)),
+            OffsetPointWithRotation(new Vector3(xMin, yMax, zMin)),
+            OffsetPointWithRotation(new Vector3(xMax, yMax, zMin)),
+            OffsetPointWithRotation(new Vector3(xMax, yMin, zMin)),
+            OffsetPointWithRotation(new Vector3(xMin, yMin, zMin))
         };
         // Back
-        var backPoints = new Vector3[]
+        var backPoints = new[]
         {
-            new(xMax, yMin, zMax),
-            new(xMax, yMax, zMax),
-            new(xMin, yMax, zMax),
-            new(xMin, yMin, zMax),
-            new(xMax, yMin, zMax)
+            OffsetPointWithRotation(new Vector3(xMax, yMin, zMax)),
+            OffsetPointWithRotation(new Vector3(xMax, yMax, zMax)),
+            OffsetPointWithRotation(new Vector3(xMin, yMax, zMax)),
+            OffsetPointWithRotation(new Vector3(xMin, yMin, zMax)),
+            OffsetPointWithRotation(new Vector3(xMax, yMin, zMax))
         };
         // Left
-        var leftPoints = new Vector3[]
+        var leftPoints = new[]
         {
-            new(xMin, yMin, zMax),
-            new(xMin, yMax, zMax),
-            new(xMin, yMax, zMin),
-            new(xMin, yMin, zMin),
-            new(xMin, yMin, zMax)
+            OffsetPointWithRotation(new Vector3(xMin, yMin, zMax)),
+            OffsetPointWithRotation(new Vector3(xMin, yMax, zMax)),
+            OffsetPointWithRotation(new Vector3(xMin, yMax, zMin)),
+            OffsetPointWithRotation(new Vector3(xMin, yMin, zMin)),
+            OffsetPointWithRotation(new Vector3(xMin, yMin, zMax))
         };
         // Right
-        var rightPoints = new Vector3[]
+        var rightPoints = new[]
         {
-            new(xMax, yMin, zMin),
-            new(xMax, yMax, zMin),
-            new(xMax, yMax, zMax),
-            new(xMax, yMin, zMax),
-            new(xMax, yMin, zMin)
+            OffsetPointWithRotation(new Vector3(xMax, yMin, zMin)),
+            OffsetPointWithRotation(new Vector3(xMax, yMax, zMin)),
+            OffsetPointWithRotation(new Vector3(xMax, yMax, zMax)),
+            OffsetPointWithRotation(new Vector3(xMax, yMin, zMax)),
+            OffsetPointWithRotation(new Vector3(xMax, yMin, zMin))
         };
 
         _downFace = CreateColliderRenderer($"{name}_Down", downPoints);
@@ -95,16 +108,34 @@ public class BoxColliderRenderer
         _backFace = CreateColliderRenderer($"{name}_Back", backPoints);
         _leftFace = CreateColliderRenderer($"{name}_Left", leftPoints);
         _rightFace = CreateColliderRenderer($"{name}_Right", rightPoints);
+
+        _faces = new[] { _downFace, _upFace, _frontFace, _backFace, _leftFace, _rightFace };
+        _lines = _faces.Select(face => face.GetComponent<LineRenderer>()).ToArray();
     }
 
     public void SetVisible(bool drawLines)
     {
-        _downFace.active = drawLines;
-        _upFace.active = drawLines;
-        _frontFace.active = drawLines;
-        _backFace.active = drawLines;
-        _leftFace.active = drawLines;
-        _rightFace.active = drawLines;
+        foreach (var face in _faces)
+        {
+            face.active = drawLines;
+        }
+    }
+
+    public void SetLineWidth(float lineWidth)
+    {
+        foreach (var lineRenderer in _lines)
+        {
+            lineRenderer.widthMultiplier = lineWidth;
+        }
+    }
+
+    public void SetLineColor(Color lineStartColor, Color lineEndColor)
+    {
+        foreach (var lineRenderer in _lines)
+        {
+            lineRenderer.startColor = lineStartColor;
+            lineRenderer.endColor = lineEndColor;
+        }
     }
 
     public void Destroy()
@@ -119,22 +150,16 @@ public class BoxColliderRenderer
 
     private GameObject CreateColliderRenderer(string name, Vector3[] linePoints)
     {
-        var gameObject = new GameObject(name)
-        {
-            transform =
-            {
-                parent = _parent
-            }
-        };
+        var gameObject = new GameObject(name);
 
         // Create one line render per linePoints
         var lineRenderer = gameObject.AddComponent<LineRenderer>();
 
         lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-        lineRenderer.widthMultiplier = 0.2f;
+        lineRenderer.widthMultiplier = CollidersRenderPatches.LineWidth;
 
-        lineRenderer.startColor = Color.blue;
-        lineRenderer.endColor = Color.red;
+        lineRenderer.startColor = CollidersRenderPatches.LineStartColor.ToColor();
+        lineRenderer.endColor = CollidersRenderPatches.LineEndColor.ToColor();
 
         lineRenderer.positionCount = linePoints.Length;
         lineRenderer.SetPositions(linePoints);
