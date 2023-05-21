@@ -26,6 +26,7 @@ public static class Singletons
     public static ShortcutEditor ShortcutEditor { get; set; }
     public static Timers Timers { get; set; }
     public static TeleportationManager TeleportationManager { get; set; }
+    public static ColliderRendererManager ColliderRendererManager { get; set; }
 
     public static bool SaveLoaded => GameSave is not null;
 

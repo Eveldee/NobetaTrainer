@@ -1,4 +1,5 @@
-﻿using ImGuiNET;
+﻿using Humanizer;
+using ImGuiNET;
 using NobetaTrainer.Patches;
 using NobetaTrainer.Utils;
 
@@ -187,26 +188,45 @@ public partial class TrainerOverlay
         // Colliders options
         if (ImGui.CollapsingHeader("Colliders"))
         {
-            ImGui.SeparatorText("Lines");
+            ImGui.SeparatorText("General");
 
-            if (ImGui.Checkbox("Draw Lines", ref CollidersRenderPatches.DrawLines))
+            if (ImGui.Checkbox("Show Colliders", ref CollidersRenderPatches.ShowColliders))
             {
-                CollidersRenderPatches.UpdateDrawLines();
-            }
-            if (ImGui.InputFloat("Line width", ref CollidersRenderPatches.LineWidth, 0.01f, 0.1f, "%.2f"))
-            {
-                CollidersRenderPatches.UpdateDrawLines();
-            }
-            if (ImGui.ColorEdit4("Start Color", ref CollidersRenderPatches.LineStartColor))
-            {
-                CollidersRenderPatches.UpdateDrawLines();
-            }
-            if (ImGui.ColorEdit4("End Color", ref CollidersRenderPatches.LineEndColor))
-            {
-                CollidersRenderPatches.UpdateDrawLines();
+                CollidersRenderPatches.ToggleShowColliders();
             }
 
-            ImGui.SeparatorText("Surfaces");
+            ImGui.SeparatorText("Styles");
+
+            foreach (var (colliderType, rendererConfig) in Singletons.ColliderRendererManager.RendererConfigs)
+            {
+                if (ImGui.TreeNode($"{colliderType.Humanize()}##{colliderType}"))
+                {
+                    if (ImGui.Checkbox($"Enable##{colliderType}", ref rendererConfig.Enable))
+                    {
+                        CollidersRenderPatches.UpdateDrawLines(colliderType);
+                    }
+                    if (ImGui.Checkbox($"Draw Lines##{colliderType}", ref rendererConfig.DrawLines))
+                    {
+                        CollidersRenderPatches.UpdateDrawLines(colliderType);
+                    }
+                    if (ImGui.InputFloat($"Line width##{colliderType}", ref rendererConfig.LineWidth, 0.01f, 0.1f, "%.2f"))
+                    {
+                        CollidersRenderPatches.UpdateDrawLines(colliderType);
+                    }
+                    if (ImGui.ColorEdit4($"Start Color##{colliderType}", ref rendererConfig.LineStartColor))
+                    {
+                        rendererConfig.LineEndColor.W = rendererConfig.LineStartColor.W;
+                        CollidersRenderPatches.UpdateDrawLines(colliderType);
+                    }
+                    if (ImGui.ColorEdit4($"End Color##{colliderType}", ref rendererConfig.LineEndColor))
+                    {
+                        rendererConfig.LineStartColor.W = rendererConfig.LineEndColor.W;
+                        CollidersRenderPatches.UpdateDrawLines(colliderType);
+                    }
+
+                    ImGui.TreePop();
+                }
+            }
         }
 
         // Other options

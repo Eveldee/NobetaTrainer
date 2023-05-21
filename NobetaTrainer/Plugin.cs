@@ -66,6 +66,7 @@ public class Plugin : BasePlugin
         Singletons.ShortcutEditor = AddComponent<ShortcutEditor>();
         Singletons.Timers = AddComponent<Timers>();
         Singletons.TeleportationManager = new TeleportationManager();
+        Singletons.ColliderRendererManager = new ColliderRendererManager();
 
         Log.LogMessage($"Plugin {MyPluginInfo.PLUGIN_GUID} successfully loaded!");
     }
@@ -90,6 +91,9 @@ public class Plugin : BasePlugin
 
         // Save Teleportation points
         Singletons.TeleportationManager.SavePoints();
+
+        // Save Collider render config
+        Singletons.ColliderRendererManager.Save();
 
         // Save BepInEx config
         AutoConfigManager.FetchValuesFromFields();

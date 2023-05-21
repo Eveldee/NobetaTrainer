@@ -11,7 +11,7 @@ public class TeleportationManager
     public IEnumerable<TeleportationPoint> TeleportationPoints => SceneName is { } sceneName && _teleportationPoints.ContainsKey(sceneName)
         ? _teleportationPoints[sceneName]
         : Enumerable.Empty<TeleportationPoint>();
-    public string TeleportationPointsSavePath { get; } = Path.Combine(Plugin.ConfigDirectory.FullName, "TeleportationPoints.json");
+    public string SavePath { get; } = Path.Combine(Plugin.ConfigDirectory.FullName, "TeleportationPoints.json");
 
     private Dictionary<string, List<TeleportationPoint>> _teleportationPoints;
 
@@ -24,7 +24,7 @@ public class TeleportationManager
 
     private void LoadPoints()
     {
-        if (!File.Exists(TeleportationPointsSavePath))
+        if (!File.Exists(SavePath))
         {
             _teleportationPoints = new Dictionary<string, List<TeleportationPoint>>();
 
@@ -33,13 +33,13 @@ public class TeleportationManager
 
         _teleportationPoints = SerializeUtils.Deserialize<Dictionary<string, List<TeleportationPoint>>>
         (
-            File.ReadAllText(TeleportationPointsSavePath)
+            File.ReadAllText(SavePath)
         );
     }
 
     public void SavePoints()
     {
-        File.WriteAllText(TeleportationPointsSavePath, SerializeUtils.SerializeIndented(_teleportationPoints));
+        File.WriteAllText(SavePath, SerializeUtils.SerializeIndented(_teleportationPoints));
     }
 
     public void AddPoint(TeleportationPoint teleportationPoint)

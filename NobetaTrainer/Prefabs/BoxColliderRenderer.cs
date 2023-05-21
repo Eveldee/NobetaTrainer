@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using NobetaTrainer.Config.Models;
 using NobetaTrainer.Patches;
 using NobetaTrainer.Utils;
 using UnityEngine;
@@ -9,6 +10,8 @@ namespace NobetaTrainer.Prefabs;
 
 public class BoxColliderRenderer
 {
+    public ColliderType ColliderType { get; }
+
     private readonly Transform _parent;
 
     private readonly GameObject _downFace;
@@ -20,10 +23,12 @@ public class BoxColliderRenderer
     private readonly GameObject _leftFace;
     private readonly GameObject _rightFace;
 
-    private IEnumerable<GameObject> _faces;
-    private IEnumerable<LineRenderer> _lines;
+    private readonly BoxColliderRendererConfig _rendererConfig;
 
-    public BoxColliderRenderer(string name, Transform parent, BoxCollider boxCollider)
+    private readonly IEnumerable<GameObject> _faces;
+    private readonly IEnumerable<LineRenderer> _lineRenderers;
+
+    public BoxColliderRenderer(string name, Transform parent, BoxCollider boxCollider, BoxColliderRendererConfig rendererConfig, ColliderType colliderType)
     {
         Vector3 OffsetPointWithRotation(Vector3 point)
         {
@@ -31,6 +36,8 @@ public class BoxColliderRenderer
         }
 
         _parent = parent;
+        _rendererConfig = rendererConfig;
+        ColliderType = colliderType;
 
         var center = boxCollider.center;
         var xExtent = boxCollider.extents.x;
@@ -110,31 +117,22 @@ public class BoxColliderRenderer
         _rightFace = CreateColliderRenderer($"{name}_Right", rightPoints);
 
         _faces = new[] { _downFace, _upFace, _frontFace, _backFace, _leftFace, _rightFace };
-        _lines = _faces.Select(face => face.GetComponent<LineRenderer>()).ToArray();
+        _lineRenderers = _faces.Select(face => face.GetComponent<LineRenderer>()).ToArray();
     }
 
-    public void SetVisible(bool drawLines)
+    public void UpdateDisplay()
     {
         foreach (var face in _faces)
         {
-            face.active = drawLines;
+            face.SetActive(_rendererConfig.Enable);
         }
-    }
 
-    public void SetLineWidth(float lineWidth)
-    {
-        foreach (var lineRenderer in _lines)
+        foreach (var lineRenderer in _lineRenderers)
         {
-            lineRenderer.widthMultiplier = lineWidth;
-        }
-    }
-
-    public void SetLineColor(Color lineStartColor, Color lineEndColor)
-    {
-        foreach (var lineRenderer in _lines)
-        {
-            lineRenderer.startColor = lineStartColor;
-            lineRenderer.endColor = lineEndColor;
+            lineRenderer.enabled = _rendererConfig.DrawLines;
+            lineRenderer.widthMultiplier = _rendererConfig.LineWidth;
+            lineRenderer.startColor = _rendererConfig.LineStartColor.ToColor();
+            lineRenderer.endColor = _rendererConfig.LineEndColor.ToColor();
         }
     }
 
@@ -150,16 +148,22 @@ public class BoxColliderRenderer
 
     private GameObject CreateColliderRenderer(string name, Vector3[] linePoints)
     {
-        var gameObject = new GameObject(name);
+        var gameObject = new GameObject(name)
+        {
+            transform =
+            {
+                parent = CollidersRenderPatches.RenderersContainer.transform
+            }
+        };
 
         // Create one line render per linePoints
         var lineRenderer = gameObject.AddComponent<LineRenderer>();
 
         lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-        lineRenderer.widthMultiplier = CollidersRenderPatches.LineWidth;
+        lineRenderer.widthMultiplier = _rendererConfig.LineWidth;
 
-        lineRenderer.startColor = CollidersRenderPatches.LineStartColor.ToColor();
-        lineRenderer.endColor = CollidersRenderPatches.LineEndColor.ToColor();
+        lineRenderer.startColor = _rendererConfig.LineStartColor.ToColor();
+        lineRenderer.endColor = _rendererConfig.LineEndColor.ToColor();
 
         lineRenderer.positionCount = linePoints.Length;
         lineRenderer.SetPositions(linePoints);
@@ -167,7 +171,7 @@ public class BoxColliderRenderer
         // TODO mesh renderer + mesh filter + mesh https://docs.unity3d.com/Manual/Example-CreatingaBillboardPlane.html
 
         // Activate object
-        gameObject.SetActive(true);
+        gameObject.SetActive(_rendererConfig.Enable);
 
         return gameObject;
     }

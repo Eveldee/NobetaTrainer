@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
+using NobetaTrainer.Config.Models;
 using NobetaTrainer.Prefabs;
 using NobetaTrainer.Utils;
 using UnityEngine;
@@ -10,25 +11,26 @@ namespace NobetaTrainer.Patches;
 
 public static class CollidersRenderPatches
 {
-    public static bool DrawLines;
-    public static float LineWidth = 0.05f;
-    public static Vector4 LineStartColor = Color.blue.ToVector4();
-    public static Vector4 LineEndColor = Color.red.ToVector4();
+    public static bool ShowColliders;
+    public static GameObject RenderersContainer;
 
     private static readonly List<BoxColliderRenderer> _boxColliderRenderers = new();
 
-    public static void UpdateDrawLines()
+    public static void ToggleShowColliders()
     {
         Singletons.Dispatcher.Enqueue(() =>
         {
-            var startColor = LineStartColor.ToColor();
-            var endColor = LineEndColor.ToColor();
+            RenderersContainer.SetActive(ShowColliders);
+        });
+    }
 
-            foreach (var boxColliderRenderer in _boxColliderRenderers)
+    public static void UpdateDrawLines(ColliderType colliderType)
+    {
+        Singletons.Dispatcher.Enqueue(() =>
+        {
+            foreach (var boxColliderRenderer in _boxColliderRenderers.Where(renderer => renderer.ColliderType == colliderType))
             {
-                boxColliderRenderer.SetVisible(DrawLines);
-                boxColliderRenderer.SetLineWidth(LineWidth);
-                boxColliderRenderer.SetLineColor(startColor, endColor);
+                boxColliderRenderer.UpdateDisplay();
             }
         });
     }
@@ -37,30 +39,71 @@ public static class CollidersRenderPatches
     [HarmonyPostfix]
     private static void OnSceneInitCompletePostfix()
     {
-        // Draw AreaCheck colliders
+        void AddRenderer(Transform parent, BoxCollider boxCollider, ColliderType colliderType)
+        {
+            _boxColliderRenderers.Add(new BoxColliderRenderer($"{parent.name}-ColliderRenderer", parent, boxCollider, Singletons.ColliderRendererManager.RendererConfigs[colliderType], colliderType));
+        }
+
+        RenderersContainer = new GameObject("ColliderRenderer_Container");
+        RenderersContainer.SetActive(true);
+
         foreach (var areaCheck in UnityUtils.FindComponentsByTypeForced<AreaCheck>())
         {
             if (areaCheck.g_BC is not null)
             {
-                _boxColliderRenderers.Add(new BoxColliderRenderer($"{areaCheck.name}-ColliderRenderer", areaCheck.transform, areaCheck.g_BC));
+                AddRenderer(areaCheck.transform, areaCheck.g_BC, ColliderType.AreaCheck);
             }
         }
-        // foreach (var boxCollider in UnityUtils.FindComponentsByTypeForced<BoxCollider>())
-        // {
-        //     _boxColliderRenderers.Add(new BoxColliderRenderer($"{boxCollider.name}-ColliderRenderer", boxCollider.transform, boxCollider));
-        // }
+        foreach (var magicWall in UnityUtils.FindComponentsByTypeForced<MagicWall>())
+        {
+            if (magicWall.g_BC is not null)
+            {
+                AddRenderer(magicWall.transform, magicWall.g_BC, ColliderType.MagicWall);
+            }
+        }
+        foreach (var loadScript in UnityUtils.FindComponentsByTypeForced<LoadScript>())
+        {
+            if (loadScript.g_BC is not null)
+            {
+                AddRenderer(loadScript.transform, loadScript.g_BC, ColliderType.LoadScript);
+            }
+        }
+        foreach (var sceneEvent in UnityUtils.FindComponentsByTypeForced<SceneEvent>())
+        {
+            if (sceneEvent is AreaCheck or MagicWall or LoadScript)
+            {
+                continue;
+            }
 
-        UpdateDrawLines();
+            if (sceneEvent.g_BC is not null)
+            {
+                AddRenderer(sceneEvent.transform, sceneEvent.g_BC, ColliderType.SceneEvent);
+            }
+        }
+        foreach (var boxCollider in UnityUtils.FindComponentsByTypeForced<BoxCollider>())
+        {
+            if (boxCollider.GetComponent<SceneEvent>() != null)
+            {
+                continue;
+            }
+
+            AddRenderer(boxCollider.transform, boxCollider, ColliderType.Other);
+        }
+
+        UpdateDrawLines(ColliderType.AreaCheck);
+        UpdateDrawLines(ColliderType.SceneEvent);
+        UpdateDrawLines(ColliderType.Other);
     }
 
     [HarmonyPatch(typeof(Game), nameof(Game.EnterLoaderScene))]
     [HarmonyPrefix]
     private static void EnterLoaderScenePostfix()
     {
-        foreach (var colliderRenderer in _boxColliderRenderers)
-        {
-            colliderRenderer.Destroy();
-        }
+        Object.Destroy(RenderersContainer);
+        // foreach (var colliderRenderer in _boxColliderRenderers)
+        // {
+        //     colliderRenderer.Destroy();
+        // }
 
         _boxColliderRenderers.Clear();
     }
