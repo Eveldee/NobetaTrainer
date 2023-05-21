@@ -4,15 +4,12 @@ using NobetaTrainer.Config.Models;
 using NobetaTrainer.Patches;
 using NobetaTrainer.Utils;
 using UnityEngine;
-using Vector4 = System.Numerics.Vector4;
 
 namespace NobetaTrainer.Prefabs;
 
 public class BoxColliderRenderer
 {
     public ColliderType ColliderType { get; }
-
-    private readonly Transform _parent;
 
     private readonly GameObject _downFace;
     private readonly GameObject _upFace;
@@ -27,15 +24,32 @@ public class BoxColliderRenderer
 
     private readonly IEnumerable<GameObject> _faces;
     private readonly IEnumerable<LineRenderer> _lineRenderers;
+    private readonly IEnumerable<MeshRenderer> _meshRenderers;
 
-    public BoxColliderRenderer(string name, Transform parent, BoxCollider boxCollider, BoxColliderRendererConfig rendererConfig, ColliderType colliderType)
+    private readonly Material sharedLineMaterial = new(Shader.Find("Sprites/Default"));
+
+    private readonly int[] _triangles =
+    {
+        // bottom left triangle
+        0, 1, 3,
+        // upper right triangle
+        1, 2, 3
+    };
+    private readonly Vector2[] _uv =
+    {
+        new(0, 0),
+        new (1, 0),
+        new (0, 1),
+        new (1, 1)
+    };
+
+    public BoxColliderRenderer(string name, Transform target, BoxCollider boxCollider, BoxColliderRendererConfig rendererConfig, ColliderType colliderType)
     {
         Vector3 OffsetPointWithRotation(Vector3 point)
         {
-            return (parent.rotation * point) + parent.position;
+            return (target.rotation * point) + target.position;
         }
 
-        _parent = parent;
         _rendererConfig = rendererConfig;
         ColliderType = colliderType;
 
@@ -52,7 +66,6 @@ public class BoxColliderRenderer
         var zMax = center.z + zExtent;
 
         // Faces clockwise from down to sides to up
-        var rotation = parent.rotation;
 
         // Down
         var downPoints = new[]
@@ -118,6 +131,7 @@ public class BoxColliderRenderer
 
         _faces = new[] { _downFace, _upFace, _frontFace, _backFace, _leftFace, _rightFace };
         _lineRenderers = _faces.Select(face => face.GetComponent<LineRenderer>()).ToArray();
+        _meshRenderers = _faces.Select(face => face.GetComponent<MeshRenderer>()).ToArray();
     }
 
     public void UpdateDisplay()
@@ -133,6 +147,12 @@ public class BoxColliderRenderer
             lineRenderer.widthMultiplier = _rendererConfig.LineWidth;
             lineRenderer.startColor = _rendererConfig.LineStartColor.ToColor();
             lineRenderer.endColor = _rendererConfig.LineEndColor.ToColor();
+        }
+
+        foreach (var meshRenderer in _meshRenderers)
+        {
+            meshRenderer.enabled = _rendererConfig.DrawSurfaces;
+            meshRenderer.material.color = _rendererConfig.SurfaceColor.ToColor();
         }
     }
 
@@ -156,10 +176,12 @@ public class BoxColliderRenderer
             }
         };
 
-        // Create one line render per linePoints
+        // Create line renderer for borders
         var lineRenderer = gameObject.AddComponent<LineRenderer>();
 
-        lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+        // Avoid lags for less important objects
+        lineRenderer.material = sharedLineMaterial;
+
         lineRenderer.widthMultiplier = _rendererConfig.LineWidth;
 
         lineRenderer.startColor = _rendererConfig.LineStartColor.ToColor();
@@ -168,7 +190,23 @@ public class BoxColliderRenderer
         lineRenderer.positionCount = linePoints.Length;
         lineRenderer.SetPositions(linePoints);
 
-        // TODO mesh renderer + mesh filter + mesh https://docs.unity3d.com/Manual/Example-CreatingaBillboardPlane.html
+        // Create mesh for solid surface
+        var meshRenderer = gameObject.AddComponent<MeshRenderer>();
+        meshRenderer.sharedMaterial = new Material(Shader.Find("Sprites/Default"))
+        {
+            color = _rendererConfig.SurfaceColor.ToColor()
+        };
+
+        var meshFilter = gameObject.AddComponent<MeshFilter>();
+
+        var mesh = new Mesh
+        {
+            vertices = linePoints.SkipLast(1).ToArray(),
+            triangles = _triangles,
+            uv = _uv
+        };
+
+        meshFilter.mesh = mesh;
 
         // Activate object
         gameObject.SetActive(_rendererConfig.Enable);

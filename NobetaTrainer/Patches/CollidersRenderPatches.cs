@@ -77,7 +77,7 @@ public static class CollidersRenderPatches
         _sceneEvents = UnityUtils.FindComponentsByTypeForced<SceneEvent>();
         foreach (var sceneEvent in _sceneEvents)
         {
-            if (sceneEvent is AreaCheck or MagicWall or LoadScript)
+            if (sceneEvent.GetComponent<AreaCheck>() is not null || sceneEvent.GetComponent<MagicWall>() is not null || sceneEvent.GetComponent<LoadScript>() is not null)
             {
                 continue;
             }

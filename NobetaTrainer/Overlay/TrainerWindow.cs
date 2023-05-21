@@ -239,7 +239,13 @@ public partial class TrainerOverlay
                     {
                         CollidersRenderPatches.UpdateDrawLines(colliderType);
                     }
+                    ImGui.SameLine();
                     if (ImGui.Checkbox($"Draw Lines##{colliderType}", ref rendererConfig.DrawLines))
+                    {
+                        CollidersRenderPatches.UpdateDrawLines(colliderType);
+                    }
+                    ImGui.SameLine();
+                    if (ImGui.Checkbox($"Draw Surfaces##{colliderType}", ref rendererConfig.DrawSurfaces))
                     {
                         CollidersRenderPatches.UpdateDrawLines(colliderType);
                     }
@@ -247,14 +253,18 @@ public partial class TrainerOverlay
                     {
                         CollidersRenderPatches.UpdateDrawLines(colliderType);
                     }
-                    if (ImGui.ColorEdit4($"Start Color##{colliderType}", ref rendererConfig.LineStartColor))
+                    if (ImGui.ColorEdit4($"Line Start Color##{colliderType}", ref rendererConfig.LineStartColor))
                     {
                         rendererConfig.LineEndColor.W = rendererConfig.LineStartColor.W;
                         CollidersRenderPatches.UpdateDrawLines(colliderType);
                     }
-                    if (ImGui.ColorEdit4($"End Color##{colliderType}", ref rendererConfig.LineEndColor))
+                    if (ImGui.ColorEdit4($"Line End Color##{colliderType}", ref rendererConfig.LineEndColor))
                     {
                         rendererConfig.LineStartColor.W = rendererConfig.LineEndColor.W;
+                        CollidersRenderPatches.UpdateDrawLines(colliderType);
+                    }
+                    if (ImGui.ColorEdit4($"Surface Color##{colliderType}", ref rendererConfig.SurfaceColor))
+                    {
                         CollidersRenderPatches.UpdateDrawLines(colliderType);
                     }
 
