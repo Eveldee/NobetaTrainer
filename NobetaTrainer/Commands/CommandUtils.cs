@@ -29,12 +29,7 @@ public static class CommandUtils
         { GiveMPItem, new ShortcutEditor.TrainerCommand(GiveMPItem, ItemPatches.GiveMPItem) },
         { GiveBuffItem, new ShortcutEditor.TrainerCommand(GiveBuffItem, ItemPatches.GiveBuffItem) },
         { SpawnOtherItem, new ShortcutEditor.TrainerCommand(SpawnOtherItem, ItemPatches.SpawnOther) },
-        { ToggleNoClip, new ShortcutEditor.TrainerCommand(ToggleNoClip, () =>
-            {
-                Toggle(ref MovementPatches.NoClipEnabled);
-                MovementPatches.ToggleNoClip();
-            })
-        },
+        { ToggleNoClip, new ShortcutEditor.TrainerCommand(ToggleNoClip, () => Toggle(ref MovementPatches.NoClipEnabled)) },
         { ToggleGlide, new ShortcutEditor.TrainerCommand(ToggleGlide, () => Toggle(ref MovementPatches.GlideEnabled)) },
         { ToggleOneTap, new ShortcutEditor.TrainerCommand(ToggleOneTap, () => Toggle(ref CharacterPatches.OneTapEnabled)) },
         { ToggleBrightMode, new ShortcutEditor.TrainerCommand(ToggleBrightMode, () =>

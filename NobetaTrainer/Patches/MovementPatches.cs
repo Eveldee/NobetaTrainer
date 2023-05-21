@@ -22,18 +22,6 @@ public static class MovementPatches
     private static bool _walking;
     private static Vector2 _moveDirection = new(0f, 0f);
 
-    public static void ToggleNoClip()
-    {
-        // Toggle collider
-        Singletons.Dispatcher.Enqueue(() =>
-        {
-            if (Singletons.CharacterController is { } characterController)
-            {
-                characterController.enabled = !NoClipEnabled;
-            }
-        });
-    }
-
     [HarmonyPatch(typeof(PlayerInputController), nameof(PlayerInputController.Move))]
     [HarmonyPrefix]
     private static bool MovePrefix(Vector2 movement)
@@ -76,13 +64,17 @@ public static class MovementPatches
     [HarmonyPrefix]
     private static void UpdatePrefix()
     {
+        var wizardGirl = Singletons.WizardGirl;
+
+        // No Clip
+        wizardGirl.characterController.enabled = !NoClipEnabled;
+
         if (!GlideEnabled)
         {
             return;
         }
 
         // Set status to normal to keep control of the camera
-        var wizardGirl = Singletons.WizardGirl;
         wizardGirl.playerController.Normal();
         wizardGirl.GetMoveController().verticalForce = 0f;
 

@@ -125,10 +125,7 @@ public partial class TrainerOverlay
 
             ImGui.SeparatorText("Movements");
 
-            if (ImGui.Checkbox("Enable NoClip", ref MovementPatches.NoClipEnabled))
-            {
-                MovementPatches.ToggleNoClip();
-            }
+            ImGui.Checkbox("Enable NoClip", ref MovementPatches.NoClipEnabled);
             HelpMarker("Disable Nobeta collider, meaning that her hitbox is basically non-existent. Will allow to traverse walls but will also disable any trigger that works on her hitbox (map loading, fog, ...)");
 
             ImGui.SameLine();
