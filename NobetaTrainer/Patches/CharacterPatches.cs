@@ -28,6 +28,13 @@ public static class CharacterPatches
     public static int WindMagicLevel;
     public static int AbsorbMagicLevel;
 
+    public static int HealthLevel;
+    public static int ManaLevel;
+    public static int StaminaLevel;
+    public static int StrengthLevel;
+    public static int IntelligenceLevel;
+    public static int HasteLevel;
+
     public static void SetSouls()
     {
         if (Singletons.WizardGirl is not null)
@@ -40,37 +47,59 @@ public static class CharacterPatches
         }
     }
 
+    // Magic level set
     public static void SetArcaneLevel()
     {
         SetStat(ArcaneMagicLevel, (stats, value) => stats.secretMagicLevel = value);
     }
-
     public static void SetIceLevel()
     {
         SetStat(IceMagicLevel, (stats, value) => stats.iceMagicLevel = value);
     }
-
     public static void SetFireLevel()
     {
         SetStat(FireMagicLevel, (stats, value) => stats.fireMagicLevel = value);
     }
-
     public static void SetThunderLevel()
     {
         SetStat(ThunderMagicLevel, (stats, value) => stats.thunderMagicLevel = value);
     }
-
     public static void SetWindLevel()
     {
         SetStat(WindMagicLevel, (stats, value) => stats.windMagicLevel = value);
     }
-
     public static void SetAbsorptionLevel()
     {
         SetStat(AbsorbMagicLevel, (stats, value) => stats.manaAbsorbLevel = value);
     }
 
-    private static void SetStat<TValue>(TValue value, Action<PlayerStatsData, TValue> propertyModifier)
+    // Abilities level set
+    public static void SetHealthLevel()
+    {
+        SetStat(HealthLevel, (stats, value) => stats.healthyLevel = value, wizardGirl => wizardGirl.HPLevelUp());
+    }
+    public static void SetManaLevel()
+    {
+        SetStat(ManaLevel, (stats, value) => stats.manaLevel = value, wizardGirl => wizardGirl.MPLevelUp());
+    }
+    public static void SetStaminaLevel()
+    {
+        SetStat(StaminaLevel, (stats, value) => stats.staminaLevel = value, wizardGirl => wizardGirl.SPLevelUp());
+    }
+    public static void SetStrengthLevel()
+    {
+        SetStat(StrengthLevel, (stats, value) => stats.strengthLevel = value, wizardGirl => wizardGirl.OtherLevelUp());
+    }
+    public static void SetIntelligenceLevel()
+    {
+        SetStat(IntelligenceLevel, (stats, value) => stats.intelligenceLevel = value, wizardGirl => wizardGirl.OtherLevelUp());
+    }
+    public static void SetHasteLevel()
+    {
+        SetStat(HasteLevel, (stats, value) => stats.dexterityLevel = value, wizardGirl => wizardGirl.OtherLevelUp());
+    }
+
+    private static void SetStat<TValue>(TValue value, Action<PlayerStatsData, TValue> propertyModifier, Action<WizardGirlManage> afterUpdate = null)
     {
         if (Singletons.GameSave is not { } gameSave)
         {
@@ -80,6 +109,11 @@ public static class CharacterPatches
         Singletons.Dispatcher.Enqueue(() =>
         {
             propertyModifier(gameSave.stats, value);
+
+            if (Singletons.WizardGirl is { } wizardGirl)
+            {
+                afterUpdate?.Invoke(wizardGirl);
+            }
         });
     }
 
@@ -155,5 +189,12 @@ public static class CharacterPatches
         ThunderMagicLevel = stats.thunderMagicLevel;
         WindMagicLevel = stats.windMagicLevel;
         AbsorbMagicLevel = stats.manaAbsorbLevel;
+
+        HealthLevel = stats.healthyLevel;
+        ManaLevel = stats.manaLevel;
+        StaminaLevel = stats.staminaLevel;
+        StrengthLevel = stats.strengthLevel;
+        IntelligenceLevel = stats.intelligenceLevel;
+        HasteLevel = stats.dexterityLevel;
     }
 }

@@ -175,6 +175,48 @@ public partial class TrainerOverlay
             }
         }
 
+        // Stats options
+        // Magic options
+        if (ImGui.CollapsingHeader("Ability Stats"))
+        {
+            if (Singletons.GameSave is null)
+            {
+                ImGui.Text("No save loaded...");
+            }
+            else
+            {
+                if (ImGui.DragInt("Health Level", ref CharacterPatches.HealthLevel, 0.1f, 1, 100))
+                {
+                    CharacterPatches.SetHealthLevel();
+                }
+
+                if (ImGui.DragInt("Mana Level", ref CharacterPatches.ManaLevel, 0.1f, 1, 100))
+                {
+                    CharacterPatches.SetManaLevel();
+                }
+
+                if (ImGui.DragInt("Stamina Level", ref CharacterPatches.StaminaLevel, 0.1f, 1, 100))
+                {
+                    CharacterPatches.SetStaminaLevel();
+                }
+
+                if (ImGui.DragInt("Strength Level", ref CharacterPatches.StrengthLevel, 0.1f, 1, 100))
+                {
+                    CharacterPatches.SetStrengthLevel();
+                }
+
+                if (ImGui.DragInt("Intelligence Level", ref CharacterPatches.IntelligenceLevel, 0.1f, 1, 100))
+                {
+                    CharacterPatches.SetIntelligenceLevel();
+                }
+
+                if (ImGui.DragInt("Haste Level", ref CharacterPatches.HasteLevel, 0.1f, 1, 50))
+                {
+                    CharacterPatches.SetHasteLevel();
+                }
+            }
+        }
+
         // Combat options
         if (ImGui.CollapsingHeader("Combat"))
         {
