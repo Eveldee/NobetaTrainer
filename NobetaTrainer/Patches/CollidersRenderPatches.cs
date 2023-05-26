@@ -15,6 +15,8 @@ namespace NobetaTrainer.Patches;
 public static class CollidersRenderPatches
 {
     [Bind]
+    public static bool EnableOtherColliders;
+    [Bind]
     public static bool ShowColliders;
 
     public static GameObject RenderersContainer;
@@ -78,6 +80,7 @@ public static class CollidersRenderPatches
         }
 
         _sceneEvents = UnityUtils.FindComponentsByTypeForced<SceneEvent>();
+
         foreach (var sceneEvent in _sceneEvents)
         {
             if (sceneEvent.GetComponent<AreaCheck>() is not null || sceneEvent.GetComponent<MagicWall>() is not null || sceneEvent.GetComponent<LoadScript>() is not null)
@@ -90,14 +93,18 @@ public static class CollidersRenderPatches
                 AddRenderer(sceneEvent.transform, sceneEvent.g_BC, ColliderType.SceneEvent);
             }
         }
-        foreach (var boxCollider in UnityUtils.FindComponentsByTypeForced<BoxCollider>())
+        // Skip loading other colliders if they are disabled to avoid performance issues
+        if (EnableOtherColliders)
         {
-            if (boxCollider.GetComponent<SceneEvent>() != null)
+            foreach (var boxCollider in UnityUtils.FindComponentsByTypeForced<BoxCollider>())
             {
-                continue;
-            }
+                if (boxCollider.GetComponent<SceneEvent>() != null)
+                {
+                    continue;
+                }
 
-            AddRenderer(boxCollider.transform, boxCollider, ColliderType.Other);
+                AddRenderer(boxCollider.transform, boxCollider, ColliderType.Other);
+            }
         }
 
         foreach (var boxColliderRenderer in _boxColliderRenderers)

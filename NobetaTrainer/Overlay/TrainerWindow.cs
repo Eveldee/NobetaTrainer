@@ -2,6 +2,7 @@
 using System.Numerics;
 using Humanizer;
 using ImGuiNET;
+using NobetaTrainer.Config.Models;
 using NobetaTrainer.Patches;
 using NobetaTrainer.Utils;
 
@@ -235,6 +236,8 @@ public partial class TrainerOverlay
             {
                 CollidersRenderPatches.ToggleShowColliders();
             }
+            ImGui.Checkbox("Enable Other Colliders loading", ref CollidersRenderPatches.EnableOtherColliders);
+            HelpMarker("This can affect performances negatively!!! Takes effect after reloading the scene. Note that this won't affect scene event colliders as they don't generate any lag");
 
             ImGui.SeparatorText($"Colliding Scene Events ({CollidersRenderPatches.CollidingSceneEvents?.Sum(group => group.Count()) ?? 0})");
             ImGui.PushStyleColor(ImGuiCol.Text, InfoColor);
@@ -274,6 +277,11 @@ public partial class TrainerOverlay
             {
                 if (ImGui.TreeNode($"{colliderType.Humanize()}##{colliderType}"))
                 {
+                    if (colliderType == ColliderType.Other && !CollidersRenderPatches.EnableOtherColliders)
+                    {
+                        ImGui.BeginDisabled();
+                    }
+
                     if (ImGui.Checkbox($"Enable##{colliderType}", ref rendererConfig.Enable))
                     {
                         CollidersRenderPatches.UpdateDrawLines(colliderType);
@@ -305,6 +313,11 @@ public partial class TrainerOverlay
                     if (ImGui.ColorEdit4($"Surface Color##{colliderType}", ref rendererConfig.SurfaceColor))
                     {
                         CollidersRenderPatches.UpdateDrawLines(colliderType);
+                    }
+
+                    if (colliderType == ColliderType.Other && !CollidersRenderPatches.EnableOtherColliders)
+                    {
+                        ImGui.EndDisabled();
                     }
 
                     ImGui.TreePop();
