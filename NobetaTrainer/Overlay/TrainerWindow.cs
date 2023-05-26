@@ -239,7 +239,7 @@ public partial class TrainerOverlay
             ImGui.Checkbox("Enable Other Colliders loading", ref CollidersRenderPatches.EnableOtherColliders);
             HelpMarker("This can affect performances negatively!!! Takes effect after reloading the scene. Note that this won't affect scene event colliders as they don't generate any lag");
 
-            ImGui.SeparatorText($"Colliding Scene Events ({CollidersRenderPatches.CollidingSceneEvents?.Sum(group => group.Count()) ?? 0})");
+            ImGui.SeparatorText($"Colliding Scene Events ({CollidersRenderPatches.CollidingSceneEvents?.Sum(group => group.Count()) ?? 0}) [Point approximation]");
             ImGui.PushStyleColor(ImGuiCol.Text, InfoColor);
             if (ImGui.BeginChild("Colliding Scene Events#Child", new Vector2(0, 200), true, ImGuiWindowFlags.AlwaysVerticalScrollbar))
             {
@@ -247,7 +247,7 @@ public partial class TrainerOverlay
                 {
                     foreach (var collidingSceneEventGroup in collidingSceneEvents)
                     {
-                        if (ImGui.TreeNodeEx($"{collidingSceneEventGroup.Key}##{collidingSceneEventGroup.Key}", ImGuiTreeNodeFlags.DefaultOpen))
+                        if (ImGui.TreeNodeEx($"{collidingSceneEventGroup.Key}##SceneEvent{collidingSceneEventGroup.Key}", ImGuiTreeNodeFlags.DefaultOpen))
                         {
                             foreach (var sceneEvent in collidingSceneEventGroup)
                             {
@@ -261,6 +261,38 @@ public partial class TrainerOverlay
                                 {
                                     ImGui.SameLine();
                                     ImGui.TextColored(WarningColor, "(Release)");
+                                }
+                                if (!sceneEvent.isActiveAndEnabled)
+                                {
+                                    ImGui.SameLine();
+                                    ImGui.TextColored(ErrorColor, "(Disabled)");
+                                }
+                            }
+                            ImGui.TreePop();
+                        }
+                    }
+                }
+            }
+            ImGui.EndChild();
+            ImGui.PopStyleColor(1);
+
+            ImGui.SeparatorText($"Colliding Active Colliders ({CollidersRenderPatches.CollidingColliders?.Sum(group => group.Count()) ?? 0}) [Exact]");
+            ImGui.PushStyleColor(ImGuiCol.Text, InfoColor);
+            if (ImGui.BeginChild("Colliding Colliders#Child", new Vector2(0, 200), true, ImGuiWindowFlags.AlwaysVerticalScrollbar))
+            {
+                if (CollidersRenderPatches.CollidingColliders is {  } collidingColliders)
+                {
+                    foreach (var grouping in collidingColliders)
+                    {
+                        if (ImGui.TreeNodeEx($"{grouping.Key}##Collider{grouping.Key}", ImGuiTreeNodeFlags.DefaultOpen))
+                        {
+                            foreach (var collider in grouping)
+                            {
+                                ImGui.TextColored(ValueColor, $"{collider.name}");
+                                if (collider.isTrigger)
+                                {
+                                    ImGui.SameLine();
+                                    ImGui.TextColored(WarningColor, "(Trigger)");
                                 }
                             }
                             ImGui.TreePop();

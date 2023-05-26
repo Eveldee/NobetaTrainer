@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
+using Humanizer;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using NobetaTrainer.Config;
 using NobetaTrainer.Config.Models;
@@ -21,6 +22,7 @@ public static class CollidersRenderPatches
 
     public static GameObject RenderersContainer;
     public static IGrouping<string, SceneEvent>[] CollidingSceneEvents;
+    public static IGrouping<string, Collider>[] CollidingColliders;
 
     private static readonly List<BoxColliderRenderer> _boxColliderRenderers = new();
     private static Il2CppArrayBase<SceneEvent> _sceneEvents;
@@ -133,11 +135,19 @@ public static class CollidersRenderPatches
             return;
         }
 
-        // Get all scene events that Nobeta is colliding with
+        // Get all scene events that Nobeta center point is colliding with
         var nobetaPosition = __instance.g_PlayerCenter.position;
 
         CollidingSceneEvents = _sceneEvents
             .Where(sceneEvent => sceneEvent.g_BC != null && sceneEvent.g_BC.ContainsBox(nobetaPosition))
             .GroupBy(sceneEvent => sceneEvent.GetIl2CppType().Name).ToArray();
+
+        // Get all active colliders that Nobeta is exactly colliding with
+        var capsule = __instance.characterController;
+        var cylinderHeightVector = new Vector3(0, capsule.height / 2 - capsule.radius, 0);
+        var capsuleCenter = __instance.transform.TransformPoint(capsule.center);
+
+        CollidingColliders = Physics.OverlapCapsule(capsuleCenter - cylinderHeightVector, capsuleCenter + cylinderHeightVector, capsule.radius)
+            .GroupBy(collider => collider.GetIl2CppType().Name).ToArray();
     }
 }
