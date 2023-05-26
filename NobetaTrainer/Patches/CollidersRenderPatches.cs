@@ -124,6 +124,7 @@ public static class CollidersRenderPatches
         _boxColliderRenderers.Clear();
         _sceneEvents = null;
         CollidingSceneEvents = null;
+        CollidingColliders = null;
     }
 
     [HarmonyPatch(typeof(WizardGirlManage), nameof(WizardGirlManage.Update))]
@@ -136,10 +137,10 @@ public static class CollidersRenderPatches
         }
 
         // Get all scene events that Nobeta center point is colliding with
-        var nobetaPosition = __instance.g_PlayerCenter.position;
+        var worldNobetaPosition = __instance.g_PlayerCenter.position;
 
         CollidingSceneEvents = _sceneEvents
-            .Where(sceneEvent => sceneEvent.g_BC != null && sceneEvent.g_BC.ContainsBox(nobetaPosition))
+            .Where(sceneEvent => sceneEvent.g_BC != null && sceneEvent.g_BC.Contains(worldNobetaPosition))
             .GroupBy(sceneEvent => sceneEvent.GetIl2CppType().Name).ToArray();
 
         // Get all active colliders that Nobeta is exactly colliding with
