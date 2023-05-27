@@ -240,14 +240,13 @@ public partial class TrainerOverlay
             HelpMarker("This can affect performances negatively!!! Takes effect after reloading the scene. Note that this won't affect scene event colliders as they don't generate any lag");
 
             ImGui.SeparatorText($"Colliding Scene Events ({CollidersRenderPatches.CollidingSceneEvents?.Sum(group => group.Count()) ?? 0}) [Point approximation]");
-            ImGui.PushStyleColor(ImGuiCol.Text, InfoColor);
-            if (ImGui.BeginChild("Colliding Scene Events#Child", new Vector2(0, 200), true, ImGuiWindowFlags.AlwaysVerticalScrollbar))
+            Child("Colliding Scene Events#Child", new Vector2(0, 200), true, ImGuiWindowFlags.AlwaysVerticalScrollbar, () =>
             {
-                if (CollidersRenderPatches.CollidingSceneEvents is {  } collidingSceneEvents)
+                if (CollidersRenderPatches.CollidingSceneEvents is { } collidingSceneEvents)
                 {
                     foreach (var collidingSceneEventGroup in collidingSceneEvents)
                     {
-                        if (ImGui.TreeNodeEx($"{collidingSceneEventGroup.Key}##SceneEvent{collidingSceneEventGroup.Key}", ImGuiTreeNodeFlags.DefaultOpen))
+                        TreeNodeEx($"{collidingSceneEventGroup.Key}##SceneEvent{collidingSceneEventGroup.Key}", ImGuiTreeNodeFlags.DefaultOpen, () =>
                         {
                             foreach (var sceneEvent in collidingSceneEventGroup)
                             {
@@ -257,34 +256,32 @@ public partial class TrainerOverlay
                                     ImGui.SameLine();
                                     ImGui.TextColored(WarningColor, "(Open)");
                                 }
+
                                 if (sceneEvent.g_bReleaseEvent)
                                 {
                                     ImGui.SameLine();
                                     ImGui.TextColored(WarningColor, "(Release)");
                                 }
+
                                 if (!sceneEvent.isActiveAndEnabled)
                                 {
                                     ImGui.SameLine();
                                     ImGui.TextColored(ErrorColor, "(Disabled)");
                                 }
                             }
-                            ImGui.TreePop();
-                        }
+                        });
                     }
                 }
-            }
-            ImGui.EndChild();
-            ImGui.PopStyleColor(1);
+            });
 
             ImGui.SeparatorText($"Colliding Active Colliders ({CollidersRenderPatches.CollidingColliders?.Sum(group => group.Count()) ?? 0}) [Exact]");
-            ImGui.PushStyleColor(ImGuiCol.Text, InfoColor);
-            if (ImGui.BeginChild("Colliding Colliders#Child", new Vector2(0, 200), true, ImGuiWindowFlags.AlwaysVerticalScrollbar))
+            Child("Colliding Colliders#Child", new Vector2(0, 200), true, ImGuiWindowFlags.AlwaysVerticalScrollbar, () =>
             {
                 if (CollidersRenderPatches.CollidingColliders is {  } collidingColliders)
                 {
                     foreach (var grouping in collidingColliders)
                     {
-                        if (ImGui.TreeNodeEx($"{grouping.Key}##Collider{grouping.Key}", ImGuiTreeNodeFlags.DefaultOpen))
+                        TreeNodeEx($"{grouping.Key}##Collider{grouping.Key}", ImGuiTreeNodeFlags.DefaultOpen, () =>
                         {
                             foreach (var collider in grouping)
                             {
@@ -295,19 +292,16 @@ public partial class TrainerOverlay
                                     ImGui.TextColored(WarningColor, "(Trigger)");
                                 }
                             }
-                            ImGui.TreePop();
-                        }
+                        });
                     }
                 }
-            }
-            ImGui.EndChild();
-            ImGui.PopStyleColor(1);
+            });
 
             ImGui.SeparatorText("Styles");
 
             foreach (var (colliderType, rendererConfig) in Singletons.ColliderRendererManager.RendererConfigs)
             {
-                if (ImGui.TreeNode($"{colliderType.Humanize()}##{colliderType}"))
+                TreeNode($"{colliderType.Humanize()}##{colliderType}", () =>
                 {
                     if (colliderType == ColliderType.Other && !CollidersRenderPatches.EnableOtherColliders)
                     {
@@ -318,30 +312,37 @@ public partial class TrainerOverlay
                     {
                         CollidersRenderPatches.UpdateDrawLines(colliderType);
                     }
+
                     ImGui.SameLine();
                     if (ImGui.Checkbox($"Draw Lines##{colliderType}", ref rendererConfig.DrawLines))
                     {
                         CollidersRenderPatches.UpdateDrawLines(colliderType);
                     }
+
                     ImGui.SameLine();
                     if (ImGui.Checkbox($"Draw Surfaces##{colliderType}", ref rendererConfig.DrawSurfaces))
                     {
                         CollidersRenderPatches.UpdateDrawLines(colliderType);
                     }
-                    if (ImGui.InputFloat($"Line width##{colliderType}", ref rendererConfig.LineWidth, 0.01f, 0.1f, "%.2f"))
+
+                    if (ImGui.InputFloat($"Line width##{colliderType}", ref rendererConfig.LineWidth, 0.01f, 0.1f,
+                            "%.2f"))
                     {
                         CollidersRenderPatches.UpdateDrawLines(colliderType);
                     }
+
                     if (ImGui.ColorEdit4($"Line Start Color##{colliderType}", ref rendererConfig.LineStartColor))
                     {
                         rendererConfig.LineEndColor.W = rendererConfig.LineStartColor.W;
                         CollidersRenderPatches.UpdateDrawLines(colliderType);
                     }
+
                     if (ImGui.ColorEdit4($"Line End Color##{colliderType}", ref rendererConfig.LineEndColor))
                     {
                         rendererConfig.LineStartColor.W = rendererConfig.LineEndColor.W;
                         CollidersRenderPatches.UpdateDrawLines(colliderType);
                     }
+
                     if (ImGui.ColorEdit4($"Surface Color##{colliderType}", ref rendererConfig.SurfaceColor))
                     {
                         CollidersRenderPatches.UpdateDrawLines(colliderType);
@@ -351,9 +352,7 @@ public partial class TrainerOverlay
                     {
                         ImGui.EndDisabled();
                     }
-
-                    ImGui.TreePop();
-                }
+                });
             }
         }
 

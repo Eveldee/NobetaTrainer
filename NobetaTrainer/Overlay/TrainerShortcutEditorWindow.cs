@@ -99,12 +99,13 @@ public partial class TrainerOverlay
                 var array = new Il2CppReferenceArray<ShortcutEditor.CommandAction>(editor.CommandActionsMap.Count);
                 editor.CommandActionsMap.Values.CopyTo(array, 0);
 
-                ImGui.BeginChild("Commands", new Vector2(0, 190f), true, ImGuiWindowFlags.AlwaysVerticalScrollbar | ImGuiWindowFlags.HorizontalScrollbar);
-                foreach (var commandAction in array)
+                Child("Commands", new Vector2(0, 190f), true, ImGuiWindowFlags.AlwaysVerticalScrollbar | ImGuiWindowFlags.HorizontalScrollbar, () =>
                 {
-                    DisplayCommandAction(commandAction);
-                }
-                ImGui.EndChild();
+                    foreach (var commandAction in array)
+                    {
+                        DisplayCommandAction(commandAction);
+                    }
+                });
             }
 
             if (ImGui.CollapsingHeader("Unlock Cursor"))

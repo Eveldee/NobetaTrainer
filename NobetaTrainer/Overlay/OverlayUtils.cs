@@ -8,6 +8,7 @@ using Humanizer;
 using ImGuiNET;
 using NobetaTrainer.Utils;
 using UnityEngine;
+using Vector2 = System.Numerics.Vector2;
 using Vector3 = UnityEngine.Vector3;
 using Vector4 = System.Numerics.Vector4;
 
@@ -215,7 +216,7 @@ public partial class TrainerOverlay
         }
     }
 
-    private bool ButtonColored(Vector4 color, string label, float gradientStep = 0.1f)
+    private static bool ButtonColored(Vector4 color, string label, float gradientStep = 0.1f)
     {
         var gradient = color.IntensityGradient(gradientStep, 3);
 
@@ -230,20 +231,46 @@ public partial class TrainerOverlay
         return result;
     }
 
-    private void TreeNode(string label, Action whenOpened)
+    private static void TreeNodeEx(string label, ImGuiTreeNodeFlags flags, Action content)
     {
         ImGui.PushStyleColor(ImGuiCol.Text, InfoColor);
-        if (ImGui.TreeNode(label))
+        if (ImGui.TreeNodeEx(label, flags))
         {
             ImGui.PopStyleColor();
 
-            whenOpened();
+            content();
 
             ImGui.TreePop();
         }
         else
         {
             ImGui.PopStyleColor();
+        }
+    }
+    private static void TreeNode(string label, Action content)
+    {
+        ImGui.PushStyleColor(ImGuiCol.Text, InfoColor);
+        if (ImGui.TreeNode(label))
+        {
+            ImGui.PopStyleColor();
+
+            content();
+
+            ImGui.TreePop();
+        }
+        else
+        {
+            ImGui.PopStyleColor();
+        }
+    }
+
+    private static void Child(string label, Vector2 size, bool border, ImGuiWindowFlags flags, Action content)
+    {
+        if (ImGui.BeginChild(label, size, border, flags))
+        {
+            content();
+
+            ImGui.EndChild();
         }
     }
 }

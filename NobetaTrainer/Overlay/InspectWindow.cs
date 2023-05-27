@@ -155,7 +155,7 @@ public partial class TrainerOverlay
             }
             else
             {
-                if (ImGui.TreeNode("General"))
+                TreeNode("General", () =>
                 {
                     ImGui.SeparatorText("Position");
                     ShowValueModifiable(nameof(Transform.position), wizardGirl.transform);
@@ -177,7 +177,9 @@ public partial class TrainerOverlay
                     ShowValueExpression(wizardGirl.isNobeta);
 
                     ImGui.SeparatorText("Magic");
-                    ShowValueExpression(wizardGirl.GetMagicType() == PlayerEffectPlay.Magic.Null ? "Arcane" : wizardGirl.GetMagicType());
+                    ShowValueExpression(wizardGirl.GetMagicType() == PlayerEffectPlay.Magic.Null
+                        ? "Arcane"
+                        : wizardGirl.GetMagicType());
                     ShowValue("Charging:", wizardGirl.GetIsChanging());
                     ShowValueExpression(wizardGirl.IsChargeMax());
                     ShowValue("Player Shot Effect:", wizardGirl.g_bPlayerShotEffect);
@@ -188,11 +190,9 @@ public partial class TrainerOverlay
 
                     ShowValue("Hold Item:", wizardGirl.g_PlayerItem.g_HoldItem.Humanize());
                     ShowValue("Item Using:", wizardGirl.g_PlayerItem.g_ItemUsing);
+                });
 
-                    ImGui.TreePop();
-                }
-
-                if (ImGui.TreeNode("Base Data"))
+                TreeNode("Base Data", () =>
                 {
                     var basic = wizardGirl.BaseData;
 
@@ -244,11 +244,9 @@ public partial class TrainerOverlay
                     ShowValueExpression(basic.g_fSPRecoveryStayTime);
                     ShowValueExpression(basic.g_fSPRecoveryStayTimeVal);
                     ShowValueExpression(basic.g_fStaminaPoints);
+                });
 
-                    ImGui.TreePop();
-                }
-
-                if (ImGui.TreeNode("Magic Data"))
+                TreeNode("Magic Data", () =>
                 {
                     var magic = wizardGirl.g_MData;
 
@@ -288,11 +286,9 @@ public partial class TrainerOverlay
                     ShowValueExpression(magic.g_SkyJumpCD);
                     ShowValueExpression(magic.g_SkyJumpCDTime);
                     ShowValueExpression(magic.g_SkyJumpExp);
+                });
 
-                    ImGui.TreePop();
-                }
-
-                if (ImGui.TreeNode("Character Controller"))
+                TreeNode("Character Controller", () =>
                 {
                     var characterController = wizardGirl.characterController;
                     ImGui.SeparatorText("General");
@@ -314,16 +310,12 @@ public partial class TrainerOverlay
                     ShowValueExpression(characterController.skinWidth);
                     ShowValueExpression(characterController.slopeLimit);
                     ShowValueExpression(characterController.stepOffset);
+                });
 
-                    ImGui.TreePop();
-                }
-
-                if (ImGui.TreeNode("Camera"))
+                TreeNode("Camera", () =>
                 {
                     ImGui.SeparatorText("Camera");
-
-                    ImGui.TreePop();
-                }
+                });
             }
         }
 
