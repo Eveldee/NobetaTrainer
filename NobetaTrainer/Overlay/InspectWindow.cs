@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using EnumsNET;
 using Humanizer;
 using ImGuiNET;
@@ -11,6 +13,11 @@ namespace NobetaTrainer.Overlay;
 
 public partial class TrainerOverlay
 {
+    private static readonly IGrouping<string, PropertyInfo>[] _flagPropertyInfos = typeof(StageFlagData).GetProperties()
+        .Where(property => property.Name.StartsWith("Stage", StringComparison.OrdinalIgnoreCase))
+        .GroupBy(property => property.Name[..7])
+        .ToArray();
+
     private void ShowInspectWindow()
     {
         ImGui.Begin("Inspector", ref OverlayState.ShowInspectWindow);
@@ -18,6 +25,8 @@ public partial class TrainerOverlay
 
         ImGui.TextColored(InfoColor, "Notes:");
         ImGui.Text("- Vectors are shown in (x, y, z) format");
+        ImGui.Text("- EulerAngles are shown in (x, y, z) format");
+        ImGui.Text("- Quaternions are shown in (x, y, z, w) format");
 
         if (ImGui.CollapsingHeader("ImGui"))
         {
@@ -149,18 +158,21 @@ public partial class TrainerOverlay
                 if (ImGui.TreeNode("General"))
                 {
                     ImGui.SeparatorText("Position");
-                    ShowValue("Position:", wizardGirl.transform.position.Format());
-                    ShowValue("Rotation:", wizardGirl.transform.rotation.Format());
-                    ShowValue("Center  :", wizardGirl.GetCenter().Format());
-                    ShowValue("AimTarget:", wizardGirl.aimTarget.position.Format());
+                    ShowValueModifiable(nameof(Transform.position), wizardGirl.transform);
+                    ShowValueModifiable(nameof(Transform.rotation), wizardGirl.transform);
+                    ShowValueModifiable(nameof(Transform.position), wizardGirl.g_PlayerCenter, "Center");
+
+                    ImGui.NewLine();
+                    ShowValueModifiable(nameof(Transform.position), wizardGirl.aimTarget, "AimTarget Position");
+                    ShowValueModifiable(nameof(Transform.rotation), wizardGirl.aimTarget, "AimTarget Rotation");
 
                     ImGui.SeparatorText("Status");
-                    ShowValueExpression(wizardGirl.GetPlayerStatus());
+                    ShowValueModifiable(nameof(PlayerController.state), wizardGirl.playerController);
                     #if !V1031
-                    ShowValueExpression(wizardGirl.currentActiveSkin);
+                    ShowValueModifiable(nameof(WizardGirlManage.currentActiveSkin), wizardGirl);
                     #endif
+                    ShowValueModifiable(nameof(WizardGirlManage.g_bStealth), wizardGirl, "Stealth");
                     ShowValueExpression(wizardGirl.GetIsDead());
-                    ShowValue("Stealth:", wizardGirl.g_bStealth);
                     ShowValueExpression(wizardGirl.GetRadius());
                     ShowValueExpression(wizardGirl.isNobeta);
 
@@ -190,6 +202,7 @@ public partial class TrainerOverlay
                     ShowValueExpression(basic.g_bChargeFadeStop);
                     ShowValueExpression(basic.g_fChargeAddVal);
                     ShowValueExpression(basic.g_fChargeFade);
+                    ShowValue("Charge Fade Rate:", wizardGirl.g_MData.GetChargeMaxFade());
                     ShowValueExpression(basic.g_fChargeMax);
                     ShowValueExpression(basic.g_fChargeSpeed);
                     ShowValueExpression(basic.g_fChargeWait);
@@ -240,7 +253,7 @@ public partial class TrainerOverlay
                     var magic = wizardGirl.g_MData;
 
                     ImGui.SeparatorText("General");
-                    ShowValue("Max Charge Fade:", magic.GetChargeMaxFade());
+                    ShowValue("Charge Fade Rate:", magic.GetChargeMaxFade());
 
                     ImGui.SeparatorText("Arcane");
                     ShowValueExpression(magic.g_NullCD);
@@ -286,6 +299,7 @@ public partial class TrainerOverlay
 
                     ShowValueExpression(characterController.center.Format());
                     ShowValueExpression(characterController.velocity.Format());
+                    ShowValue("Velocity Magnitude", characterController.velocity.magnitude, "F3");
 
                     ImGui.SeparatorText("Status");
                     ShowValueExpression(FlagEnums.FormatFlags(characterController.collisionFlags));
@@ -390,6 +404,26 @@ public partial class TrainerOverlay
                 ShowValueExpression(runtimeData.StaminaLossDodge);
                 ShowValueExpression(runtimeData.StaminaLossFall);
                 ShowValueExpression(runtimeData.StaminaLossJump);
+            }
+        }
+
+        if (ImGui.CollapsingHeader("Stage Flag Data"))
+        {
+            if (Singletons.GameSave?.flags is { } flags)
+            {
+                foreach (var grouping in _flagPropertyInfos)
+                {
+                    TreeNode(grouping.Key.Humanize(LetterCasing.Title), () =>
+                    {
+                        foreach (var propertyInfo in grouping)
+                        {
+                            if (ShowValueModifiable(propertyInfo, flags, propertyInfo.Name.Replace('_', ' ').Humanize(LetterCasing.Title)))
+                            {
+                                Singletons.WizardGirl?.BaseData.UpdateFlag();
+                            }
+                        }
+                    });
+                }
             }
         }
 
