@@ -24,7 +24,8 @@ public static class UnityUtils
 
     public static string Format(this Quaternion quaternion)
     {
-        return $"({quaternion.x:F3}, {quaternion.y:F3}, {quaternion.z:F3}, {quaternion.w:F3})";
+        var eulerAngles = quaternion.eulerAngles;
+        return $"({eulerAngles.x:F3}, {eulerAngles.y:F3}, {eulerAngles.z:F3})";
     }
 
     public static bool ToBool(this int value) => value switch

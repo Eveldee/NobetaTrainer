@@ -25,8 +25,7 @@ public partial class TrainerOverlay
 
         ImGui.TextColored(InfoColor, "Notes:");
         ImGui.Text("- Vectors are shown in (x, y, z) format");
-        ImGui.Text("- EulerAngles are shown in (x, y, z) format");
-        ImGui.Text("- Quaternions are shown in (x, y, z, w) format");
+        ImGui.Text("- Rotations are shown in euler angles (x, y, z) format");
 
         if (ImGui.CollapsingHeader("ImGui"))
         {
