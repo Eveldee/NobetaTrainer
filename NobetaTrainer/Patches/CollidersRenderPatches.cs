@@ -92,15 +92,21 @@ public static class CollidersRenderPatches
             }
 
             // Skip loading other colliders if they are disabled to avoid performance issues
+            // Also skip colliders that starts with "Damage" to disable fix an issue in last levels
             if (newColliderType == ColliderType.Other)
             {
-                if (!EnableOtherColliders)
+                if (!EnableOtherColliders || boxCollider.name.StartsWith("Damage"))
                 {
                     continue;
                 }
             }
 
             AddRenderer(boxCollider.transform, boxCollider, newColliderType);
+        }
+
+        foreach (var boxColliderRenderer in _boxColliderRenderers)
+        {
+            boxColliderRenderer.UpdateDisplay();
         }
 
         RenderersContainer.SetActive(ShowColliders);
@@ -122,8 +128,6 @@ public static class CollidersRenderPatches
     [HarmonyPrefix]
     private static void WizardGirlManageUpdatePostfix(WizardGirlManage __instance)
     {
-        RangeLoader.TriggerPosition = __instance.transform.position;
-
         if (_sceneEvents == null)
         {
             return;

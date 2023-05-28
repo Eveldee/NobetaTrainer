@@ -1,9 +1,5 @@
-﻿using System;
-using Il2CppInterop.Runtime.Injection;
-using NobetaTrainer.Patches;
-using Unity.Mathematics;
+﻿using Il2CppInterop.Runtime.Injection;
 using UnityEngine;
-using Math = Il2CppSystem.Math;
 using Random = UnityEngine.Random;
 
 namespace NobetaTrainer.Behaviours;

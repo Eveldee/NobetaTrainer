@@ -15,7 +15,6 @@ public class BoxColliderRenderer
     public const float LoadRange = 100f;
 
     private readonly GameObject _container;
-    private readonly GameObject _rangeLoader;
     private readonly Vector3 _centerOffset;
 
     private readonly BoxColliderRendererConfig _rendererConfig;
@@ -50,33 +49,22 @@ public class BoxColliderRenderer
 
         // Parent is a global container for everything except others which are contained in their respective scenes,
         // this allow dynamically loading them to avoid lag
+        var parent =
+            ColliderType == ColliderType.Other && target.GetComponentInParent<SceneIsHide>()?.transform is { } scene
+                ? scene
+                : CollidersRenderPatches.RenderersContainer.transform;
+
         _container = new GameObject($"{name}_Container")
         {
             transform =
             {
-                parent = CollidersRenderPatches.RenderersContainer.transform,
-                localPosition = target.position,
-                localRotation = target.rotation,
+                parent = parent,
+                position = target.position,
+                rotation = target.rotation,
                 localScale = target.lossyScale
             }
         };
         _centerOffset = boxCollider.center;
-
-        // Add range loader for other colliders
-        if (colliderType == ColliderType.Other)
-        {
-            _rangeLoader = new GameObject()
-            {
-                transform =
-                {
-                    parent = CollidersRenderPatches.RenderersContainer.transform
-                }
-            };
-            var rangeLoader = _rangeLoader.AddComponent<RangeLoader>();
-            rangeLoader.Target = _container;
-            rangeLoader.TargetPosition = _container.transform.position;
-            rangeLoader.Range = LoadRange;
-        }
 
         // Create surface and line renderers
         var xExtent = boxCollider.extents.x;
@@ -103,17 +91,17 @@ public class BoxColliderRenderer
         _lineRenderers = _container.GetComponentsInChildren<LineRenderer>();
         _meshRenderers = _container.GetComponentsInChildren<MeshRenderer>();
 
-        _container.SetActive(true);
-        _rangeLoader?.SetActive(true);
+        _container.SetActive(IsActive());
     }
 
     public void UpdateDisplay()
     {
-        _container.SetActive(IsActive());
+        var active = IsActive();
+        _container.SetActive(active);
 
         foreach (var lineRenderer in _lineRenderers)
         {
-            lineRenderer.enabled = _rendererConfig.DrawLines;
+            lineRenderer.enabled = active && _rendererConfig.DrawLines;
             lineRenderer.widthMultiplier = _rendererConfig.LineWidth;
             lineRenderer.startColor = _rendererConfig.LineStartColor.ToColor();
             lineRenderer.endColor = _rendererConfig.LineEndColor.ToColor();
@@ -121,7 +109,7 @@ public class BoxColliderRenderer
 
         foreach (var meshRenderer in _meshRenderers)
         {
-            meshRenderer.enabled = _rendererConfig.DrawSurfaces;
+            meshRenderer.enabled = active && _rendererConfig.DrawSurfaces;
             meshRenderer.material.color = _rendererConfig.SurfaceColor.ToColor();
         }
     }
@@ -133,7 +121,6 @@ public class BoxColliderRenderer
 
     public void Destroy()
     {
-        Object.Destroy(_rangeLoader);
         Object.Destroy(_container);
     }
 
