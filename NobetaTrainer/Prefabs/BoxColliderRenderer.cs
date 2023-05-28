@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using NobetaTrainer.Behaviours;
 using NobetaTrainer.Config.Models;
 using NobetaTrainer.Patches;
 using NobetaTrainer.Utils;
@@ -11,7 +12,10 @@ public class BoxColliderRenderer
 {
     public ColliderType ColliderType { get; }
 
+    public const float LoadRange = 100f;
+
     private readonly GameObject _container;
+    private readonly GameObject _rangeLoader;
     private readonly Vector3 _centerOffset;
 
     private readonly BoxColliderRendererConfig _rendererConfig;
@@ -57,11 +61,24 @@ public class BoxColliderRenderer
             }
         };
         _centerOffset = boxCollider.center;
-        // if (ColliderType == ColliderType.Other && target.GetComponentInParent<SceneIsHide>()?.transform is { } parent)
-        // {
-        //     _parent = parent.gameObject;
-        // }
 
+        // Add range loader for other colliders
+        if (colliderType == ColliderType.Other)
+        {
+            _rangeLoader = new GameObject()
+            {
+                transform =
+                {
+                    parent = CollidersRenderPatches.RenderersContainer.transform
+                }
+            };
+            var rangeLoader = _rangeLoader.AddComponent<RangeLoader>();
+            rangeLoader.Target = _container;
+            rangeLoader.TargetPosition = _container.transform.position;
+            rangeLoader.Range = LoadRange;
+        }
+
+        // Create surface and line renderers
         var xExtent = boxCollider.extents.x;
         var yExtent = boxCollider.extents.y;
         var zExtent = boxCollider.extents.z;
@@ -86,7 +103,8 @@ public class BoxColliderRenderer
         _lineRenderers = _container.GetComponentsInChildren<LineRenderer>();
         _meshRenderers = _container.GetComponentsInChildren<MeshRenderer>();
 
-        _container.SetActive(IsActive());
+        _container.SetActive(true);
+        _rangeLoader?.SetActive(true);
     }
 
     public void UpdateDisplay()
@@ -115,6 +133,7 @@ public class BoxColliderRenderer
 
     public void Destroy()
     {
+        Object.Destroy(_rangeLoader);
         Object.Destroy(_container);
     }
 

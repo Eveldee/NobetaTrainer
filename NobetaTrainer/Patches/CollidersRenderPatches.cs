@@ -5,6 +5,7 @@ using Humanizer;
 using Il2CppInterop.Runtime;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Il2CppSystem;
+using NobetaTrainer.Behaviours;
 using NobetaTrainer.Config;
 using NobetaTrainer.Config.Models;
 using NobetaTrainer.Prefabs;
@@ -39,6 +40,11 @@ public static class CollidersRenderPatches
 
     public static void ToggleShowColliders()
     {
+        if (RenderersContainer is null)
+        {
+            return;
+        }
+
         Singletons.Dispatcher.Enqueue(() =>
         {
             RenderersContainer.SetActive(ShowColliders);
@@ -71,38 +77,30 @@ public static class CollidersRenderPatches
 
         _sceneEvents = UnityUtils.FindComponentsByTypeForced<SceneEvent>();
 
-        if (EnableOtherColliders)
+        foreach (var boxCollider in UnityUtils.FindComponentsByTypeForced<BoxCollider>())
         {
-            foreach (var boxCollider in UnityUtils.FindComponentsByTypeForced<BoxCollider>())
+            var newColliderType = ColliderType.Other;
+
+            foreach (var (componentType, colliderType) in _componentToColliderType)
             {
-                var newColliderType = ColliderType.Other;
-
-                foreach (var (componentType, colliderType) in _componentToColliderType)
+                if (boxCollider.GetComponent(componentType) is not null)
                 {
-                    if (boxCollider.GetComponent(componentType) is not null)
-                    {
-                        newColliderType = colliderType;
+                    newColliderType = colliderType;
 
-                        break;
-                    }
+                    break;
                 }
-
-                // Skip loading other colliders if they are disabled to avoid performance issues
-                if (newColliderType == ColliderType.Other)
-                {
-                    if (!EnableOtherColliders)
-                    {
-                        continue;
-                    }
-                }
-
-                AddRenderer(boxCollider.transform, boxCollider, newColliderType);
             }
-        }
 
-        foreach (var boxColliderRenderer in _boxColliderRenderers)
-        {
-            boxColliderRenderer.UpdateDisplay();
+            // Skip loading other colliders if they are disabled to avoid performance issues
+            if (newColliderType == ColliderType.Other)
+            {
+                if (!EnableOtherColliders)
+                {
+                    continue;
+                }
+            }
+
+            AddRenderer(boxCollider.transform, boxCollider, newColliderType);
         }
 
         RenderersContainer.SetActive(ShowColliders);
@@ -124,6 +122,8 @@ public static class CollidersRenderPatches
     [HarmonyPrefix]
     private static void WizardGirlManageUpdatePostfix(WizardGirlManage __instance)
     {
+        RangeLoader.TriggerPosition = __instance.transform.position;
+
         if (_sceneEvents == null)
         {
             return;
