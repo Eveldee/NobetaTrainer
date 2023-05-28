@@ -18,6 +18,8 @@ public static class CharacterPatches
     public static bool InfiniteStaminaEnabled;
     [Bind]
     public static bool OneTapEnabled;
+    [Bind]
+    public static bool OneHitKOEnabled;
 
     public static int SoulsCount;
 
@@ -123,7 +125,18 @@ public static class CharacterPatches
     private static bool WizardGirlManageHitPrefix(ref bool __result, AttackData Data, bool bIgnoreDodge = false)
     {
         // No Damage
-        return !NoDamageEnabled;
+        if (NoDamageEnabled)
+        {
+            return false;
+        }
+
+        // One hit KO
+        if (OneHitKOEnabled)
+        {
+            Data.g_fStrength = float.MaxValue;
+        }
+
+        return true;
     }
 
     // Infinite HP, MP and SP

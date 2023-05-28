@@ -36,8 +36,6 @@ public partial class TrainerOverlay
         if (ImGui.CollapsingHeader("Character", ImGuiTreeNodeFlags.DefaultOpen))
         {
             ImGui.SeparatorText("General");
-            ImGui.Checkbox("No Damage", ref CharacterPatches.NoDamageEnabled);
-            HelpMarker("Ignore damages, disabling any effect like knockback");
 
             ImGui.Checkbox("Infinite HP", ref CharacterPatches.InfiniteHpEnabled);
             HelpMarker("Regen HP anytime it goes below max");
@@ -223,8 +221,15 @@ public partial class TrainerOverlay
         {
             ImGui.SeparatorText("General");
 
+            ImGui.Checkbox("No Damage", ref CharacterPatches.NoDamageEnabled);
+            HelpMarker("Ignore damages, disabling any effect like knockback");
+
             ImGui.Checkbox("One Tap", ref CharacterPatches.OneTapEnabled);
             HelpMarker("Kill all enemies in one hit, effectively deals just a stupid amount of damage");
+
+            ImGui.NewLine();
+            ImGui.Checkbox("On Hit KO (OHKO)", ref CharacterPatches.OneHitKOEnabled);
+            HelpMarker("Nobeta instantly dies upon taking any damage");
         }
 
         // Colliders options
