@@ -14,18 +14,8 @@ public class BoxColliderRenderer
     private readonly GameObject _container;
     private readonly Vector3 _centerOffset;
 
-    private readonly GameObject _downFace;
-    private readonly GameObject _upFace;
-
-    private readonly GameObject _frontFace;
-    private readonly GameObject _backFace;
-
-    private readonly GameObject _leftFace;
-    private readonly GameObject _rightFace;
-
     private readonly BoxColliderRendererConfig _rendererConfig;
 
-    private readonly IEnumerable<GameObject> _faces;
     private readonly IEnumerable<LineRenderer> _lineRenderers;
     private readonly IEnumerable<MeshRenderer> _meshRenderers;
 
@@ -86,26 +76,22 @@ public class BoxColliderRenderer
         _points[6] = new Vector3(+xExtent, +yExtent, +zExtent);
         _points[7] = new Vector3(+xExtent, +yExtent, -zExtent);
 
-        _downFace = CreateColliderRenderer($"{name}_Down", new[] { _points[1], _points[0], _points[3], _points[2], _points[1] });
-        _upFace = CreateColliderRenderer($"{name}_Up", new[] { _points[4], _points[5], _points[6], _points[7], _points[4] });
-        _frontFace = CreateColliderRenderer($"{name}_Front", new[] { _points[0], _points[0 + 4], _points[3 + 4], _points[3], _points[0] });
-        _backFace = CreateColliderRenderer($"{name}_Back", new[] { _points[2], _points[2 + 4], _points[1 + 4], _points[1], _points[2] });
-        _leftFace = CreateColliderRenderer($"{name}_Left", new[] { _points[1], _points[1 + 4], _points[0 + 4], _points[0], _points[1] });
-        _rightFace = CreateColliderRenderer($"{name}_Right", new[] { _points[3], _points[3 + 4], _points[2 + 4], _points[2], _points[3] });
+        CreateColliderRenderer($"{name}_Down", new[] { _points[1], _points[0], _points[3], _points[2], _points[1] });
+        CreateColliderRenderer($"{name}_Up", new[] { _points[0 + 4], _points[1 + 4], _points[2 + 4], _points[3 + 4], _points[0 + 4] });
+        CreateColliderRenderer($"{name}_Front", new[] { _points[0], _points[0 + 4], _points[3 + 4], _points[3], _points[0] });
+        CreateColliderRenderer($"{name}_Back", new[] { _points[2], _points[2 + 4], _points[1 + 4], _points[1], _points[2] });
+        CreateColliderRenderer($"{name}_Left", new[] { _points[1], _points[1 + 4], _points[0 + 4], _points[0], _points[1] });
+        CreateColliderRenderer($"{name}_Right", new[] { _points[3], _points[3 + 4], _points[2 + 4], _points[2], _points[3] });
 
-        _faces = new[] { _downFace, _upFace, _frontFace, _backFace, _leftFace, _rightFace };
-        _lineRenderers = _faces.Select(face => face.GetComponent<LineRenderer>()).ToArray();
-        _meshRenderers = _faces.Select(face => face.GetComponent<MeshRenderer>()).ToArray();
+        _lineRenderers = _container.GetComponentsInChildren<LineRenderer>();
+        _meshRenderers = _container.GetComponentsInChildren<MeshRenderer>();
 
-        _container.SetActive(true);
+        _container.SetActive(IsActive());
     }
 
     public void UpdateDisplay()
     {
-        foreach (var face in _faces)
-        {
-            face.SetActive(IsActive());
-        }
+        _container.SetActive(IsActive());
 
         foreach (var lineRenderer in _lineRenderers)
         {
@@ -124,27 +110,15 @@ public class BoxColliderRenderer
 
     private bool IsActive()
     {
-        // If it's an object in a scene it's active if the scene is active
-        // if (ColliderType == ColliderType.Other && _parent.GetComponent<SceneIsHide>() is { } sceneIsHide)
-        // {
-        //     return !sceneIsHide.g_bIsHide && CollidersRenderPatches.ShowColliders && _rendererConfig.Enable;
-        // }
-        //
-        // return _parent.active && _rendererConfig.Enable;
-        return true;
+        return _rendererConfig.Enable;
     }
 
     public void Destroy()
     {
-        Object.Destroy(_downFace);
-        Object.Destroy(_upFace);
-        Object.Destroy(_frontFace);
-        Object.Destroy(_backFace);
-        Object.Destroy(_leftFace);
-        Object.Destroy(_rightFace);
+        Object.Destroy(_container);
     }
 
-    private GameObject CreateColliderRenderer(string name, Vector3[] meshPoints)
+    private void CreateColliderRenderer(string name, Vector3[] meshPoints)
     {
         var gameObject = new GameObject(name)
         {
@@ -191,8 +165,6 @@ public class BoxColliderRenderer
         // Activate object
         lineRenderer.enabled = _rendererConfig.DrawLines;
         meshRenderer.enabled = _rendererConfig.DrawSurfaces;
-        gameObject.SetActive(IsActive());
-
-        return gameObject;
+        gameObject.SetActive(true);
     }
 }

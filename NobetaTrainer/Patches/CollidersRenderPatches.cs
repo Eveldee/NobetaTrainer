@@ -2,7 +2,9 @@
 using System.Linq;
 using HarmonyLib;
 using Humanizer;
+using Il2CppInterop.Runtime;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using Il2CppSystem;
 using NobetaTrainer.Config;
 using NobetaTrainer.Config.Models;
 using NobetaTrainer.Prefabs;
@@ -26,6 +28,14 @@ public static class CollidersRenderPatches
 
     private static readonly List<BoxColliderRenderer> _boxColliderRenderers = new();
     private static Il2CppArrayBase<SceneEvent> _sceneEvents;
+
+    private static readonly IOrderedDictionary<Type, ColliderType> _componentToColliderType = new OrderedDictionary<Type, ColliderType>()
+    {
+        { Il2CppType.Of<AreaCheck>(), ColliderType.AreaCheck },
+        { Il2CppType.Of<MagicWall>(), ColliderType.MagicWall },
+        { Il2CppType.Of<LoadScript>(), ColliderType.LoadScript },
+        { Il2CppType.Of<SceneEvent>(), ColliderType.SceneEvent }
+    };
 
     public static void ToggleShowColliders()
     {
@@ -57,55 +67,36 @@ public static class CollidersRenderPatches
         }
 
         RenderersContainer = new GameObject("ColliderRenderer_RootContainer");
-        RenderersContainer.SetActive(ShowColliders);
-
-        foreach (var areaCheck in UnityUtils.FindComponentsByTypeForced<AreaCheck>())
-        {
-            if (areaCheck.g_BC is not null)
-            {
-                AddRenderer(areaCheck.transform, areaCheck.g_BC, ColliderType.AreaCheck);
-            }
-        }
-        foreach (var magicWall in UnityUtils.FindComponentsByTypeForced<MagicWall>())
-        {
-            if (magicWall.g_BC is not null)
-            {
-                AddRenderer(magicWall.transform, magicWall.g_BC, ColliderType.MagicWall);
-            }
-        }
-        foreach (var loadScript in UnityUtils.FindComponentsByTypeForced<LoadScript>())
-        {
-            if (loadScript.g_BC is not null)
-            {
-                AddRenderer(loadScript.transform, loadScript.g_BC, ColliderType.LoadScript);
-            }
-        }
+        RenderersContainer.SetActive(false);
 
         _sceneEvents = UnityUtils.FindComponentsByTypeForced<SceneEvent>();
 
-        foreach (var sceneEvent in _sceneEvents)
-        {
-            if (sceneEvent.GetComponent<AreaCheck>() is not null || sceneEvent.GetComponent<MagicWall>() is not null || sceneEvent.GetComponent<LoadScript>() is not null)
-            {
-                continue;
-            }
-
-            if (sceneEvent.g_BC is not null)
-            {
-                AddRenderer(sceneEvent.transform, sceneEvent.g_BC, ColliderType.SceneEvent);
-            }
-        }
-        // Skip loading other colliders if they are disabled to avoid performance issues
         if (EnableOtherColliders)
         {
             foreach (var boxCollider in UnityUtils.FindComponentsByTypeForced<BoxCollider>())
             {
-                if (boxCollider.GetComponent<SceneEvent>() != null)
+                var newColliderType = ColliderType.Other;
+
+                foreach (var (componentType, colliderType) in _componentToColliderType)
                 {
-                    continue;
+                    if (boxCollider.GetComponent(componentType) is not null)
+                    {
+                        newColliderType = colliderType;
+
+                        break;
+                    }
                 }
 
-                AddRenderer(boxCollider.transform, boxCollider, ColliderType.Other);
+                // Skip loading other colliders if they are disabled to avoid performance issues
+                if (newColliderType == ColliderType.Other)
+                {
+                    if (!EnableOtherColliders)
+                    {
+                        continue;
+                    }
+                }
+
+                AddRenderer(boxCollider.transform, boxCollider, newColliderType);
             }
         }
 
@@ -113,6 +104,8 @@ public static class CollidersRenderPatches
         {
             boxColliderRenderer.UpdateDisplay();
         }
+
+        RenderersContainer.SetActive(ShowColliders);
     }
 
     [HarmonyPatch(typeof(Game), nameof(Game.EnterLoaderScene))]
