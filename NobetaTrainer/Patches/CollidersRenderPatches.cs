@@ -56,7 +56,7 @@ public static class CollidersRenderPatches
             _boxColliderRenderers.Add(new BoxColliderRenderer($"{parent.name}-ColliderRenderer", parent, boxCollider, Singletons.ColliderRendererManager.RendererConfigs[colliderType], colliderType));
         }
 
-        RenderersContainer = new GameObject("ColliderRenderer_Container");
+        RenderersContainer = new GameObject("ColliderRenderer_RootContainer");
         RenderersContainer.SetActive(ShowColliders);
 
         foreach (var areaCheck in UnityUtils.FindComponentsByTypeForced<AreaCheck>())

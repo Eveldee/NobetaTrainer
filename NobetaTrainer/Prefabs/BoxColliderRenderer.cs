@@ -11,7 +11,8 @@ public class BoxColliderRenderer
 {
     public ColliderType ColliderType { get; }
 
-    private readonly GameObject _parent;
+    private readonly GameObject _container;
+    private readonly Vector3 _centerOffset;
 
     private readonly GameObject _downFace;
     private readonly GameObject _upFace;
@@ -30,6 +31,9 @@ public class BoxColliderRenderer
 
     private readonly Material sharedLineMaterial = new(Shader.Find("Sprites/Default"));
 
+    // Points from bottom face to top face clockwise
+    private readonly Vector3[] _points = new Vector3[8];
+
     private readonly int[] _triangles =
     {
         // bottom left triangle
@@ -47,101 +51,53 @@ public class BoxColliderRenderer
 
     public BoxColliderRenderer(string name, Transform target, BoxCollider boxCollider, BoxColliderRendererConfig rendererConfig, ColliderType colliderType)
     {
-        Vector3 OffsetPointWithRotation(Vector3 point)
-        {
-            return (target.rotation * point) + target.position;
-        }
-
         _rendererConfig = rendererConfig;
         ColliderType = colliderType;
 
         // Parent is a global container for everything except others which are contained in their respective scenes,
         // this allow dynamically loading them to avoid lag
-        _parent = CollidersRenderPatches.RenderersContainer;
-        if (ColliderType == ColliderType.Other && target.GetComponentInParent<SceneIsHide>()?.transform is { } parent)
+        _container = new GameObject($"{name}_Container")
         {
-            _parent = parent.gameObject;
-        }
+            transform =
+            {
+                parent = CollidersRenderPatches.RenderersContainer.transform,
+                localPosition = target.position,
+                localRotation = target.rotation,
+                localScale = target.lossyScale
+            }
+        };
+        _centerOffset = boxCollider.center;
+        // if (ColliderType == ColliderType.Other && target.GetComponentInParent<SceneIsHide>()?.transform is { } parent)
+        // {
+        //     _parent = parent.gameObject;
+        // }
 
-        var center = boxCollider.center;
         var xExtent = boxCollider.extents.x;
         var yExtent = boxCollider.extents.y;
         var zExtent = boxCollider.extents.z;
 
-        var xMin = center.x - xExtent;
-        var xMax = center.x + xExtent;
-        var yMin = center.y - yExtent;
-        var yMax = center.y + yExtent;
-        var zMin = center.z - zExtent;
-        var zMax = center.z + zExtent;
+        // Points from bottom face to top face clockwise
+        _points[0] = new Vector3(-xExtent, -yExtent, -zExtent);
+        _points[1] = new Vector3(-xExtent, -yExtent, +zExtent);
+        _points[2] = new Vector3(+xExtent, -yExtent, +zExtent);
+        _points[3] = new Vector3(+xExtent, -yExtent, -zExtent);
+        _points[4] = new Vector3(-xExtent, +yExtent, -zExtent);
+        _points[5] = new Vector3(-xExtent, +yExtent, +zExtent);
+        _points[6] = new Vector3(+xExtent, +yExtent, +zExtent);
+        _points[7] = new Vector3(+xExtent, +yExtent, -zExtent);
 
-        // Faces clockwise from down to sides to up
-
-        // Down
-        var downPoints = new[]
-        {
-            OffsetPointWithRotation(new Vector3(xMin, yMin, zMax)),
-            OffsetPointWithRotation(new Vector3(xMin, yMin, zMin)),
-            OffsetPointWithRotation(new Vector3(xMax, yMin, zMin)),
-            OffsetPointWithRotation(new Vector3(xMax, yMin, zMax)),
-            OffsetPointWithRotation(new Vector3(xMin, yMin, zMax))
-        };
-        // Up
-        var upPoints = new[]
-        {
-            OffsetPointWithRotation(new Vector3(xMin, yMax, zMin)),
-            OffsetPointWithRotation(new Vector3(xMin, yMax, zMax)),
-            OffsetPointWithRotation(new Vector3(xMax, yMax, zMax)),
-            OffsetPointWithRotation(new Vector3(xMax, yMax, zMin)),
-            OffsetPointWithRotation(new Vector3(xMin, yMax, zMin))
-        };
-        // Front
-        var frontPoints = new[]
-        {
-            OffsetPointWithRotation(new Vector3(xMin, yMin, zMin)),
-            OffsetPointWithRotation(new Vector3(xMin, yMax, zMin)),
-            OffsetPointWithRotation(new Vector3(xMax, yMax, zMin)),
-            OffsetPointWithRotation(new Vector3(xMax, yMin, zMin)),
-            OffsetPointWithRotation(new Vector3(xMin, yMin, zMin))
-        };
-        // Back
-        var backPoints = new[]
-        {
-            OffsetPointWithRotation(new Vector3(xMax, yMin, zMax)),
-            OffsetPointWithRotation(new Vector3(xMax, yMax, zMax)),
-            OffsetPointWithRotation(new Vector3(xMin, yMax, zMax)),
-            OffsetPointWithRotation(new Vector3(xMin, yMin, zMax)),
-            OffsetPointWithRotation(new Vector3(xMax, yMin, zMax))
-        };
-        // Left
-        var leftPoints = new[]
-        {
-            OffsetPointWithRotation(new Vector3(xMin, yMin, zMax)),
-            OffsetPointWithRotation(new Vector3(xMin, yMax, zMax)),
-            OffsetPointWithRotation(new Vector3(xMin, yMax, zMin)),
-            OffsetPointWithRotation(new Vector3(xMin, yMin, zMin)),
-            OffsetPointWithRotation(new Vector3(xMin, yMin, zMax))
-        };
-        // Right
-        var rightPoints = new[]
-        {
-            OffsetPointWithRotation(new Vector3(xMax, yMin, zMin)),
-            OffsetPointWithRotation(new Vector3(xMax, yMax, zMin)),
-            OffsetPointWithRotation(new Vector3(xMax, yMax, zMax)),
-            OffsetPointWithRotation(new Vector3(xMax, yMin, zMax)),
-            OffsetPointWithRotation(new Vector3(xMax, yMin, zMin))
-        };
-
-        _downFace = CreateColliderRenderer($"{name}_Down", downPoints);
-        _upFace = CreateColliderRenderer($"{name}_Up", upPoints);
-        _frontFace = CreateColliderRenderer($"{name}_Front", frontPoints);
-        _backFace = CreateColliderRenderer($"{name}_Back", backPoints);
-        _leftFace = CreateColliderRenderer($"{name}_Left", leftPoints);
-        _rightFace = CreateColliderRenderer($"{name}_Right", rightPoints);
+        _downFace = CreateColliderRenderer($"{name}_Down", new[] { _points[1], _points[0], _points[3], _points[2], _points[1] });
+        _upFace = CreateColliderRenderer($"{name}_Up", new[] { _points[4], _points[5], _points[6], _points[7], _points[4] });
+        _frontFace = CreateColliderRenderer($"{name}_Front", new[] { _points[0], _points[0 + 4], _points[3 + 4], _points[3], _points[0] });
+        _backFace = CreateColliderRenderer($"{name}_Back", new[] { _points[2], _points[2 + 4], _points[1 + 4], _points[1], _points[2] });
+        _leftFace = CreateColliderRenderer($"{name}_Left", new[] { _points[1], _points[1 + 4], _points[0 + 4], _points[0], _points[1] });
+        _rightFace = CreateColliderRenderer($"{name}_Right", new[] { _points[3], _points[3 + 4], _points[2 + 4], _points[2], _points[3] });
 
         _faces = new[] { _downFace, _upFace, _frontFace, _backFace, _leftFace, _rightFace };
         _lineRenderers = _faces.Select(face => face.GetComponent<LineRenderer>()).ToArray();
         _meshRenderers = _faces.Select(face => face.GetComponent<MeshRenderer>()).ToArray();
+
+        _container.SetActive(true);
     }
 
     public void UpdateDisplay()
@@ -169,12 +125,13 @@ public class BoxColliderRenderer
     private bool IsActive()
     {
         // If it's an object in a scene it's active if the scene is active
-        if (ColliderType == ColliderType.Other && _parent.GetComponent<SceneIsHide>() is { } sceneIsHide)
-        {
-            return !sceneIsHide.g_bIsHide && CollidersRenderPatches.ShowColliders && _rendererConfig.Enable;
-        }
-
-        return _parent.active && _rendererConfig.Enable;
+        // if (ColliderType == ColliderType.Other && _parent.GetComponent<SceneIsHide>() is { } sceneIsHide)
+        // {
+        //     return !sceneIsHide.g_bIsHide && CollidersRenderPatches.ShowColliders && _rendererConfig.Enable;
+        // }
+        //
+        // return _parent.active && _rendererConfig.Enable;
+        return true;
     }
 
     public void Destroy()
@@ -187,13 +144,15 @@ public class BoxColliderRenderer
         Object.Destroy(_rightFace);
     }
 
-    private GameObject CreateColliderRenderer(string name, Vector3[] linePoints)
+    private GameObject CreateColliderRenderer(string name, Vector3[] meshPoints)
     {
         var gameObject = new GameObject(name)
         {
             transform =
             {
-                parent = _parent.transform
+                parent = _container.transform,
+                localPosition = _centerOffset,
+                localRotation = Quaternion.identity
             }
         };
 
@@ -207,8 +166,9 @@ public class BoxColliderRenderer
         lineRenderer.startColor = _rendererConfig.LineStartColor.ToColor();
         lineRenderer.endColor = _rendererConfig.LineEndColor.ToColor();
 
-        lineRenderer.positionCount = linePoints.Length;
-        lineRenderer.SetPositions(linePoints);
+        lineRenderer.useWorldSpace = false;
+        lineRenderer.positionCount = meshPoints.Length;
+        lineRenderer.SetPositions(meshPoints);
 
         // Create mesh for solid surface
         var meshRenderer = gameObject.AddComponent<MeshRenderer>();
@@ -221,7 +181,7 @@ public class BoxColliderRenderer
 
         var mesh = new Mesh
         {
-            vertices = linePoints.SkipLast(1).ToArray(),
+            vertices = meshPoints.SkipLast(1).ToArray(),
             triangles = _triangles,
             uv = _uv
         };
