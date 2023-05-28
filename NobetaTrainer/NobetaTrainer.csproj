@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <AssemblyName>NobetaTrainer</AssemblyName>
-        <Description>My first plugin</Description>
-        <Version>1.2.3</Version>
+        <Description>Little Witch Nobeta speedrun Trainer tool</Description>
+        <Version>1.2.4</Version>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <LangVersion>latest</LangVersion>
         <RestoreAdditionalProjectSources>
