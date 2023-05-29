@@ -1,7 +1,6 @@
 ﻿using System.Text.Json;
-using NobetaTrainer.Config.Serialization;
 
-namespace NobetaTrainer.Serialization;
+namespace NobetaTrainer.Config.Serialization;
 
 public static class SerializeUtils
 {

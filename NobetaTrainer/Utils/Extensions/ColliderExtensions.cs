@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace NobetaTrainer.Utils;
+namespace NobetaTrainer.Utils.Extensions;
 
 public static class ColliderExtensions
 {

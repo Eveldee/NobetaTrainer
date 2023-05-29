@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NobetaTrainer.Behaviours;
-using NobetaTrainer.Config.Models;
-using NobetaTrainer.Patches;
-using NobetaTrainer.Utils;
+using NobetaTrainer.Utils.Extensions;
 using UnityEngine;
 
-namespace NobetaTrainer.Prefabs;
+namespace NobetaTrainer.Colliders;
 
 public class BoxColliderRenderer
 {

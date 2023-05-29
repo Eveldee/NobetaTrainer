@@ -1,9 +1,9 @@
 ﻿using System;
 using HarmonyLib;
+using NobetaTrainer.Behaviours;
 using NobetaTrainer.Config;
-using NobetaTrainer.Utils;
 
-namespace NobetaTrainer.Patches;
+namespace NobetaTrainer.Trainer;
 
 [Section("Character.General")]
 public static class CharacterPatches

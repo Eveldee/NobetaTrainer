@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using EnumsNET;
 using Humanizer;
 using ImGuiNET;
-using NobetaTrainer.Utils;
+using NobetaTrainer.Utils.Extensions;
 using UnityEngine;
 using Vector2 = System.Numerics.Vector2;
 using Vector3 = UnityEngine.Vector3;
@@ -14,7 +14,7 @@ using Vector4 = System.Numerics.Vector4;
 
 namespace NobetaTrainer.Overlay;
 
-public partial class TrainerOverlay
+public partial class NobetaTrainerOverlay
 {
     private static void ShowValue(string title, object value, string format = null, string help = null)
     {

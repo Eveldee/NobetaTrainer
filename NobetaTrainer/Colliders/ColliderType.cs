@@ -1,4 +1,4 @@
-﻿namespace NobetaTrainer.Config.Models;
+﻿namespace NobetaTrainer.Colliders;
 
 public enum ColliderType
 {

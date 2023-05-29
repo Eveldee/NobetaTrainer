@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using HarmonyLib;
 using Il2CppInterop.Runtime.Attributes;
 using Il2CppInterop.Runtime.Injection;
 using Il2CppSystem.IO;
-using NobetaTrainer.Commands;
-using NobetaTrainer.Config;
+using NobetaTrainer.Behaviours;
+using NobetaTrainer.Config.Serialization;
 using NobetaTrainer.Overlay;
-using NobetaTrainer.Patches;
-using NobetaTrainer.Serialization;
-using NobetaTrainer.Utils;
+using NobetaTrainer.Shortcuts.Commands;
+using NobetaTrainer.Trainer;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using File = System.IO.File;
 
-namespace NobetaTrainer.Behaviours;
+namespace NobetaTrainer.Shortcuts;
 
 // ReSharper disable once ClassNeverInstantiated.Global
 public class ShortcutEditor : MonoBehaviour

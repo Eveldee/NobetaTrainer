@@ -3,13 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
-using Il2CppInterop.Runtime;
-using NobetaTrainer.Config;
-using NobetaTrainer.Config.Models;
+using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
 using UnityEngine;
 
-namespace NobetaTrainer.Patches;
+namespace NobetaTrainer.Teleportation;
 
 public static class TeleportationPatches
 {

@@ -3,7 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using UnityEngine;
 
-namespace NobetaTrainer.Serialization;
+namespace NobetaTrainer.Config.Serialization;
 
 public class UnityQuaternionJsonConverter : JsonConverter<Quaternion>
 {

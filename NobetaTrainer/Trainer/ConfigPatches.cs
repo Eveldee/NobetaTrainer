@@ -1,7 +1,7 @@
 ﻿using System;
 using HarmonyLib;
 
-namespace NobetaTrainer.Patches;
+namespace NobetaTrainer.Trainer;
 
 public static class ConfigPatches
 {

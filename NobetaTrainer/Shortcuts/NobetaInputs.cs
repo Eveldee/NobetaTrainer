@@ -1,8 +1,8 @@
 ﻿using UnityEngine.InputSystem;
 
-namespace NobetaTrainer.Utils;
+namespace NobetaTrainer.Shortcuts;
 
-public static class InputUtils
+public static class NobetaInputs
 {
 
     public static InputActionMap GameplayActionMap => Game.input?.gameplayActionMap;

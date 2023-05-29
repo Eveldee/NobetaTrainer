@@ -1,11 +1,11 @@
 ﻿using ImGuiNET;
-using NobetaTrainer.Behaviours;
-using NobetaTrainer.Patches;
+using NobetaTrainer.Timer;
+using NobetaTrainer.Trainer;
 using UnityEngine;
 
 namespace NobetaTrainer.Overlay;
 
-public partial class TrainerOverlay
+public partial class NobetaTrainerOverlay
 {
     private void ShowTimersConfigWindow()
     {

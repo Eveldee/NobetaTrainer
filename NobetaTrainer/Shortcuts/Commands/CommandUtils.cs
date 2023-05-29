@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EnumsNET;
 using Humanizer;
-using NobetaTrainer.Behaviours;
+using NobetaTrainer.Colliders;
 using NobetaTrainer.Overlay;
-using NobetaTrainer.Patches;
-using static NobetaTrainer.Commands.CommandType;
+using NobetaTrainer.Teleportation;
+using NobetaTrainer.Timer;
+using NobetaTrainer.Trainer;
+using static NobetaTrainer.Shortcuts.Commands.CommandType;
 
-namespace NobetaTrainer.Commands;
+namespace NobetaTrainer.Shortcuts.Commands;
 
 public static class CommandUtils
 {

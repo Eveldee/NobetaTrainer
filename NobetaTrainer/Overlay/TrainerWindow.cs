@@ -2,13 +2,13 @@
 using System.Numerics;
 using Humanizer;
 using ImGuiNET;
-using NobetaTrainer.Config.Models;
-using NobetaTrainer.Patches;
+using NobetaTrainer.Colliders;
+using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
 
 namespace NobetaTrainer.Overlay;
 
-public partial class TrainerOverlay
+public partial class NobetaTrainerOverlay
 {
     private void ShowTrainerWindow()
     {

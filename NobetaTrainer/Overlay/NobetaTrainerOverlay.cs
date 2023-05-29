@@ -1,17 +1,12 @@
-﻿using System.Globalization;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using Humanizer;
+﻿using System.Threading.Tasks;
 using Il2CppInterop.Runtime;
 using ImGuiNET;
-using NobetaTrainer.Behaviours;
+using NobetaTrainer.Timer;
 using NobetaTrainer.Utils;
-using Vector4 = System.Numerics.Vector4;
 
 namespace NobetaTrainer.Overlay;
 
-public partial class TrainerOverlay : ClickableTransparentOverlay.Overlay
+public partial class NobetaTrainerOverlay : ClickableTransparentOverlay.Overlay
 {
     private bool _showImGuiAboutWindow;
     private bool _showImGuiStyleEditorWindow;

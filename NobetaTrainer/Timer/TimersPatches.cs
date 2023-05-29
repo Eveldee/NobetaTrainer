@@ -1,7 +1,8 @@
 ﻿using System;
 using HarmonyLib;
+using NobetaTrainer.Trainer;
 
-namespace NobetaTrainer.Patches;
+namespace NobetaTrainer.Timer;
 
 public static class TimersPatches
 {

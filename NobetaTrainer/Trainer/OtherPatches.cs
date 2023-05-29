@@ -2,10 +2,11 @@
 using HarmonyLib;
 using NobetaTrainer.Config;
 using NobetaTrainer.Utils;
+using NobetaTrainer.Utils.Extensions;
 using UnityEngine;
 using Vector3 = System.Numerics.Vector3;
 
-namespace NobetaTrainer.Patches;
+namespace NobetaTrainer.Trainer;
 
 [Section("Others")]
 public static class OtherPatches

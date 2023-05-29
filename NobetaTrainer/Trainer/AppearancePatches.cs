@@ -3,12 +3,9 @@ using EnumsNET;
 using HarmonyLib;
 using NobetaTrainer.Config;
 using UnityEngine;
-
-#if !V1031
 using UnityEngine.AddressableAssets;
-#endif
 
-namespace NobetaTrainer.Patches;
+namespace NobetaTrainer.Trainer;
 
 [Section("Character.Appearance")]
 public static class AppearancePatches

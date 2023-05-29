@@ -9,9 +9,13 @@ using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using NobetaTrainer.Behaviours;
+using NobetaTrainer.Colliders;
 using NobetaTrainer.Config;
 using NobetaTrainer.Overlay;
-using NobetaTrainer.Patches;
+using NobetaTrainer.Shortcuts;
+using NobetaTrainer.Teleportation;
+using NobetaTrainer.Timer;
+using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
 using UnityEngine;
 
@@ -23,7 +27,7 @@ public class Plugin : BasePlugin
 {
     internal new static ManualLogSource Log;
 
-    public static TrainerOverlay TrainerOverlay;
+    public static NobetaTrainerOverlay NobetaTrainerOverlay;
     public static DirectoryInfo ConfigDirectory;
     public static ConfigFile ConfigFile;
 
@@ -37,7 +41,7 @@ public class Plugin : BasePlugin
         // Fix ImGUI task preventing the game from closing
         Application.quitting += (Action) (() =>
         {
-            TrainerOverlay.Close();
+            NobetaTrainerOverlay.Close();
             Unload();
         });
 
@@ -54,8 +58,8 @@ public class Plugin : BasePlugin
         NobetaProcessUtils.GameWindowHandle = NobetaProcessUtils.FindWindow(null, "Little Witch Nobeta");
 
         // Create and show overlay
-        TrainerOverlay = new TrainerOverlay();
-        Task.Run(TrainerOverlay.Run);
+        NobetaTrainerOverlay = new NobetaTrainerOverlay();
+        Task.Run(NobetaTrainerOverlay.Run);
 
         // Apply patches
         ApplyPatches();

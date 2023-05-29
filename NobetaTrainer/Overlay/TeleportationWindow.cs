@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Collections;
 using System.Linq;
 using BepInEx;
 using ImGuiNET;
-using NobetaTrainer.Config;
-using NobetaTrainer.Config.Models;
-using NobetaTrainer.Patches;
+using NobetaTrainer.Teleportation;
+using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
+using NobetaTrainer.Utils.Extensions;
 using UnityEngine;
 
 namespace NobetaTrainer.Overlay;
 
-public partial class TrainerOverlay
+public partial class NobetaTrainerOverlay
 {
     private void ShowTeleportationWindow()
     {

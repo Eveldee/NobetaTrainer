@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Linq;
 using System.Numerics;
-using System.Runtime.InteropServices;
 using Humanizer;
-using Il2CppInterop.Runtime;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using ImGuiNET;
 using NobetaTrainer.Behaviours;
-using NobetaTrainer.Commands;
-using NobetaTrainer.Patches;
+using NobetaTrainer.Shortcuts;
+using NobetaTrainer.Shortcuts.Commands;
+using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
 using UnityEngine.InputSystem;
 
 namespace NobetaTrainer.Overlay;
 
-public partial class TrainerOverlay
+public partial class NobetaTrainerOverlay
 {
     private void ShowShortcutEditorWindow()
     {

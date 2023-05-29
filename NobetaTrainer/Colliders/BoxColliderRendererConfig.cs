@@ -1,9 +1,9 @@
 ﻿using System.Text.Json.Serialization;
-using NobetaTrainer.Utils;
+using NobetaTrainer.Utils.Extensions;
 using UnityEngine;
 using Vector4 = System.Numerics.Vector4;
 
-namespace NobetaTrainer.Config.Models;
+namespace NobetaTrainer.Colliders;
 
 public class BoxColliderRendererConfig
 {

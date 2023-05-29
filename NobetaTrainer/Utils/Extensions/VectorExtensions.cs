@@ -2,9 +2,9 @@
 using UnityEngine;
 using Vector4 = System.Numerics.Vector4;
 
-namespace NobetaTrainer.Utils;
+namespace NobetaTrainer.Utils.Extensions;
 
-public static class VectorUtils
+public static class VectorExtensions
 {
     public static Vector4 AddIntensity(this Vector4 vector4, float intensity)
     {

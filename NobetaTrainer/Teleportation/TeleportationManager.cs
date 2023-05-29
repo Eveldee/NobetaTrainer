@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NobetaTrainer.Config.Models;
-using NobetaTrainer.Serialization;
+using NobetaTrainer.Config.Serialization;
 
-namespace NobetaTrainer.Config;
+namespace NobetaTrainer.Teleportation;
 
 public class TeleportationManager
 {

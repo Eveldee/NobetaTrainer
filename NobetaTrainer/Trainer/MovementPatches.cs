@@ -1,11 +1,10 @@
-﻿using System;
-using HarmonyLib;
+﻿using HarmonyLib;
 using NobetaTrainer.Config;
-using NobetaTrainer.Utils;
+using NobetaTrainer.Shortcuts;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace NobetaTrainer.Patches;
+namespace NobetaTrainer.Trainer;
 
 [Section("Character.Movements")]
 public static class MovementPatches
@@ -104,11 +103,11 @@ public static class MovementPatches
         // Jump
         float verticalVelocity = 0f;
 
-        if (InputUtils.JumpAction.phase == InputActionPhase.Performed)
+        if (NobetaInputs.JumpAction.phase == InputActionPhase.Performed)
         {
             verticalVelocity = Time.deltaTime * GlideVelocity;
         }
-        else if (InputUtils.DodgeAction.phase == InputActionPhase.Performed)
+        else if (NobetaInputs.DodgeAction.phase == InputActionPhase.Performed)
         {
             verticalVelocity = -Time.deltaTime * GlideVelocity;
         }

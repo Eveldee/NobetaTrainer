@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using NobetaTrainer.Config.Models;
-using NobetaTrainer.Serialization;
+using NobetaTrainer.Colliders;
+using NobetaTrainer.Config.Serialization;
 
 namespace NobetaTrainer.Config;
 

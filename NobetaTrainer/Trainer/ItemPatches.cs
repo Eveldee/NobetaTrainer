@@ -2,7 +2,7 @@
 using NobetaTrainer.Utils;
 using UnityEngine;
 
-namespace NobetaTrainer.Patches;
+namespace NobetaTrainer.Trainer;
 
 public static class ItemPatches
 {

@@ -1,16 +1,14 @@
 ﻿using System.Numerics;
-using System.Threading.Tasks;
 using ImGuiNET;
-using NobetaTrainer.Behaviours;
 using NobetaTrainer.Config;
-using NobetaTrainer.Patches;
+using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
-using static NobetaTrainer.Behaviours.Timers;
+using static NobetaTrainer.Timer.Timers;
 
 namespace NobetaTrainer.Overlay;
 
 [Section("Timers.Overlay")]
-public partial class TrainerOverlay
+public partial class NobetaTrainerOverlay
 {
     private Vector2 _timersWindowSize = new(0, 0);
     [Bind]

@@ -1,9 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
-using NobetaTrainer.Behaviours;
-using NobetaTrainer.Commands;
+using NobetaTrainer.Shortcuts.Commands;
 
-namespace NobetaTrainer.Config;
+namespace NobetaTrainer.Shortcuts;
 
 public class SavableCommandAction
 {

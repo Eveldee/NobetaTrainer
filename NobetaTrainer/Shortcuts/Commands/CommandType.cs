@@ -1,4 +1,4 @@
-﻿namespace NobetaTrainer.Commands;
+﻿namespace NobetaTrainer.Shortcuts.Commands;
 
 public enum CommandType
 {

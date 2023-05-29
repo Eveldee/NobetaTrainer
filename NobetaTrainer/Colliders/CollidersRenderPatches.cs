@@ -1,19 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
-using Humanizer;
 using Il2CppInterop.Runtime;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Il2CppSystem;
-using NobetaTrainer.Behaviours;
 using NobetaTrainer.Config;
-using NobetaTrainer.Config.Models;
-using NobetaTrainer.Prefabs;
+using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
+using NobetaTrainer.Utils.Extensions;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace NobetaTrainer.Patches;
+namespace NobetaTrainer.Colliders;
 
 [Section("Colliders")]
 public static class CollidersRenderPatches

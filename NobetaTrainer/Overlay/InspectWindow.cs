@@ -1,17 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EnumsNET;
 using Humanizer;
 using ImGuiNET;
-using NobetaTrainer.Patches;
+using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
+using NobetaTrainer.Utils.Extensions;
 using UnityEngine;
 
 namespace NobetaTrainer.Overlay;
 
-public partial class TrainerOverlay
+public partial class NobetaTrainerOverlay
 {
     private static readonly IGrouping<string, PropertyInfo>[] _flagPropertyInfos = typeof(StageFlagData).GetProperties()
         .Where(property => property.Name.StartsWith("Stage", StringComparison.OrdinalIgnoreCase))

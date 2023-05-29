@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using ImGuiNET;
 using NobetaTrainer.Config;
-using NobetaTrainer.Overlay;
-using NobetaTrainer.Utils;
 using UnityEngine;
-using ImGui = UnityEngine.GUILayout;
 
-namespace NobetaTrainer.Behaviours;
+namespace NobetaTrainer.Timer;
 
 [Section("Timers")]
 public class Timers : MonoBehaviour

@@ -1,12 +1,12 @@
 ﻿using HarmonyLib;
-using Il2CppInterop.Runtime;
 using NobetaTrainer.Behaviours;
 using NobetaTrainer.Config;
-using NobetaTrainer.Utils;
+using NobetaTrainer.Shortcuts;
+using NobetaTrainer.Teleportation;
+using NobetaTrainer.Timer;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-namespace NobetaTrainer.Patches;
+namespace NobetaTrainer.Trainer;
 
 public static class Singletons
 {
