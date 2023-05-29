@@ -12,8 +12,6 @@ public class BoxColliderRenderer
 {
     public ColliderType ColliderType { get; }
 
-    public const float LoadRange = 100f;
-
     private readonly GameObject _container;
     private readonly Vector3 _centerOffset;
 

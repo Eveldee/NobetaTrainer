@@ -269,8 +269,8 @@ public partial class TrainerOverlay
         if (ImGui.BeginChild(label, size, border, flags))
         {
             content();
-
-            ImGui.EndChild();
         }
+
+        ImGui.EndChild();
     }
 }
