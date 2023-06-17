@@ -273,4 +273,44 @@ public partial class NobetaTrainerOverlay
 
         ImGui.EndChild();
     }
+
+    private static void TabBar(string id, ImGuiTabBarFlags flags, Action content)
+    {
+        if (ImGui.BeginTabBar(id, flags))
+        {
+            content();
+
+            ImGui.EndTabBar();
+        }
+    }
+
+    private static void TabBar(string id, Action content)
+    {
+        TabBar(id, ImGuiTabBarFlags.None, content);
+    }
+
+    private static void TabItem(string label, Action content)
+    {
+        if (ImGui.BeginTabItem(label))
+        {
+            content();
+
+            ImGui.EndTabItem();
+        }
+    }
+
+    private static void WithDisabled(bool disabled, Action content)
+    {
+        if (disabled)
+        {
+            ImGui.BeginDisabled();
+        }
+
+        content();
+
+        if (disabled)
+        {
+            ImGui.EndDisabled();
+        }
+    }
 }

@@ -26,6 +26,8 @@ public partial class NobetaTrainerOverlay
             ImGui.Checkbox("Inspector    ", ref OverlayState.ShowInspectWindow);
             ImGui.SameLine();
             ImGui.Checkbox("Teleportation", ref OverlayState.ShowTeleportationWindow);
+            ImGui.SameLine();
+            ImGui.Checkbox("Saves", ref OverlayState.ShowSavesWindow);
 
             ImGui.Checkbox("Timers Config", ref OverlayState.ShowTimersConfigWindow);
             ImGui.SameLine();

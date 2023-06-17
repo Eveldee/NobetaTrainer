@@ -12,6 +12,7 @@ using NobetaTrainer.Behaviours;
 using NobetaTrainer.Colliders;
 using NobetaTrainer.Config;
 using NobetaTrainer.Overlay;
+using NobetaTrainer.Saves;
 using NobetaTrainer.Shortcuts;
 using NobetaTrainer.Teleportation;
 using NobetaTrainer.Timer;
@@ -120,5 +121,6 @@ public class Plugin : BasePlugin
         Harmony.CreateAndPatchAll(typeof(CursorUnlocker));
         Harmony.CreateAndPatchAll(typeof(TimersPatches));
         Harmony.CreateAndPatchAll(typeof(CollidersRenderPatches));
+        Harmony.CreateAndPatchAll(typeof(SavePatches));
     }
 }

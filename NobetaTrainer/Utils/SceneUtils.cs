@@ -4,6 +4,11 @@ namespace NobetaTrainer.Utils;
 
 public static class SceneUtils
 {
+    public static bool IsLoading()
+    {
+        return UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Loader";
+    }
+
     public static AreaCheck FindLastAreaCheck()
     {
         var sceneHides = UnityUtils.FindComponentsByTypeForced<SceneIsHide>().Where(hide => !hide.g_bIsHide);

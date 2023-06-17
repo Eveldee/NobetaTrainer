@@ -81,6 +81,11 @@ public partial class NobetaTrainerOverlay : ClickableTransparentOverlay.Overlay
         {
             ShowTeleportationWindow();
         }
+
+        if (OverlayState.ShowSavesWindow)
+        {
+            ShowSavesWindow();
+        }
         if (OverlayState.ShowShortcutEditorWindow)
         {
             ShowShortcutEditorWindow();

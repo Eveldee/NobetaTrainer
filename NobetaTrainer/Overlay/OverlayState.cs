@@ -13,6 +13,8 @@ public static class OverlayState
     public static bool ShowTeleportationWindow;
     [Bind]
     public static bool ShowTimersConfigWindow;
+    [Bind]
+    public static bool ShowSavesWindow;
 
     public static bool ShowShortcutEditorWindow;
 }

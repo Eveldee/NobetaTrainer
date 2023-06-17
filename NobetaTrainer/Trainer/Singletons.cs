@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using NobetaTrainer.Behaviours;
 using NobetaTrainer.Config;
+using NobetaTrainer.Saves;
 using NobetaTrainer.Shortcuts;
 using NobetaTrainer.Teleportation;
 using NobetaTrainer.Timer;
@@ -10,6 +11,7 @@ namespace NobetaTrainer.Trainer;
 
 public static class Singletons
 {
+    public static Game GameInstance { get; private set; }
     public static NobetaSkin NobetaSkin { get; private set; }
     public static WizardGirlManage WizardGirl { get; private set; }
     public static PlayerController PlayerController => WizardGirl?.playerController;
@@ -27,8 +29,17 @@ public static class Singletons
     public static Timers Timers { get; set; }
     public static TeleportationManager TeleportationManager { get; set; }
     public static ColliderRendererManager ColliderRendererManager { get; set; }
+    public static SavesManager SavesManager { get; set; }
+    public static UIPauseMenu UIPauseMenu { get; private set; }
 
     public static bool SaveLoaded => GameSave is not null;
+
+    [HarmonyPatch(typeof(Game), nameof(Game.Awake))]
+    [HarmonyPostfix]
+    private static void GameAwakePostfix(Game __instance)
+    {
+        GameInstance = __instance;
+    }
 
     [HarmonyPatch(typeof(PlayerController), nameof(PlayerController.UpdateSkin))]
     [HarmonyPostfix]
@@ -69,7 +80,7 @@ public static class Singletons
         WizardGirl = null;
     }
 
-    [HarmonyPatch(typeof(UIGameSave), nameof(UIGameSave.StartGamePlay))]
+    [HarmonyPatch(typeof(Game), nameof(Game.SwitchGameSave))]
     [HarmonyPostfix]
     private static void StartGamePlayPostfix(GameSave gameSave)
     {
@@ -90,5 +101,14 @@ public static class Singletons
     private static void EnterScenePostfix()
     {
         Plugin.Log.LogInfo("Entered scene");
+    }
+
+    [HarmonyPatch(typeof(UIPauseMenu), nameof(global::UIPauseMenu.Init))]
+    [HarmonyPostfix]
+    private static void UIPauseMenuInit(UIPauseMenu __instance)
+    {
+        Plugin.Log.LogInfo("UIPauseMenu Init");
+
+        UIPauseMenu = __instance;
     }
 }

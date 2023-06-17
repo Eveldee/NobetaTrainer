@@ -6,6 +6,7 @@ public partial class NobetaTrainerOverlay
 {
     private static readonly Vector4 ValueColor = new(252 / 255f, 161 / 255f, 3 / 255f, 1f);
     private static readonly Vector4 InfoColor = new(3 / 255f, 148 / 255f, 252 / 255f, 1f);
+    private static readonly Vector4 InfoColorSecondary = new(6 / 255f, 178 / 255f, 255 / 255f, 1f);
     private static readonly Vector4 WarningColor = new(252 / 255f, 211 / 255f, 3 / 255f, 1f);
     private static readonly Vector4 ErrorColor = new(255 / 255f, 0 / 255f, 0 / 255f, 1f);
     private static readonly Vector4 TitleColor = new(173 / 255f, 3 / 255f, 252 / 255f, 1f);
