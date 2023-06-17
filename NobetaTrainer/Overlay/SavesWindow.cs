@@ -1,4 +1,5 @@
-﻿using ImGuiNET;
+﻿using System;
+using ImGuiNET;
 using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
 
@@ -36,6 +37,7 @@ public partial class NobetaTrainerOverlay
         {
             WithDisabled(saveManager.IsLoading || SceneUtils.IsLoading(), () =>
             {
+                ImGui.SeparatorText("");
                 foreach (var gameSaveInfo in saveManager.GameSaveInfos)
                 {
                     if (ImGui.Button($"Load##{gameSaveInfo.Index}"))
@@ -43,7 +45,7 @@ public partial class NobetaTrainerOverlay
                         saveManager.LoadGameSave(gameSaveInfo);
                     }
 
-                    ImGui.SameLine();
+                    ImGui.SameLine(55);
                     ImGui.TextColored(
                         Singletons.GameSave?.basic?.dataIndex == gameSaveInfo.Index ? TitleColor : InfoColor,
                         $"({gameSaveInfo.Index:D2})"
@@ -52,8 +54,6 @@ public partial class NobetaTrainerOverlay
                     ImGui.TextColored(InfoColorSecondary, $"{gameSaveInfo.StageName}");
                     ImGui.SameLine();
                     ImGui.TextColored(ValueColor, $"[{gameSaveInfo.Difficulty} {gameSaveInfo.ClearedCount}*]");
-                    ImGui.SameLine();
-                    ImGui.TextColored(WarningColor, $"{gameSaveInfo.LastSaveTimestamp}");
                 }
             });
         }
@@ -62,24 +62,50 @@ public partial class NobetaTrainerOverlay
         {
             WithDisabled(saveManager.IsLoading || SceneUtils.IsLoading(), () =>
             {
+                ImGui.SeparatorText("");
                 foreach (var saveState in saveManager.SaveStates)
                 {
-                    // if (ImGui.Button($"Load##{gameSaveInfo.Index}"))
-                    // {
-                    //     saveManager.LoadGameSave(gameSaveInfo);
-                    // }
-                    //
-                    // ImGui.SameLine();
-                    // ImGui.TextColored(
-                    //     Singletons.GameSave?.basic?.dataIndex == gameSaveInfo.Index ? TitleColor : InfoColor,
-                    //     $"({gameSaveInfo.Index:D2})"
-                    // );
-                    // ImGui.SameLine();
-                    // ImGui.TextColored(InfoColorSecondary, $"{gameSaveInfo.StageName}");
-                    // ImGui.SameLine();
-                    // ImGui.TextColored(ValueColor, $"[{gameSaveInfo.Difficulty} {gameSaveInfo.ClearedCount}*]");
-                    // ImGui.SameLine();
-                    // ImGui.TextColored(WarningColor, $"{gameSaveInfo.LastSaveTimestamp}");
+                    if (ImGui.Button($"Load##{saveState.Id}"))
+                    {
+                        saveManager.LoadSaveState(saveState);
+                    }
+
+                    ImGui.SameLine(55);
+                    ImGui.TextColored(ReferenceEquals(saveManager.LoadedSaveState, saveState) ? TitleColor : InfoColor, $"{saveState.SaveName}");
+
+                    ImGui.Text("");
+                    ImGui.SameLine(55);
+                    ImGui.TextColored(WarningColor, ">");
+                    ImGui.SameLine();
+                    ImGui.TextColored(InfoColorSecondary, $"{saveState.StageName}");
+                    ImGui.SameLine();
+                    ImGui.TextColored(ValueColor, $"[{saveState.Difficulty} {saveState.ClearedCount}*]");
+                }
+
+                ImGui.SeparatorText("Create Save State");
+                WithDisabled(Singletons.GameSave?.basic?.dataIndex is not (>= 1 and <= 9), () =>
+                {
+                    ImGui.InputText("Name##Create", ref saveManager.CreateSaveStateName, 100);
+                    if (ImGui.Button("Create##SaveState"))
+                    {
+                        saveManager.CreateSaveState();
+                    }
+                });
+
+                ImGui.SeparatorText("Modify Save State");
+                if (saveManager.LoadedSaveState is { } loadedSaveState)
+                {
+                    ImGui.InputText("Rename##Label", ref saveManager.RenameSaveStateName, 100);
+
+                    if (ButtonColored(PrimaryButtonColor, "Rename##Button"))
+                    {
+                        loadedSaveState.SaveName = saveManager.RenameSaveStateName;
+                    }
+                    ImGui.SameLine();
+                    if (ButtonColored(ErrorButtonColor, "Delete"))
+                    {
+                        saveManager.DeleteSaveState(loadedSaveState);
+                    }
                 }
             });
         }

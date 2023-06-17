@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using NobetaTrainer.Trainer;
 
 namespace NobetaTrainer.Saves;
@@ -30,5 +31,12 @@ public static class SavePatches
         {
             savesManager.IsLoading = false;
         }
+    }
+
+    [HarmonyPatch(typeof(Game), nameof(Game.WriteGameSave), new Type[]{ })]
+    [HarmonyPostfix]
+    public static void WriteGameSavePostfix()
+    {
+        Singletons.SavesManager?.UpdateSaves();
     }
 }
