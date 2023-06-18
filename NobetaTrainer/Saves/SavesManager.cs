@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BepInEx;
 using Il2CppSystem.IO;
 using MarsSDK;
+using NativeFileDialogSharp;
 using NobetaTrainer.Config.Serialization;
 using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
@@ -21,7 +23,7 @@ public class SavesManager
         Path.Combine(Plugin.ConfigDirectory.FullName, "..", "..", "..", "LittleWitchNobeta_Data", "Save", "SaveStates")
     );
 
-    public string SavePath { get; } = Path.Combine(Plugin.ConfigDirectory.FullName, "SaveStates.json");
+    public static string SavePath { get; } = Path.Combine(Plugin.ConfigDirectory.FullName, "SaveStates.json");
 
     public const int SaveStateIndex = 9;
 
@@ -32,15 +34,12 @@ public class SavesManager
         Path.Combine(SaveStatesDirectory.FullName, $"{guid}.dat");
 
     public IEnumerable<GameSaveInfo> GameSaveInfos => _gameSaveInfos;
-    // TODO cache result
-    // public IEnumerable<IGrouping<string, SaveState>> SaveStates => _saveStates
-    //     .OrderBy(saveState => saveState.SaveName)
-    //     .GroupBy(saveState => saveState.GroupName)
-    //     .OrderBy(group => group.Key);
+    public int SaveStatesCount => _saveStates.Count;
     public IEnumerable<IGrouping<string, SaveState>> SaveStateGroups = Enumerable.Empty<IGrouping<string, SaveState>>();
     public string[] GroupNames = Array.Empty<string>();
 
     public bool IsLoading { get; set; } = true;
+    public bool IsExporting { get; private set; } = false;
     public SaveState LoadedSaveState = null;
 
     public string CreateSaveStateName = "Save State 01";
@@ -210,12 +209,35 @@ public class SavesManager
 
     public void ExportGroup(string targetGroup)
     {
+        var saveStates = SaveStateGroups.FirstOrDefault(group => group.Key == targetGroup);
 
+        if (saveStates is null)
+        {
+            return;
+        }
+
+        Task.Run(() =>
+        {
+            IsExporting = true;
+
+            new NobetaSaveStatesArchive().Export(saveStates.Key, saveStates);
+
+            IsExporting = false;
+        });
     }
 
     public void ImportGroup()
     {
+        Task.Run(() =>
+        {
+            IsExporting = true;
 
+            new NobetaSaveStatesArchive().Import(_saveStates);
+
+            IsExporting = false;
+
+            UpdateGroups();
+        });
     }
 
     public void Save()

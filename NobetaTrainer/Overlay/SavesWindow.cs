@@ -103,6 +103,19 @@ public partial class NobetaTrainerOverlay
 
             if (ImGui.CollapsingHeader("Save states", ImGuiTreeNodeFlags.DefaultOpen))
             {
+                ImGui.TextColored(InfoColorSecondary, $"There are");
+                ImGui.SameLine();
+                ImGui.TextColored(ValueColor, saveManager.SaveStatesCount.ToString());
+                ImGui.SameLine();
+                ImGui.TextColored(InfoColorSecondary, "save states available");
+                WithDisabled(saveManager.IsExporting, () =>
+                {
+                    if (ButtonColored(TitleColor, "Import"))
+                    {
+                        saveManager.ImportGroup();
+                    }
+                });
+                ImGui.NewLine();
                 TabBar("SaveStatesTabBar", ImGuiTabBarFlags.AutoSelectNewTabs, () =>
                 {
                     foreach (var group in saveManager.SaveStateGroups)
@@ -141,15 +154,13 @@ public partial class NobetaTrainerOverlay
                                 }
 
                                 ImGui.SeparatorText("");
-                                if (ButtonColored(TitleColor, "Export"))
+                                WithDisabled(saveManager.IsExporting, () =>
                                 {
-                                    saveManager.ExportGroup(group.Key);
-                                }
-                                ImGui.SameLine();
-                                if (ButtonColored(TitleColor, "Import"))
-                                {
-                                    saveManager.ImportGroup();
-                                }
+                                    if (ButtonColored(TitleColor, "Export"))
+                                    {
+                                        saveManager.ExportGroup(group.Key);
+                                    }
+                                });
                                 ImGui.SameLine();
                                 if (ButtonColored(ErrorButtonColor, "Delete"))
                                 {
