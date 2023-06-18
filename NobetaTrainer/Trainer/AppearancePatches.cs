@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using EnumsNET;
 using HarmonyLib;
 using NobetaTrainer.Config;
@@ -21,6 +23,8 @@ public static class AppearancePatches
     public static bool HideHatEnabled;
     [Bind]
     public static bool UseNobetaMoveset;
+    [Bind]
+    public static bool InvisibleEnabled;
 
     public static void LoadSelectedSkin()
     {
@@ -77,6 +81,8 @@ public static class AppearancePatches
             {
                 skin.storyHatMesh.enabled = !HideHatEnabled;
             }
+
+            ToggleInvisible();
         });
     }
 
@@ -97,6 +103,29 @@ public static class AppearancePatches
             LoadSelectedSkin();
             SelectedSkinIndex = originalSkin;
             LoadSelectedSkin();
+        });
+    }
+
+    public static void ToggleInvisible()
+    {
+        Singletons.Dispatcher.Enqueue(() =>
+        {
+            if (Singletons.WizardGirl is not { } wizardGirl)
+            {
+                return;
+            }
+
+            var skin = wizardGirl.Skin;
+            var renderers = skin.GetComponentsInChildren<MeshRenderer>(true)
+                .Concat<Renderer>(skin.GetComponentsInChildren<SkinnedMeshRenderer>());
+
+            foreach (var renderer in renderers)
+            {
+                if (renderer is not null)
+                {
+                    renderer.enabled = !InvisibleEnabled;
+                }
+            }
         });
     }
 

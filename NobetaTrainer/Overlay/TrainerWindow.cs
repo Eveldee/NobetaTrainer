@@ -124,6 +124,12 @@ public partial class NobetaTrainerOverlay
                 AppearancePatches.UpdateAppearance();
             }
 
+            ImGui.NewLine();
+            if (ImGui.Checkbox("Invisible Nobeta", ref AppearancePatches.InvisibleEnabled))
+            {
+                AppearancePatches.ToggleInvisible();
+            }
+
             ImGui.SeparatorText("Movements");
 
             ImGui.Checkbox("Enable NoClip", ref MovementPatches.NoClipEnabled);
