@@ -60,11 +60,27 @@ public class SavesManager
             SaveStatesDirectory.Create();
         }
 
-        // TODO Cleanup orphaned save states and missing save state files
-
         UpdateSaves();
 
         Load();
+
+        // Cleanup save states with missing game save file
+        if (_saveStates.RemoveAll(saveState => !File.Exists(GetGameSaveStatePathFromGuid(saveState.Id))) > 0)
+        {
+            UpdateGroups();
+        }
+
+        // Cleanup orphaned game save state files
+        foreach (var saveFileInfo in SaveStatesDirectory.EnumerateFiles("*.dat"))
+        {
+            var saveId = Guid.Parse(Path.GetFileNameWithoutExtension(saveFileInfo.Name));
+
+            if (_saveStates.All(saveState => saveState.Id != saveId))
+            {
+                Plugin.Log.LogInfo($"Deleting orphaned save state file: {saveFileInfo.Name}");
+                File.Delete(saveFileInfo.FullName);
+            }
+        }
     }
 
     public void UpdateSaves()
@@ -236,6 +252,7 @@ public class SavesManager
 
             IsExporting = false;
 
+            Save();
             UpdateGroups();
         });
     }

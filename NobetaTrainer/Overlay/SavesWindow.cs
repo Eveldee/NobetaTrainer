@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using ImGuiNET;
+﻿using ImGuiNET;
 using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
 
@@ -74,6 +72,7 @@ public partial class NobetaTrainerOverlay
                 var loadedSaveState = saveManager.LoadedSaveState;
                 WithDisabled(loadedSaveState is null, () =>
                 {
+                    ImGui.TextColored(TitleColor, "Modify currently loaded save state (name in purple)");
                     ImGui.InputText("New Name##Label", ref saveManager.RenameSaveStateName, 100);
 
                     if (ButtonColored(PrimaryButtonColor, "Rename##Button"))
