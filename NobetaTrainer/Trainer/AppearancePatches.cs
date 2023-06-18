@@ -1,11 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using EnumsNET;
 using HarmonyLib;
 using NobetaTrainer.Config;
 using UnityEngine;
+
+#if !V1031
 using UnityEngine.AddressableAssets;
+#endif
 
 namespace NobetaTrainer.Trainer;
 
