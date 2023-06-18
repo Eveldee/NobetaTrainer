@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using BepInEx;
-using Humanizer;
 using Il2CppSystem.IO;
 using MarsSDK;
+using NobetaTrainer.Config.Serialization;
 using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
 using DirectoryInfo = System.IO.DirectoryInfo;
@@ -21,6 +21,8 @@ public class SavesManager
         Path.Combine(Plugin.ConfigDirectory.FullName, "..", "..", "..", "LittleWitchNobeta_Data", "Save", "SaveStates")
     );
 
+    public string SavePath { get; } = Path.Combine(Plugin.ConfigDirectory.FullName, "SaveStates.json");
+
     public const int SaveStateIndex = 9;
 
     public static string GetGameSavePathFromIndex(int index) =>
@@ -30,15 +32,23 @@ public class SavesManager
         Path.Combine(SaveStatesDirectory.FullName, $"{guid}.dat");
 
     public IEnumerable<GameSaveInfo> GameSaveInfos => _gameSaveInfos;
-    public IEnumerable<SaveState> SaveStates => _saveStates.OrderBy(saveState => saveState.SaveName);
+    // TODO cache result
+    // public IEnumerable<IGrouping<string, SaveState>> SaveStates => _saveStates
+    //     .OrderBy(saveState => saveState.SaveName)
+    //     .GroupBy(saveState => saveState.GroupName)
+    //     .OrderBy(group => group.Key);
+    public IEnumerable<IGrouping<string, SaveState>> SaveStateGroups = Enumerable.Empty<IGrouping<string, SaveState>>();
+    public string[] GroupNames = Array.Empty<string>();
 
     public bool IsLoading { get; set; } = true;
     public string CreateSaveStateName = "Save State 01";
     public SaveState LoadedSaveState = null;
 
     private GameSaveInfo[] _gameSaveInfos;
-    private readonly List<SaveState> _saveStates;
+    private List<SaveState> _saveStates;
     public string RenameSaveStateName = "New name";
+    public string CreateSaveStateGroup = "New Group";
+    public int ModifySaveStateGroupIndex;
 
     public SavesManager()
     {
@@ -48,12 +58,11 @@ public class SavesManager
             SaveStatesDirectory.Create();
         }
 
-        // TODO Cleanup orphaned save states
+        // TODO Cleanup orphaned save states and missing save state files
 
         UpdateSaves();
 
-        // TODO Load from json file
-        _saveStates = new List<SaveState>();
+        Load();
     }
 
     public void UpdateSaves()
@@ -62,6 +71,17 @@ public class SavesManager
             .Where(index => File.Exists(GetGameSavePathFromIndex(index)))
             .Select(GameSaveInfo.FromSaveIndex)
             .ToArray();
+    }
+
+    public void UpdateGroups()
+    {
+        var groups = _saveStates
+            .OrderBy(saveState => saveState.SaveName)
+            .GroupBy(saveState => saveState.GroupName)
+            .OrderBy(group => group.Key);
+
+        SaveStateGroups = groups.ToArray();
+        GroupNames = SaveStateGroups.Select(group => group.Key).OrderBy(name => name).ToArray();
     }
 
     public void LoadGameSave(GameSaveInfo gameSaveInfo)
@@ -128,6 +148,8 @@ public class SavesManager
 
         LoadedSaveState = saveState;
         RenameSaveStateName = saveState.SaveName;
+        CreateSaveStateGroup = saveState.GroupName;
+        ModifySaveStateGroupIndex = Array.IndexOf(GroupNames, saveState.GroupName);
         UpdateSaves();
     }
 
@@ -138,11 +160,14 @@ public class SavesManager
             return;
         }
 
-        if (SaveState.TryCreateFromCurrentSave(CreateSaveStateName, out var saveState))
+        if (SaveState.TryCreateFromCurrentSave(CreateSaveStateName, CreateSaveStateGroup, out var saveState))
         {
             _saveStates.Add(saveState);
             LoadedSaveState = saveState;
             RenameSaveStateName = saveState.SaveName;
+
+            Save();
+            UpdateGroups();
         }
     }
 
@@ -150,5 +175,30 @@ public class SavesManager
     {
         _saveStates.Remove(loadedSaveState);
         LoadedSaveState = null;
+
+        Save();
+        UpdateGroups();
+    }
+
+    public void Save()
+    {
+        File.WriteAllText(SavePath, SerializeUtils.SerializeIndented(_saveStates));
+    }
+
+    private void Load()
+    {
+        if (!File.Exists(SavePath))
+        {
+            _saveStates = new List<SaveState>();
+
+            return;
+        }
+
+        _saveStates = SerializeUtils.Deserialize<List<SaveState>>
+        (
+            File.ReadAllText(SavePath)
+        );
+
+        UpdateGroups();
     }
 }

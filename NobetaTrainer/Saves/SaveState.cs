@@ -10,8 +10,9 @@ namespace NobetaTrainer.Saves;
 public record SaveState(Guid Id, string StageName, GameDifficulty Difficulty, int ClearedCount)
 {
     public required string SaveName { get; set; }
+    public required string GroupName { get; set; }
 
-    public static bool TryCreateFromCurrentSave(string name, [NotNullWhen(true)] out SaveState saveState)
+    public static bool TryCreateFromCurrentSave(string saveName, string groupName, [NotNullWhen(true)] out SaveState saveState)
     {
         saveState = null;
 
@@ -37,7 +38,11 @@ public record SaveState(Guid Id, string StageName, GameDifficulty Difficulty, in
             Game.GetLocationText(preview.stage, preview.savePoint),
             preview.difficulty,
             preview.gameCleared
-        ) { SaveName = name };
+        )
+        {
+            SaveName = saveName,
+            GroupName = groupName
+        };
 
         var sourcePath = SavesManager.GetGameSavePathFromIndex(SavesManager.SaveStateIndex);
         var destinationPath = SavesManager.GetGameSaveStatePathFromGuid(saveState.Id);

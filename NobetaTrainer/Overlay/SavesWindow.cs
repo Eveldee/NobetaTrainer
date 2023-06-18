@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using ImGuiNET;
 using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
@@ -25,19 +26,18 @@ public partial class NobetaTrainerOverlay
 
         if (saveManager.IsLoading || SceneUtils.IsLoading())
         {
-            ImGui.TextColored(WarningColor, $"Loading...{new string('.', (_saveLoadPoints++)/100)}");
+            ImGui.TextColored(WarningColor, $"Loading...{new string('.', (_saveLoadPoints++) / 100)}");
         }
         else
         {
             _saveLoadPoints = 0;
         }
 
-        ImGui.PushTextWrapPos();
-        if (ImGui.CollapsingHeader("Game Saves", ImGuiTreeNodeFlags.DefaultOpen))
+        WithDisabled(saveManager.IsLoading || SceneUtils.IsLoading(), () =>
         {
-            WithDisabled(saveManager.IsLoading || SceneUtils.IsLoading(), () =>
+            ImGui.PushTextWrapPos();
+            if (ImGui.CollapsingHeader("Game Saves", ImGuiTreeNodeFlags.DefaultOpen))
             {
-                ImGui.SeparatorText("");
                 foreach (var gameSaveInfo in saveManager.GameSaveInfos)
                 {
                     if (ImGui.Button($"Load##{gameSaveInfo.Index}"))
@@ -55,36 +55,14 @@ public partial class NobetaTrainerOverlay
                     ImGui.SameLine();
                     ImGui.TextColored(ValueColor, $"[{gameSaveInfo.Difficulty} {gameSaveInfo.ClearedCount}*]");
                 }
-            });
-        }
+            }
 
-        if (ImGui.CollapsingHeader("Save states", ImGuiTreeNodeFlags.DefaultOpen))
-        {
-            WithDisabled(saveManager.IsLoading || SceneUtils.IsLoading(), () =>
+            if (ImGui.CollapsingHeader("Manage Save states"))
             {
-                ImGui.SeparatorText("");
-                foreach (var saveState in saveManager.SaveStates)
-                {
-                    if (ImGui.Button($"Load##{saveState.Id}"))
-                    {
-                        saveManager.LoadSaveState(saveState);
-                    }
-
-                    ImGui.SameLine(55);
-                    ImGui.TextColored(ReferenceEquals(saveManager.LoadedSaveState, saveState) ? TitleColor : InfoColor, $"{saveState.SaveName}");
-
-                    ImGui.Text("");
-                    ImGui.SameLine(55);
-                    ImGui.TextColored(WarningColor, ">");
-                    ImGui.SameLine();
-                    ImGui.TextColored(InfoColorSecondary, $"{saveState.StageName}");
-                    ImGui.SameLine();
-                    ImGui.TextColored(ValueColor, $"[{saveState.Difficulty} {saveState.ClearedCount}*]");
-                }
-
                 ImGui.SeparatorText("Create Save State");
                 WithDisabled(Singletons.GameSave?.basic?.dataIndex is not (>= 1 and <= 9), () =>
                 {
+                    ImGui.InputText("Group##Create", ref saveManager.CreateSaveStateGroup, 100);
                     ImGui.InputText("Name##Create", ref saveManager.CreateSaveStateName, 100);
                     if (ImGui.Button("Create##SaveState"))
                     {
@@ -93,22 +71,70 @@ public partial class NobetaTrainerOverlay
                 });
 
                 ImGui.SeparatorText("Modify Save State");
-                if (saveManager.LoadedSaveState is { } loadedSaveState)
+                var loadedSaveState = saveManager.LoadedSaveState;
+                WithDisabled(loadedSaveState is null, () =>
                 {
-                    ImGui.InputText("Rename##Label", ref saveManager.RenameSaveStateName, 100);
+                    ImGui.InputText("New Name##Label", ref saveManager.RenameSaveStateName, 100);
 
                     if (ButtonColored(PrimaryButtonColor, "Rename##Button"))
                     {
-                        loadedSaveState.SaveName = saveManager.RenameSaveStateName;
+                        loadedSaveState!.SaveName = saveManager.RenameSaveStateName;
+                        saveManager.Save();
                     }
+
                     ImGui.SameLine();
                     if (ButtonColored(ErrorButtonColor, "Delete"))
                     {
                         saveManager.DeleteSaveState(loadedSaveState);
                     }
-                }
-            });
-        }
+
+                    ImGui.NewLine();
+
+                    ImGui.Combo("Group##Change", ref saveManager.ModifySaveStateGroupIndex, saveManager.GroupNames,saveManager.GroupNames.Length);
+
+                    if (ImGui.Button("Change Group##Button"))
+                    {
+                        loadedSaveState!.GroupName = saveManager.GroupNames[saveManager.ModifySaveStateGroupIndex];
+                        saveManager.Save();
+                        saveManager.UpdateGroups();
+                    }
+                });
+
+            }
+
+            if (ImGui.CollapsingHeader("Save states"))
+            {
+                TabBar("SaveStatesTabBar", ImGuiTabBarFlags.AutoSelectNewTabs, () =>
+                {
+                    foreach (var group in saveManager.SaveStateGroups)
+                    {
+                        TabItem(group.Key, () =>
+                        {
+                            foreach (var saveState in group)
+                            {
+                                if (ImGui.Button($"Load##{saveState.Id}"))
+                                {
+                                    saveManager.LoadSaveState(saveState);
+                                }
+
+                                ImGui.SameLine(55);
+                                ImGui.TextColored(
+                                    ReferenceEquals(saveManager.LoadedSaveState, saveState) ? TitleColor : InfoColor,
+                                    $"{saveState.SaveName}");
+
+                                ImGui.Text("");
+                                ImGui.SameLine(55);
+                                ImGui.TextColored(WarningColor, ">");
+                                ImGui.SameLine();
+                                ImGui.TextColored(InfoColorSecondary, $"{saveState.StageName}");
+                                ImGui.SameLine();
+                                ImGui.TextColored(ValueColor, $"[{saveState.Difficulty} {saveState.ClearedCount}*]");
+                            }
+                        });
+                    }
+                });
+            }
+        });
         ImGui.PopTextWrapPos();
 
         ImGui.End();
