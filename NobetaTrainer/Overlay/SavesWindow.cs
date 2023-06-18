@@ -57,7 +57,7 @@ public partial class NobetaTrainerOverlay
                 }
             }
 
-            if (ImGui.CollapsingHeader("Manage Save states"))
+            if (ImGui.CollapsingHeader("Manage Save States"))
             {
                 ImGui.SeparatorText("Create Save State");
                 WithDisabled(Singletons.GameSave?.basic?.dataIndex is not (>= 1 and <= 9), () =>
@@ -99,10 +99,9 @@ public partial class NobetaTrainerOverlay
                         saveManager.UpdateGroups();
                     }
                 });
-
             }
 
-            if (ImGui.CollapsingHeader("Save states"))
+            if (ImGui.CollapsingHeader("Save states", ImGuiTreeNodeFlags.DefaultOpen))
             {
                 TabBar("SaveStatesTabBar", ImGuiTabBarFlags.AutoSelectNewTabs, () =>
                 {
@@ -130,6 +129,33 @@ public partial class NobetaTrainerOverlay
                                 ImGui.SameLine();
                                 ImGui.TextColored(ValueColor, $"[{saveState.Difficulty} {saveState.ClearedCount}*]");
                             }
+
+                            ImGui.SeparatorText("");
+                            TreeNode("Group Operations", TitleColor, () =>
+                            {
+                                ImGui.InputText("New Name", ref saveManager.RenameGroupName, 100);
+
+                                if (ButtonColored(PrimaryButtonColor, "Rename##Button"))
+                                {
+                                    saveManager.RenameGroup(group.Key);
+                                }
+
+                                ImGui.SeparatorText("");
+                                if (ButtonColored(TitleColor, "Export"))
+                                {
+                                    saveManager.ExportGroup(group.Key);
+                                }
+                                ImGui.SameLine();
+                                if (ButtonColored(TitleColor, "Import"))
+                                {
+                                    saveManager.ImportGroup();
+                                }
+                                ImGui.SameLine();
+                                if (ButtonColored(ErrorButtonColor, "Delete"))
+                                {
+                                    saveManager.DeleteGroup(group.Key);
+                                }
+                            });
                         });
                     }
                 });

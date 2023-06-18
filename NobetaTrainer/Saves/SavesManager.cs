@@ -41,14 +41,17 @@ public class SavesManager
     public string[] GroupNames = Array.Empty<string>();
 
     public bool IsLoading { get; set; } = true;
-    public string CreateSaveStateName = "Save State 01";
     public SaveState LoadedSaveState = null;
+
+    public string CreateSaveStateName = "Save State 01";
+    public string CreateSaveStateGroup = "New Group";
+
+    public string RenameSaveStateName = "New name";
+    public int ModifySaveStateGroupIndex;
+    public string RenameGroupName = "New group name";
 
     private GameSaveInfo[] _gameSaveInfos;
     private List<SaveState> _saveStates;
-    public string RenameSaveStateName = "New name";
-    public string CreateSaveStateGroup = "New Group";
-    public int ModifySaveStateGroupIndex;
 
     public SavesManager()
     {
@@ -178,6 +181,41 @@ public class SavesManager
 
         Save();
         UpdateGroups();
+    }
+
+    public void RenameGroup(string targetGroup)
+    {
+        var toRename = SaveStateGroups.FirstOrDefault(group => group.Key == targetGroup);
+
+        if (toRename is null)
+        {
+            return;
+        }
+
+        foreach (var saveState in toRename)
+        {
+            saveState.GroupName = RenameGroupName;
+        }
+
+        UpdateGroups();
+    }
+
+    public void DeleteGroup(string targetGroup)
+    {
+        _saveStates.RemoveAll(saveState => saveState.GroupName == targetGroup);
+
+        Save();
+        UpdateGroups();
+    }
+
+    public void ExportGroup(string targetGroup)
+    {
+
+    }
+
+    public void ImportGroup()
+    {
+
     }
 
     public void Save()

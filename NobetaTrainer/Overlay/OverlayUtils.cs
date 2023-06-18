@@ -216,7 +216,7 @@ public partial class NobetaTrainerOverlay
         }
     }
 
-    private static bool ButtonColored(Vector4 color, string label, float gradientStep = 0.1f)
+    private static bool ButtonColored(Vector4 color, string label, float gradientStep = 0.15f)
     {
         var gradient = color.IntensityGradient(gradientStep, 3);
 
@@ -231,10 +231,31 @@ public partial class NobetaTrainerOverlay
         return result;
     }
 
+    private static void TreeNodeEx(string label, Vector4 color, ImGuiTreeNodeFlags flags, Action content)
+    {
+        ImGui.PushStyleColor(ImGuiCol.Text, color);
+        if (ImGui.TreeNodeEx(label, flags))
+        {
+            ImGui.PopStyleColor();
+
+            content();
+
+            ImGui.TreePop();
+        }
+        else
+        {
+            ImGui.PopStyleColor();
+        }
+    }
     private static void TreeNodeEx(string label, ImGuiTreeNodeFlags flags, Action content)
     {
-        ImGui.PushStyleColor(ImGuiCol.Text, InfoColor);
-        if (ImGui.TreeNodeEx(label, flags))
+        TreeNodeEx(label, InfoColor, flags, content);
+    }
+
+    private static void TreeNode(string label, Vector4 color, Action content)
+    {
+        ImGui.PushStyleColor(ImGuiCol.Text, color);
+        if (ImGui.TreeNode(label))
         {
             ImGui.PopStyleColor();
 
@@ -249,19 +270,7 @@ public partial class NobetaTrainerOverlay
     }
     private static void TreeNode(string label, Action content)
     {
-        ImGui.PushStyleColor(ImGuiCol.Text, InfoColor);
-        if (ImGui.TreeNode(label))
-        {
-            ImGui.PopStyleColor();
-
-            content();
-
-            ImGui.TreePop();
-        }
-        else
-        {
-            ImGui.PopStyleColor();
-        }
+        TreeNode(label, InfoColor, content);
     }
 
     private static void Child(string label, Vector2 size, bool border, ImGuiWindowFlags flags, Action content)
