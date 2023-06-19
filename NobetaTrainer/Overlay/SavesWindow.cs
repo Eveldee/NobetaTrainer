@@ -104,7 +104,7 @@ public partial class NobetaTrainerOverlay
                     }
 
                     ImGui.Separator();
-                    ImGui.TextColored(InfoColor, "Teleportation point:");
+                    ImGui.TextColored(InfoColor, "Teleportation Point:");
                     ImGui.SameLine();
                     ImGui.TextColored(ValueColor, loadedSaveState?.TeleportationPoint?.Position.Format() ?? "N/A");
 
