@@ -12,6 +12,7 @@
   - [Trainer](#trainer)
   - [Inspector](#inspector)
   - [Teleportation](#teleportation)
+  - [Save Manager](#save-manager)
   - [Timers](#timers)
   - [Colliders Renderer](#colliders-renderer)
   - [Shortcuts](#shortcuts)
@@ -84,6 +85,20 @@ This window allows you to teleport to the level save points *(statues)* and trea
 > Note that all the teleportation points are level-dependant so you will only see teleportation points for the specific level you're in
 > 
 > Teleportation points also takes rotation into account, you can see a preview of the position and rotation that will be saved when creating a custom teleportation point
+
+### Save Manager
+
+![](Screenshots/PreviewSaveManager.png)
+
+> **Disclaimer!** Using save states will override the game save in slot 9 so you will lose all data that is stored in this slot if you use save states. However, if you did the installation of the trainer correctly it won't impact your game saves on the legit version of the game.
+
+This window allows to load **game saves** _(from slot 1 to 9)_ and **save states**. Save states are immutable (non-modifiable) copies of a game save at a certain point in time and are always loaded in slot 9.
+
+Save states are **organized in groups** and are listed in **alphabetical order** so if you want to have a custom order you will need to add some kind of prefix to the save state names _(for example numbering them as shown in the screenshot above)_.
+
+Save states can also contain a **teleportation point** where Nobeta will be teleported when loading the save state if specified.
+
+It is also possible **to export and import save state groups** to share them with other people.
 
 ### Timers
 
