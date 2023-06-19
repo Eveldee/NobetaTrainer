@@ -1,6 +1,8 @@
 ﻿using System;
 using HarmonyLib;
+using NobetaTrainer.Teleportation;
 using NobetaTrainer.Trainer;
+using NobetaTrainer.Utils;
 
 namespace NobetaTrainer.Saves;
 
@@ -19,6 +21,14 @@ public static class SavePatches
     {
         if (Singletons.SavesManager is { } savesManager)
         {
+            // Teleport when needed
+            if (savesManager.NeedTeleportationOnLoad)
+            {
+                savesManager.NeedTeleportationOnLoad = false;
+
+                TeleportationPatches.TeleportToPoint(savesManager.LoadedSaveState.TeleportationPoint);
+            }
+
             savesManager.IsLoading = false;
         }
     }
@@ -38,5 +48,15 @@ public static class SavePatches
     public static void WriteGameSavePostfix()
     {
         Singletons.SavesManager?.UpdateSaves();
+    }
+
+    // Stand up
+    [HarmonyPatch(typeof(WizardGirlManage), nameof(WizardGirlManage.SetResurrection))  ]
+    [HarmonyPrefix]
+    public static bool WizardSetResurrectionPrefix()
+    {
+        Plugin.Log.LogDebug("Nobeta resurrected");
+
+        return Singletons.SavesManager is not { NeedTeleportationOnLoad: true };
     }
 }

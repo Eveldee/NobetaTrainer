@@ -7,6 +7,7 @@ using Il2CppSystem.IO;
 using MarsSDK;
 using NativeFileDialogSharp;
 using NobetaTrainer.Config.Serialization;
+using NobetaTrainer.Teleportation;
 using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
 using DirectoryInfo = System.IO.DirectoryInfo;
@@ -41,9 +42,11 @@ public class SavesManager
     public bool IsLoading { get; set; } = true;
     public bool IsExporting { get; private set; } = false;
     public SaveState LoadedSaveState = null;
+    public bool NeedTeleportationOnLoad = false;
 
     public string CreateSaveStateName = "Save State 01";
     public string CreateSaveStateGroup = "New Group";
+    public bool CreateWithTeleport;
 
     public string RenameSaveStateName = "New name";
     public int ModifySaveStateGroupIndex;
@@ -169,16 +172,19 @@ public class SavesManager
         CreateSaveStateGroup = saveState.GroupName;
         ModifySaveStateGroupIndex = Array.IndexOf(GroupNames, saveState.GroupName);
         UpdateSaves();
+
+        // Teleport if needed
+        NeedTeleportationOnLoad = LoadedSaveState.TeleportationPoint is not null;
     }
 
     public void CreateSaveState()
     {
-        if (CreateSaveStateName.IsNullOrWhiteSpace())
+        if (CreateSaveStateName.IsNullOrWhiteSpace() || Singletons.WizardGirl is null)
         {
             return;
         }
 
-        if (SaveState.TryCreateFromCurrentSave(CreateSaveStateName, CreateSaveStateGroup, out var saveState))
+        if (SaveState.TryCreateFromCurrentSave(CreateSaveStateName, CreateSaveStateGroup, CreateWithTeleport, out var saveState))
         {
             _saveStates.Add(saveState);
             LoadedSaveState = saveState;

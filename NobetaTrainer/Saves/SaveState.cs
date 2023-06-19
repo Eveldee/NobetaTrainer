@@ -2,7 +2,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using MarsSDK;
+using NobetaTrainer.Teleportation;
 using NobetaTrainer.Trainer;
+using NobetaTrainer.Utils;
 
 namespace NobetaTrainer.Saves;
 
@@ -11,8 +13,30 @@ public record SaveState(Guid Id, string StageName, GameDifficulty Difficulty, in
 {
     public required string SaveName { get; set; }
     public required string GroupName { get; set; }
+    public TeleportationPoint TeleportationPoint { get; set; } = null;
 
-    public static bool TryCreateFromCurrentSave(string saveName, string groupName, [NotNullWhen(true)] out SaveState saveState)
+    public void RemoveTeleportationPoint()
+    {
+        TeleportationPoint = null;
+    }
+
+    public void UpdateTeleportationPoint()
+    {
+        if (Singletons.WizardGirl is { } wizardGirl)
+        {
+            var areaCheck = SceneUtils.FindLastAreaCheck();
+            var transform = wizardGirl.transform;
+
+            TeleportationPoint = new TeleportationPoint(
+                "N/A",
+                transform.position,
+                transform.rotation,
+                areaCheck.name
+            );
+        }
+    }
+
+    public static bool TryCreateFromCurrentSave(string saveName, string groupName, bool withTeleport, [NotNullWhen(true)] out SaveState saveState)
     {
         saveState = null;
 
@@ -33,6 +57,7 @@ public record SaveState(Guid Id, string StageName, GameDifficulty Difficulty, in
         gameSave.basic.dataIndex = SavesManager.SaveStateIndex;
         Game.WriteGameSave(gameSave);
 
+
         saveState = new SaveState(
             Guid.NewGuid(),
             Game.GetLocationText(preview.stage, preview.savePoint),
@@ -43,6 +68,12 @@ public record SaveState(Guid Id, string StageName, GameDifficulty Difficulty, in
             SaveName = saveName,
             GroupName = groupName
         };
+
+        // Add teleportation point if enabled
+        if (withTeleport)
+        {
+            saveState.UpdateTeleportationPoint();
+        }
 
         var sourcePath = SavesManager.GetGameSavePathFromIndex(SavesManager.SaveStateIndex);
         var destinationPath = SavesManager.GetGameSaveStatePathFromGuid(saveState.Id);

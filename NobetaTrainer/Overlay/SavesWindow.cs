@@ -1,6 +1,7 @@
 ﻿using ImGuiNET;
 using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
+using NobetaTrainer.Utils.Extensions;
 
 namespace NobetaTrainer.Overlay;
 
@@ -66,6 +67,8 @@ public partial class NobetaTrainerOverlay
                     {
                         saveManager.CreateSaveState();
                     }
+                    ImGui.SameLine();
+                    ImGui.Checkbox("With Teleport", ref saveManager.CreateWithTeleport);
                 });
 
                 ImGui.SeparatorText("Modify Save State");
@@ -73,6 +76,8 @@ public partial class NobetaTrainerOverlay
                 WithDisabled(loadedSaveState is null, () =>
                 {
                     ImGui.TextColored(TitleColor, "Modify currently loaded save state (name in purple)");
+                    ImGui.Separator();
+
                     ImGui.InputText("New Name##Label", ref saveManager.RenameSaveStateName, 100);
 
                     if (ButtonColored(PrimaryButtonColor, "Rename##Button"))
@@ -87,7 +92,7 @@ public partial class NobetaTrainerOverlay
                         saveManager.DeleteSaveState(loadedSaveState);
                     }
 
-                    ImGui.NewLine();
+                    ImGui.Separator();
 
                     ImGui.Combo("Group##Change", ref saveManager.ModifySaveStateGroupIndex, saveManager.GroupNames,saveManager.GroupNames.Length);
 
@@ -97,12 +102,29 @@ public partial class NobetaTrainerOverlay
                         saveManager.Save();
                         saveManager.UpdateGroups();
                     }
+
+                    ImGui.Separator();
+                    ImGui.TextColored(InfoColor, "Teleportation point:");
+                    ImGui.SameLine();
+                    ImGui.TextColored(ValueColor, loadedSaveState?.TeleportationPoint?.Position.Format() ?? "N/A");
+
+                    if (ImGui.Button("Update Teleport##TeleportationPoint"))
+                    {
+                        loadedSaveState?.UpdateTeleportationPoint();
+                        saveManager.Save();
+                    }
+                    ImGui.SameLine();
+                    if (ImGui.Button("Remove Teleport##TeleportationPoint"))
+                    {
+                        loadedSaveState?.RemoveTeleportationPoint();
+                        saveManager.Save();
+                    }
                 });
             }
 
             if (ImGui.CollapsingHeader("Save states", ImGuiTreeNodeFlags.DefaultOpen))
             {
-                ImGui.TextColored(InfoColorSecondary, $"There are");
+                ImGui.TextColored(InfoColorSecondary, "There are");
                 ImGui.SameLine();
                 ImGui.TextColored(ValueColor, saveManager.SaveStatesCount.ToString());
                 ImGui.SameLine();
