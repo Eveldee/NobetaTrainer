@@ -40,7 +40,7 @@ public partial class NobetaTrainerOverlay
 
         ImGui.Begin("Teleportation", ref OverlayState.ShowTeleportationWindow);
 
-        if (!TeleportationPatches.IsGameScene)
+        if (!SceneUtils.IsGameScene)
         {
             ImGui.Text("Waiting for a scene to be loaded...");
 

@@ -1,9 +1,13 @@
 ﻿using System.Linq;
+using HarmonyLib;
+using NobetaTrainer.Trainer;
 
 namespace NobetaTrainer.Utils;
 
 public static class SceneUtils
 {
+    public static bool IsGameScene;
+
     public static bool IsLoading()
     {
         return UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Loader";
@@ -19,5 +23,43 @@ public static class SceneUtils
         );
 
         return checks.First(check => check.ShowArea.Count == sceneHides.Count());
+    }
+
+    public static void ReturnToStatue()
+    {
+        Singletons.Dispatcher.Enqueue(() =>
+        {
+            if (IsGameScene && Singletons.UIPauseMenu is { } pauseMenu)
+            {
+                pauseMenu.ReloadStage();
+            }
+        });
+    }
+
+    public static void ReturnToTitleScreen()
+    {
+        Singletons.Dispatcher.Enqueue(() =>
+        {
+            UiHelpers.ForceCloseAllUi();
+            Game.SwitchTitleScene(false);
+        });
+    }
+
+    [HarmonyPatch(typeof(SceneManager), nameof(SceneManager.OnSceneInitComplete))]
+    [HarmonyPostfix]
+    private static void OnSceneInitCompletePostfix()
+    {
+        Plugin.Log.LogDebug($"New scene init complete: {Game.sceneManager.stageName}");
+
+        IsGameScene = true;
+    }
+
+    [HarmonyPatch(typeof(Game), nameof(Game.EnterLoaderScene))]
+    [HarmonyPrefix]
+    private static void EnterLoaderScenePostfix()
+    {
+        Plugin.Log.LogDebug("Entered loader scene");
+
+        IsGameScene = false;
     }
 }

@@ -3,6 +3,7 @@ using System.Numerics;
 using Humanizer;
 using ImGuiNET;
 using NobetaTrainer.Colliders;
+using NobetaTrainer.Teleportation;
 using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
 
@@ -372,6 +373,21 @@ public partial class NobetaTrainerOverlay
         // Other options
         if (ImGui.CollapsingHeader("Others"))
         {
+            ImGui.SeparatorText("Menu");
+
+            WithDisabled(!SceneUtils.IsGameScene, () =>
+            {
+                if (ImGui.Button("Return to statue"))
+                {
+                    SceneUtils.ReturnToStatue();
+                }
+            });
+            ImGui.SameLine();
+            if (ImGui.Button("Return to title screen"))
+            {
+                SceneUtils.ReturnToTitleScreen();
+            }
+
             ImGui.SeparatorText("Environment");
 
             if (ImGui.Checkbox("Bright Mode", ref OtherPatches.BrightMode))

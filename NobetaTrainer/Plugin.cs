@@ -122,5 +122,6 @@ public class Plugin : BasePlugin
         Harmony.CreateAndPatchAll(typeof(TimersPatches));
         Harmony.CreateAndPatchAll(typeof(CollidersRenderPatches));
         Harmony.CreateAndPatchAll(typeof(SavePatches));
+        Harmony.CreateAndPatchAll(typeof(SceneUtils));
     }
 }

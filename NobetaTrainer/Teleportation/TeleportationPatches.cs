@@ -12,7 +12,6 @@ namespace NobetaTrainer.Teleportation;
 
 public static class TeleportationPatches
 {
-    public static bool IsGameScene;
     public static IEnumerable<SavePoint> SavePoints { get; private set; }
     public static IEnumerable<TreasureBox> TreasureBoxes { get; private set; }
     public static IEnumerable<AreaCheck> AreaChecks { get; private set; }
@@ -103,23 +102,15 @@ public static class TeleportationPatches
     [HarmonyPostfix]
     private static void OnSceneInitCompletePostfix()
     {
-        Plugin.Log.LogDebug($"New scene init complete: {Game.sceneManager.stageName}");
-
         SavePoints = UnityUtils.FindComponentsByTypeForced<SavePoint>().OrderBy(savePoint => savePoint.name);
         TreasureBoxes = UnityUtils.FindComponentsByTypeForced<TreasureBox>();
         AreaChecks = UnityUtils.FindComponentsByTypeForced<AreaCheck>();
-
-        IsGameScene = true;
     }
 
     [HarmonyPatch(typeof(Game), nameof(Game.EnterLoaderScene))]
     [HarmonyPrefix]
     private static void EnterLoaderScenePostfix()
     {
-        Plugin.Log.LogDebug("Entered loader scene");
-
-        IsGameScene = false;
-
         SavePoints = null;
         TreasureBoxes = null;
         AreaChecks = null;
