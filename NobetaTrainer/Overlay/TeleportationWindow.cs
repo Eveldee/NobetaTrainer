@@ -64,11 +64,7 @@ public partial class NobetaTrainerOverlay
         {
             foreach (var treasureBox in TeleportationPatches.TreasureBoxes)
             {
-                var rotation = treasureBox.transform.rotation.ToEulerAngles();
-                var wantedDirection = rotation.y;
-                var positionOffset = Quaternion.Euler(0f, wantedDirection * 360/(2 * (float)Math.PI), 0f) * new Vector3(0f, 0f, -.7f);
-
-                Vector3.RotateTowards(positionOffset, rotation, -1, -1);
+                var positionOffset = -treasureBox.transform.forward;
 
                 ShowTeleportTarget($"{treasureBox.name}_{treasureBox.ItemType}_{(treasureBox.hasOpened ? "Opened" :  "Closed")}", treasureBox.transform, positionOffset, Quaternion.identity);
             }
