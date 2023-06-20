@@ -35,6 +35,25 @@ public partial class NobetaTrainerOverlay
             HelpMarker(help);
         }
     }
+    private static void ShowValue(Vector4 color, string title, object value, string format = null, string help = null)
+    {
+        ImGui.TextColored(color, title);
+        ImGui.SameLine();
+
+        if (format is null)
+        {
+            ImGui.TextColored(ValueColor, string.Format(CultureInfo.InvariantCulture, "{0}", value));
+        }
+        else
+        {
+            ImGui.TextColored(ValueColor, string.Format(CultureInfo.InvariantCulture, $"{{0:{format}}}", value));
+        }
+
+        if (help is not null)
+        {
+            HelpMarker(help);
+        }
+    }
 
      private static void ShowValueExpression(object value, string format = null, string help = null, [CallerArgumentExpression(nameof(value))] string valueExpression = default)
     {

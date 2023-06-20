@@ -22,8 +22,6 @@ public partial class NobetaTrainerOverlay
             }
             ImGui.SameLine();
             ImGui.TextColored(InfoColor, name);
-            ImGui.SameLine();
-            ImGui.TextColored(ValueColor, targetObject.position.Format());
         }
         void ShowTeleportPoint(TeleportationPoint teleportationPoint, int index)
         {
@@ -38,8 +36,6 @@ public partial class NobetaTrainerOverlay
             }
             ImGui.SameLine();
             ImGui.TextColored(InfoColor, teleportationPoint.PointName);
-            ImGui.SameLine();
-            ImGui.TextColored(ValueColor, teleportationPoint.Position.Format());
         }
 
         ImGui.Begin("Teleportation", ref OverlayState.ShowTeleportationWindow);
@@ -92,8 +88,8 @@ public partial class NobetaTrainerOverlay
             // Point builder
             var transform = Singletons.WizardGirl.transform;
 
-            ShowValue("Position:", transform.position.Format());
-            ShowValue("Rotation:", transform.rotation.Format());
+            ShowValue(InfoColorSecondary, "Position:", transform.position.Format());
+            ShowValue(InfoColorSecondary, "Rotation:", transform.rotation.Format());
 
             ImGui.NewLine();
             ImGui.InputText("Name", ref TeleportationPatches.BuildingPointName, 40);
