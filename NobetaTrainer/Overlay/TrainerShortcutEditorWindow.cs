@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Numerics;
 using Humanizer;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
@@ -29,17 +30,17 @@ public partial class NobetaTrainerOverlay
             operation.Dispose();
         }
 
-        void DisplayCommandAction(ShortcutEditor.CommandAction commandAction, bool deleteButton = true)
+        void DisplayCommandAction(ShortcutEditor.CommandAction commandAction, bool deleteButton = true, int pathOffset = 0)
         {
-            DisplayCommandActionCustom(commandAction, ref commandAction.NeedCtrlModifier, ref commandAction.NeedAltModifier, ref commandAction.NeedShiftModifier, OnCompleteRebind, deleteButton);
+            DisplayCommandActionCustom(commandAction, ref commandAction.NeedCtrlModifier, ref commandAction.NeedAltModifier, ref commandAction.NeedShiftModifier, OnCompleteRebind, deleteButton, pathOffset);
         }
 
-        void DisplayCommandActionCustom(ShortcutEditor.CommandAction commandAction, ref bool ctrlModifier, ref bool altModifier, ref bool shiftModifier, Action<InputActionRebindingExtensions.RebindingOperation> customAction, bool deleteButton = true)
+        void DisplayCommandActionCustom(ShortcutEditor.CommandAction commandAction, ref bool ctrlModifier, ref bool altModifier, ref bool shiftModifier, Action<InputActionRebindingExtensions.RebindingOperation> customAction, bool deleteButton = true, int pathOffset = 0)
         {
             if (commandAction.TrainerCommand.CommandType != CommandType.None)
             {
                 ImGui.TextColored(ValueColor, commandAction.TrainerCommand.CommandType.Humanize(LetterCasing.Title));
-                ImGui.SameLine();
+                ImGui.SameLine(180);
             }
 
             if (ImGui.Button($"{commandAction.HumanReadablePath}##{commandAction.ActionId}"))
@@ -57,7 +58,8 @@ public partial class NobetaTrainerOverlay
                 });
             }
 
-            ImGui.SameLine();
+
+            ImGui.SameLine(195 + pathOffset * 7);
             ImGui.Checkbox($"Ctrl##{commandAction.ActionId}", ref ctrlModifier);
             ImGui.SameLine();
             ImGui.Checkbox($"Alt##{commandAction.ActionId}", ref altModifier);
@@ -101,7 +103,7 @@ public partial class NobetaTrainerOverlay
                 {
                     foreach (var commandAction in array)
                     {
-                        DisplayCommandAction(commandAction);
+                        DisplayCommandAction(commandAction, true, array.Max(a => a.HumanReadablePath.Length));
                     }
                 });
             }
