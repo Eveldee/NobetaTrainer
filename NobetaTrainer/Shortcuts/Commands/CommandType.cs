@@ -21,5 +21,6 @@ public enum CommandType
     UnlockCursor = 16,
     ToggleTimers = 17,
     ResetTimers = 18,
-    ToggleColliders = 19
+    ToggleColliders = 19,
+    ReloadSaveState = 20
 }

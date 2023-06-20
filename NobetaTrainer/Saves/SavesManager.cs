@@ -177,6 +177,14 @@ public class SavesManager
         NeedTeleportationOnLoad = LoadedSaveState.TeleportationPoint is not null;
     }
 
+    public void ReloadSaveState()
+    {
+        if (LoadedSaveState is not null)
+        {
+            LoadSaveState(LoadedSaveState);
+        }
+    }
+
     public void CreateSaveState()
     {
         if (CreateSaveStateName.IsNullOrWhiteSpace() || Singletons.WizardGirl is null)
