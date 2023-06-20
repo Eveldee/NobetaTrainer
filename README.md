@@ -86,6 +86,9 @@ This window allows you to teleport to the level save points *(statues)* and trea
 > 
 > Teleportation points also takes rotation into account, you can see a preview of the position and rotation that will be saved when creating a custom teleportation point
 
+> A config file with predefined teleportation points for each stage can be [downloaded here](SampleConfigs/TeleportationPoints.json) (replace the default file in `game_root\BepInEx\config\NobetaTrainer\`)  
+> Thanks to *MichaelK__* for sharing this file
+
 ### Save Manager
 
 ![](Screenshots/PreviewSaveManager.png)
@@ -118,7 +121,7 @@ This features allows to display **borders and surfaces** of different types of c
 
 > It is possible to change the colors and what is displayed for each type of collider
 >
-> The config for the colors used in the example above can be  [downloaded here](SampleConfigs/ColliderRenderers.json) (replace the default file in `game_root\BepInEx\config\NobetaTrainer\`)
+> The config for the colors used in the example above can be [downloaded here](SampleConfigs/ColliderRenderers.json) (replace the default file in `game_root\BepInEx\config\NobetaTrainer\`)
 
 ### Shortcuts
 

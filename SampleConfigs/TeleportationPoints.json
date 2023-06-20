@@ -1,0 +1,642 @@
+{
+  "Act07": [
+    {
+      "PointName": "Wall Climb",
+      "Position": {
+        "X": 7.742185,
+        "Y": -127.59602,
+        "Z": 202.69078
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0.7438746,
+        "Z": -0,
+        "W": -0.6683193
+      },
+      "AreaCheckName": "AreaAct05Room05To06"
+    },
+    {
+      "PointName": "Out of Bounds Nonota Summonables",
+      "Position": {
+        "X": -6.685414,
+        "Y": 752.7352,
+        "Z": 162.27019
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0.96974254,
+        "Z": -0,
+        "W": 0.24412999
+      },
+      "AreaCheckName": "AreaRoomCentral"
+    },
+    {
+      "PointName": "Nonota CS Start",
+      "Position": {
+        "X": -15.876395,
+        "Y": 328.7211,
+        "Z": 150.12524
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0.1300119,
+        "Z": -0,
+        "W": 0.9915125
+      },
+      "AreaCheckName": "AreaRoomBoss"
+    },
+    {
+      "PointName": "Nonota CS 1st Teleport",
+      "Position": {
+        "X": -16.262632,
+        "Y": 748.6424,
+        "Z": 148.58228
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0,
+        "Z": -0,
+        "W": 1
+      },
+      "AreaCheckName": "AreaRoomBoss02"
+    },
+    {
+      "PointName": "Abyss Start",
+      "Position": {
+        "X": 0.43532056,
+        "Y": 178.76001,
+        "Z": -21.316582
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0.004329408,
+        "Z": -0,
+        "W": 0.9999907
+      },
+      "AreaCheckName": "AreaRoomStart"
+    }
+  ],
+  "Act03_01": [
+    {
+      "PointName": "Underground - Entry",
+      "Position": {
+        "X": -0.285,
+        "Y": 0.009999871,
+        "Z": -2.097
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": 0.7265327,
+        "Z": -0,
+        "W": 0.6871319
+      },
+      "AreaCheckName": "AreaRoom01"
+    },
+    {
+      "PointName": "Underground - Jump over weird collission",
+      "Position": {
+        "X": 29.301151,
+        "Y": 0.19531739,
+        "Z": 29.219667
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0.18913251,
+        "Z": -0,
+        "W": 0.9819516
+      },
+      "AreaCheckName": "AreaRoom02To03_B"
+    },
+    {
+      "PointName": "Underground - Destroy the Wall",
+      "Position": {
+        "X": 28.283382,
+        "Y": 0.081851125,
+        "Z": 60.529526
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": 0.14018705,
+        "Z": -0,
+        "W": 0.99012506
+      },
+      "AreaCheckName": "AreaRoom04"
+    },
+    {
+      "PointName": "Underground - Jump to Arcane 2",
+      "Position": {
+        "X": 83.02352,
+        "Y": 7.512328,
+        "Z": 71.78099
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": 0.37204045,
+        "Z": -0,
+        "W": 0.9282166
+      },
+      "AreaCheckName": "AreaRoom05_A"
+    },
+    {
+      "PointName": "Underground - Fall to Ice",
+      "Position": {
+        "X": 96.98646,
+        "Y": 7.6097937,
+        "Z": 93.94701
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0.96135193,
+        "Z": -0,
+        "W": 0.2753226
+      },
+      "AreaCheckName": "AreaRoom05_A"
+    },
+    {
+      "PointName": "Underground - Fly to Ice Trial",
+      "Position": {
+        "X": 131.62968,
+        "Y": 7.4574575,
+        "Z": 62.288883
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0.9029254,
+        "Z": -0,
+        "W": 0.4297974
+      },
+      "AreaCheckName": "AreaRoom05_A"
+    },
+    {
+      "PointName": "Underground - Ice Trial",
+      "Position": {
+        "X": 65.50585,
+        "Y": 12.998213,
+        "Z": 6.424577
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0.9677971,
+        "Z": -0,
+        "W": 0.2517319
+      },
+      "AreaCheckName": "AreaRoom05To06"
+    },
+    {
+      "PointName": "Underground - Ice Cast Trial",
+      "Position": {
+        "X": 61.7,
+        "Y": 17.679998,
+        "Z": -109.8
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": 1,
+        "Z": -0,
+        "W": 1.490116E-07
+      },
+      "AreaCheckName": "AreaRoom07To08"
+    },
+    {
+      "PointName": "Underground - Post Ice Cast Trial Jump",
+      "Position": {
+        "X": 60.815723,
+        "Y": 30.679998,
+        "Z": -139.86485
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0.6910091,
+        "Z": -0,
+        "W": -0.72284603
+      },
+      "AreaCheckName": "AreaRoom08"
+    },
+    {
+      "PointName": "Underground - Barrier Fight Skip",
+      "Position": {
+        "X": 111.05541,
+        "Y": 25.679998,
+        "Z": -129.28247
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0.10476788,
+        "Z": -0,
+        "W": -0.99449676
+      },
+      "AreaCheckName": "AreaRoom09"
+    },
+    {
+      "PointName": "Underground - Tania Fight",
+      "Position": {
+        "X": 164.75005,
+        "Y": 5.68,
+        "Z": -14.043981
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": 0.71456575,
+        "Z": -0,
+        "W": 0.69956833
+      },
+      "AreaCheckName": "AreaRoomBoss"
+    }
+  ],
+  "Act02_01": [
+    {
+      "PointName": "Okun Shrine - Start",
+      "Position": {
+        "X": 0,
+        "Y": 0.009999812,
+        "Z": 9.106951
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": 1,
+        "Z": -0,
+        "W": 1.2681949E-07
+      },
+      "AreaCheckName": "AreaCheckRoom01"
+    },
+    {
+      "PointName": "Okun Shrine - Barrier Stone",
+      "Position": {
+        "X": -111.01792,
+        "Y": 12.009999,
+        "Z": -135.88591
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": 0.033851717,
+        "Z": -0,
+        "W": -0.99942684
+      },
+      "AreaCheckName": "AreaCheckRoom03"
+    },
+    {
+      "PointName": "Okun Shrine - Cast Tutorial",
+      "Position": {
+        "X": -91.91937,
+        "Y": -0.45339507,
+        "Z": -168.19577
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": 0.7171405,
+        "Z": -0,
+        "W": 0.6969287
+      },
+      "AreaCheckName": "AreaCheckRoom03TO04"
+    },
+    {
+      "PointName": "Okun Shrine - Cat Rescue",
+      "Position": {
+        "X": -1.0190448,
+        "Y": -11.990001,
+        "Z": -168.98257
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": 0.71199477,
+        "Z": -0,
+        "W": 0.70218486
+      },
+      "AreaCheckName": "AreaCheckRoom04TO05"
+    },
+    {
+      "PointName": "Okun Shrine - Armor Fight",
+      "Position": {
+        "X": -83.622505,
+        "Y": -27.990002,
+        "Z": -237.5124
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0.007405797,
+        "Z": -0,
+        "W": 0.99997264
+      },
+      "AreaCheckName": "AreaCheckRoomOBoss"
+    }
+  ],
+  "Act04_01": [
+    {
+      "PointName": "Lava Ruins - Entry",
+      "Position": {
+        "X": -7.45058E-07,
+        "Y": 4.0099998,
+        "Z": -23.75
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -2.980232E-07,
+        "Z": -0,
+        "W": 1
+      },
+      "AreaCheckName": "AreaRoom01ToLevel02"
+    },
+    {
+      "PointName": "Lava Ruins - Post Entry Cutscene",
+      "Position": {
+        "X": -27.22,
+        "Y": -3.9900002,
+        "Z": 32.350002
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0.68714166,
+        "Z": -0,
+        "W": 0.7265236
+      },
+      "AreaCheckName": "AreaRoom01_02"
+    },
+    {
+      "PointName": "Lava Ruins - Central Cross Skip",
+      "Position": {
+        "X": -86.81228,
+        "Y": -11.990001,
+        "Z": 58.90789
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0.0020031414,
+        "Z": -0,
+        "W": 0.99999803
+      },
+      "AreaCheckName": "AreaRoom02"
+    },
+    {
+      "PointName": "Lava Ruins - Stairs to Wooden Plank Trap",
+      "Position": {
+        "X": -32.747356,
+        "Y": -11.990001,
+        "Z": 114.179214
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0.6715281,
+        "Z": -0,
+        "W": -0.7409792
+      },
+      "AreaCheckName": "AreaRoom02ToRoom04"
+    },
+    {
+      "PointName": "Lava Ruins - Scissor Doll Arena",
+      "Position": {
+        "X": -9.272916,
+        "Y": -15.91678,
+        "Z": 66.2865
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0.74231976,
+        "Z": -0,
+        "W": -0.67004585
+      },
+      "AreaCheckName": "AreaRoom04"
+    },
+    {
+      "PointName": "Lava Ruins - Post Mid Cutscene",
+      "Position": {
+        "X": 20.939178,
+        "Y": -15.990001,
+        "Z": -9.98
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -1,
+        "Z": -0,
+        "W": 2.980232E-07
+      },
+      "AreaCheckName": "AreaRoom05"
+    },
+    {
+      "PointName": "Lava Ruins - Fire Cast Trial",
+      "Position": {
+        "X": 120.29101,
+        "Y": -19.990002,
+        "Z": -27.020807
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0.7202632,
+        "Z": -0,
+        "W": -0.693701
+      },
+      "AreaCheckName": "AreaRoom06"
+    },
+    {
+      "PointName": "Lava Ruins - Post Cast Trial",
+      "Position": {
+        "X": 138.1255,
+        "Y": -11.99,
+        "Z": -1.5668439
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0.006832429,
+        "Z": -0,
+        "W": -0.9999767
+      },
+      "AreaCheckName": "AreaRoom07"
+    },
+    {
+      "PointName": "Lava Ruins - Free Ride",
+      "Position": {
+        "X": 189.73923,
+        "Y": -19.990002,
+        "Z": 141.12851
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0.67005074,
+        "Z": -0,
+        "W": 0.7423154
+      },
+      "AreaCheckName": "AreaRoom08"
+    },
+    {
+      "PointName": "Lava Ruins - Ride Skip Runway",
+      "Position": {
+        "X": 79.80377,
+        "Y": -14.854814,
+        "Z": 164.20389
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0.71505,
+        "Z": -0,
+        "W": 0.69907343
+      },
+      "AreaCheckName": "AreaRoom08"
+    },
+    {
+      "PointName": "Lava Ruins - Scissor Doll Evade",
+      "Position": {
+        "X": 10.005495,
+        "Y": -19.990002,
+        "Z": 228.86055
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": 0.640802,
+        "Z": -0,
+        "W": 0.76770616
+      },
+      "AreaCheckName": "AreaRoom09ToRoomBoss"
+    },
+    {
+      "PointName": "Lava Ruins - Monica Fight",
+      "Position": {
+        "X": 18.2635,
+        "Y": -11.99,
+        "Z": 292.2805
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0.016180974,
+        "Z": -0,
+        "W": 0.99986917
+      },
+      "AreaCheckName": "AreaRoomBoss"
+    },
+    {
+      "PointName": "Lava Ruins - Post Monica Movement",
+      "Position": {
+        "X": -96.25,
+        "Y": -19.990002,
+        "Z": 329.5
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -3.2782555E-07,
+        "Z": -0,
+        "W": 1
+      },
+      "AreaCheckName": "AreaRoomBoss02"
+    },
+    {
+      "PointName": "Lava Ruins - Post Teleport Movement",
+      "Position": {
+        "X": -42,
+        "Y": -3.8854017,
+        "Z": -18
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0,
+        "Z": -0,
+        "W": 1
+      },
+      "AreaCheckName": "AreaRoom01_02"
+    }
+  ],
+  "Act05_02": [
+    {
+      "PointName": "Dark Path - Entry",
+      "Position": {
+        "X": 1.0100001,
+        "Y": 0.009999871,
+        "Z": -3.0399992
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0.7071066,
+        "Z": -0,
+        "W": 0.70710695
+      },
+      "AreaCheckName": "ASRoom01"
+    },
+    {
+      "PointName": "Dark Path - Skip half of first Section",
+      "Position": {
+        "X": -15.11,
+        "Y": 0.009999871,
+        "Z": 38.15
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": 0.19162275,
+        "Z": -0,
+        "W": 0.9814687
+      },
+      "AreaCheckName": "ASRoom01"
+    },
+    {
+      "PointName": "Dark Path - Absorbtion Chest",
+      "Position": {
+        "X": -74.13198,
+        "Y": -3.9900002,
+        "Z": 20.790585
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": -0.08233077,
+        "Z": -0,
+        "W": 0.99660504
+      },
+      "AreaCheckName": "ASRoom02To0103"
+    },
+    {
+      "PointName": "Dark Path - Run Past Dolls",
+      "Position": {
+        "X": -103.28805,
+        "Y": 4.0099998,
+        "Z": 66.73783
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": 0.99887574,
+        "Z": -0,
+        "W": -0.047405
+      },
+      "AreaCheckName": "ASRoom03"
+    },
+    {
+      "PointName": "Dark Path - Hat Got",
+      "Position": {
+        "X": -36.5,
+        "Y": 8.009999,
+        "Z": 46.25
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": 0.70710677,
+        "Z": -0,
+        "W": 0.7071068
+      },
+      "AreaCheckName": "ASRoom01"
+    },
+    {
+      "PointName": "Dark Path - Post Hat Cat Talk",
+      "Position": {
+        "X": -12.46,
+        "Y": 0.009999871,
+        "Z": 41.63
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": 0.3210424,
+        "Z": -0,
+        "W": 0.9470649
+      },
+      "AreaCheckName": "ASRoom01"
+    },
+    {
+      "PointName": "Dark Path - Jump into the Abyss",
+      "Position": {
+        "X": 34.482185,
+        "Y": -7.9900002,
+        "Z": 32.748135
+      },
+      "Rotation": {
+        "X": -0,
+        "Y": 0.675518,
+        "Z": -0,
+        "W": 0.7373436
+      },
+      "AreaCheckName": "ASRoom04"
+    }
+  ]
+}
