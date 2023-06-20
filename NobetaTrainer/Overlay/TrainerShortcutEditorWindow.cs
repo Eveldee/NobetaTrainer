@@ -39,6 +39,7 @@ public partial class NobetaTrainerOverlay
         {
             if (commandAction.TrainerCommand.CommandType != CommandType.None)
             {
+                ImGui.AlignTextToFramePadding();
                 ImGui.TextColored(ValueColor, commandAction.TrainerCommand.CommandType.Humanize(LetterCasing.Title));
                 ImGui.SameLine(180);
             }
@@ -59,7 +60,7 @@ public partial class NobetaTrainerOverlay
             }
 
 
-            ImGui.SameLine(195 + pathOffset * 7);
+            ImGui.SameLine(pathOffset == 0 ? 0 : 195 + pathOffset * 7);
             ImGui.Checkbox($"Ctrl##{commandAction.ActionId}", ref ctrlModifier);
             ImGui.SameLine();
             ImGui.Checkbox($"Alt##{commandAction.ActionId}", ref altModifier);
