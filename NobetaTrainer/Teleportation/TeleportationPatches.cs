@@ -60,6 +60,9 @@ public static class TeleportationPatches
         IEnumerator Task()
         {
             TeleportTo(teleportationPoint.Position, teleportationPoint.Rotation, Vector3.zero, Quaternion.identity);
+            // Update camera rotation early to avoid character moving in wrong direction if a movement is done in this specific frame before the reset
+            // This happens when you keep pressing a key on load for example
+            Singletons.WizardGirl.GetCamera().g_CameraLookAt.rotation = teleportationPoint.Rotation;
 
             yield return new WaitForEndOfFrame();
 
