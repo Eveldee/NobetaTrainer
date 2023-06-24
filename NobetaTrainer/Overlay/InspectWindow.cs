@@ -313,7 +313,32 @@ public partial class NobetaTrainerOverlay
 
                 TreeNode("Camera", () =>
                 {
-                    ImGui.SeparatorText("Camera");
+                    var camera = wizardGirl.GetCamera();
+
+                    ImGui.SeparatorText("General");
+                    ShowValueExpression(camera.cameraMode);
+                    ShowValueExpression(camera.g_bRespiration);
+                    ShowValueExpression(camera.g_fDistance);
+                    ShowValueExpression(camera.g_fRecoil);
+                    ShowValueExpression(camera.g_fX);
+                    ShowValueExpression(camera.g_fY);
+                    ShowValueExpression(camera.cameraMoveDelta);
+
+                    ImGui.SeparatorText("Look At");
+                    ShowValueModifiable(nameof(Transform.position), camera.g_CameraLookAt);
+                    ShowValueModifiable(nameof(Transform.rotation), camera.g_CameraLookAt);
+
+                    ImGui.SeparatorText("Look Here");
+                    ShowValueModifiable(nameof(Transform.position), camera.g_LookHere);
+                    ShowValueModifiable(nameof(Transform.rotation), camera.g_LookHere);
+
+                    ImGui.SeparatorText("Aim Look Here");
+                    ShowValueModifiable(nameof(Transform.position), camera.g_AimLookHere);
+                    ShowValueModifiable(nameof(Transform.rotation), camera.g_AimLookHere);
+
+                    ImGui.SeparatorText("Player Look Here");
+                    ShowValueModifiable(nameof(Transform.position), camera.g_PlayerLookHere);
+                    ShowValueModifiable(nameof(Transform.rotation), camera.g_PlayerLookHere);
                 });
             }
         }
