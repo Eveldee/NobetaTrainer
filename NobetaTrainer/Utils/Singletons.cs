@@ -7,7 +7,7 @@ using NobetaTrainer.Teleportation;
 using NobetaTrainer.Timer;
 using UnityEngine;
 
-namespace NobetaTrainer.Trainer;
+namespace NobetaTrainer.Utils;
 
 public static class Singletons
 {
@@ -31,6 +31,7 @@ public static class Singletons
     public static ColliderRendererManager ColliderRendererManager { get; set; }
     public static SavesManager SavesManager { get; set; }
     public static UIPauseMenu UIPauseMenu { get; private set; }
+    public static GameUIManager GameUIManager { get; private set; }
 
     public static bool SaveLoaded => GameSave is not null;
 
@@ -103,12 +104,21 @@ public static class Singletons
         Plugin.Log.LogInfo("Entered scene");
     }
 
-    [HarmonyPatch(typeof(UIPauseMenu), nameof(global::UIPauseMenu.Init))]
+    [HarmonyPatch(typeof(UIPauseMenu), nameof(UIPauseMenu.Init))]
     [HarmonyPostfix]
     private static void UIPauseMenuInit(UIPauseMenu __instance)
     {
         Plugin.Log.LogInfo("UIPauseMenu Init");
 
         UIPauseMenu = __instance;
+    }
+
+    [HarmonyPatch(typeof(GameUIManager), nameof(global::GameUIManager.Init))]
+    [HarmonyPostfix]
+    private static void GameUIManagerInit(GameUIManager __instance)
+    {
+        Plugin.Log.LogInfo("GameUIManager Init");
+
+        GameUIManager = __instance;
     }
 }

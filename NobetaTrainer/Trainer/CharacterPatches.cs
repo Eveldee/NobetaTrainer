@@ -2,6 +2,7 @@
 using HarmonyLib;
 using NobetaTrainer.Behaviours;
 using NobetaTrainer.Config;
+using NobetaTrainer.Utils;
 
 namespace NobetaTrainer.Trainer;
 

@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using NobetaTrainer.Config;
 using NobetaTrainer.Shortcuts;
+using NobetaTrainer.Utils;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

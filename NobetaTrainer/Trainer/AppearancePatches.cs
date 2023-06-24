@@ -3,6 +3,7 @@ using System.Linq;
 using EnumsNET;
 using HarmonyLib;
 using NobetaTrainer.Config;
+using NobetaTrainer.Utils;
 using UnityEngine;
 
 #if !V1031

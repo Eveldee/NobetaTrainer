@@ -1,6 +1,7 @@
 ﻿using System;
 using HarmonyLib;
 using NobetaTrainer.Trainer;
+using NobetaTrainer.Utils;
 
 namespace NobetaTrainer.Timer;
 

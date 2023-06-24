@@ -1,6 +1,7 @@
 ﻿using ImGuiNET;
 using NobetaTrainer.Timer;
 using NobetaTrainer.Trainer;
+using NobetaTrainer.Utils;
 using UnityEngine;
 
 namespace NobetaTrainer.Overlay;

@@ -7,6 +7,7 @@ using NobetaTrainer.Overlay;
 using NobetaTrainer.Teleportation;
 using NobetaTrainer.Timer;
 using NobetaTrainer.Trainer;
+using NobetaTrainer.Utils;
 using static NobetaTrainer.Shortcuts.Commands.CommandType;
 
 namespace NobetaTrainer.Shortcuts.Commands;

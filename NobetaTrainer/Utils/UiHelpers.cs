@@ -1,4 +1,4 @@
-﻿using NobetaTrainer.Trainer;
+﻿using System.Collections.Generic;
 
 namespace NobetaTrainer.Utils;
 
@@ -6,13 +6,13 @@ public static class UiHelpers
 {
     public static void ForceCloseAllUi()
     {
-        if (Singletons.GameInstance.ui.stackingManager.canvasStack is { } uiStack)
+        var uis = GameUis;
+
+        foreach (var ui in uis)
         {
-            while (uiStack.Count > 0)
-            {
-                var ui = uiStack.Pop();
-                ui.ForceClose();
-            }
+            ui.Hide(null);
         }
     }
+
+    public static IEnumerable<GameCanvasBase> GameUis => Singletons.GameUIManager?.GetComponentsInChildren<GameCanvasBase>();
 }
