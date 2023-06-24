@@ -10,7 +10,7 @@ public static class UiHelpers
 
         foreach (var ui in uis)
         {
-            ui.Hide(null);
+            ui.SimpleHide();
         }
     }
 
