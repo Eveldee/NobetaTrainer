@@ -4,7 +4,7 @@
         <TargetFramework>net6.0</TargetFramework>
         <AssemblyName>NobetaTrainer</AssemblyName>
         <Description>Little Witch Nobeta speedrun Trainer tool</Description>
-        <Version>1.3.2</Version>
+        <Version>1.3.3</Version>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <LangVersion>latest</LangVersion>
         <RestoreAdditionalProjectSources>
