@@ -44,6 +44,9 @@ public record SaveState(Guid Id, string StageName, GameDifficulty Difficulty, in
             return false;
         }
 
+        // First save to make sure the save is updated
+        Game.WriteGameSave();
+
         if (Game.ReadGameSave(saveIndex, out var gameSave) != ReadFileResult.Succeed)
         {
             return false;
@@ -55,7 +58,6 @@ public record SaveState(Guid Id, string StageName, GameDifficulty Difficulty, in
         // Set file index to SaveStateIndex
         gameSave.basic.dataIndex = SavesManager.SaveStateIndex;
         Game.WriteGameSave(gameSave);
-
 
         saveState = new SaveState(
             Guid.NewGuid(),
