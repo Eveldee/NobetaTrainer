@@ -1,5 +1,4 @@
 ﻿using ImGuiNET;
-using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
 using NobetaTrainer.Utils.Extensions;
 

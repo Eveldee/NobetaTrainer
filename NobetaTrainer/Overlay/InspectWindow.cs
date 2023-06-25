@@ -4,7 +4,6 @@ using System.Reflection;
 using EnumsNET;
 using Humanizer;
 using ImGuiNET;
-using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
 using NobetaTrainer.Utils.Extensions;
 using UnityEngine;

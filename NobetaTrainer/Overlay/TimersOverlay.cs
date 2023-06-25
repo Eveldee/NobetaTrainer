@@ -1,7 +1,6 @@
 ﻿using System.Numerics;
 using ImGuiNET;
 using NobetaTrainer.Config;
-using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
 using static NobetaTrainer.Timer.Timers;
 

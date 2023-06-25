@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using HarmonyLib;
-using NobetaTrainer.Trainer;
 
 namespace NobetaTrainer.Utils;
 

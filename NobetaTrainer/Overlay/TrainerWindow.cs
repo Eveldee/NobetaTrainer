@@ -3,7 +3,6 @@ using System.Numerics;
 using Humanizer;
 using ImGuiNET;
 using NobetaTrainer.Colliders;
-using NobetaTrainer.Teleportation;
 using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
 
@@ -38,18 +37,39 @@ public partial class NobetaTrainerOverlay
         // Character options
         if (ImGui.CollapsingHeader("Character", ImGuiTreeNodeFlags.DefaultOpen))
         {
-            ImGui.SeparatorText("General");
+            // Combat options
+            ImGui.SeparatorText("Combat");
 
-            ImGui.Checkbox("Infinite HP", ref CharacterPatches.InfiniteHpEnabled);
-            HelpMarker("Regen HP anytime it goes below max");
+            ImGui.Checkbox("Vanilla Mode", ref CharacterPatches.VanillaMode);
+            HelpMarker("Disable all 'cheat' features like Infinite HP, No Damage, One Tap, ...");
 
-            ImGui.Checkbox("Infinite Mana", ref CharacterPatches.InfiniteManaEnabled);
-            HelpMarker("Regen Mana anytime it goes below max");
+            ImGui.Separator();
 
-            ImGui.Checkbox("Infinite Stamina", ref CharacterPatches.InfiniteStaminaEnabled);
-            HelpMarker("Regen Stamina anytime it goes below max");
+            WithDisabled(CharacterPatches.VanillaMode, () =>
+            {
+                ImGui.Checkbox("Infinite HP", ref CharacterPatches.InfiniteHpEnabled);
+                HelpMarker("Regen HP anytime it goes below max");
 
-            ImGui.NewLine();
+                ImGui.Checkbox("Infinite Mana", ref CharacterPatches.InfiniteManaEnabled);
+                HelpMarker("Regen Mana anytime it goes below max");
+
+                ImGui.Checkbox("Infinite Stamina", ref CharacterPatches.InfiniteStaminaEnabled);
+                HelpMarker("Regen Stamina anytime it goes below max");
+
+                ImGui.Separator();
+
+                ImGui.Checkbox("No Damage", ref CharacterPatches.NoDamageEnabled);
+                HelpMarker("Ignore damages, disabling any effect like knockback");
+
+                ImGui.Checkbox("One Tap", ref CharacterPatches.OneTapEnabled);
+                HelpMarker("Kill all enemies in one hit, effectively deals just a stupid amount of damage");
+
+                ImGui.Checkbox("On Hit KO (OHKO)", ref CharacterPatches.OneHitKOEnabled);
+                HelpMarker("Nobeta instantly dies upon taking any damage");
+            });
+
+            ImGui.Separator();
+
             if (ImGui.Checkbox("Nobeta Moveset", ref AppearancePatches.UseNobetaMoveset))
             {
                 AppearancePatches.ToggleNobetaSkin();
@@ -223,22 +243,6 @@ public partial class NobetaTrainerOverlay
                     CharacterPatches.SetHasteLevel();
                 }
             }
-        }
-
-        // Combat options
-        if (ImGui.CollapsingHeader("Combat"))
-        {
-            ImGui.SeparatorText("General");
-
-            ImGui.Checkbox("No Damage", ref CharacterPatches.NoDamageEnabled);
-            HelpMarker("Ignore damages, disabling any effect like knockback");
-
-            ImGui.Checkbox("One Tap", ref CharacterPatches.OneTapEnabled);
-            HelpMarker("Kill all enemies in one hit, effectively deals just a stupid amount of damage");
-
-            ImGui.NewLine();
-            ImGui.Checkbox("On Hit KO (OHKO)", ref CharacterPatches.OneHitKOEnabled);
-            HelpMarker("Nobeta instantly dies upon taking any damage");
         }
 
         // Colliders options

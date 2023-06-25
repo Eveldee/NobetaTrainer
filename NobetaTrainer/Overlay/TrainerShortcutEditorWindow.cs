@@ -7,7 +7,6 @@ using ImGuiNET;
 using NobetaTrainer.Behaviours;
 using NobetaTrainer.Shortcuts;
 using NobetaTrainer.Shortcuts.Commands;
-using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
 using UnityEngine.InputSystem;
 

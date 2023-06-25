@@ -6,9 +6,7 @@ public static class UiHelpers
 {
     public static void ForceCloseAllUi()
     {
-        var uis = GameUis;
-
-        foreach (var ui in uis)
+        foreach (var ui in GameUis)
         {
             ui.SimpleHide();
         }

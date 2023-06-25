@@ -22,5 +22,6 @@ public enum CommandType
     ToggleTimers = 17,
     ResetTimers = 18,
     ToggleColliders = 19,
-    ReloadSaveState = 20
+    ReloadSaveState = 20,
+    ToggleVanillaMode = 21
 }

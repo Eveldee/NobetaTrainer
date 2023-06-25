@@ -1,7 +1,6 @@
 ﻿using System;
 using HarmonyLib;
 using NobetaTrainer.Teleportation;
-using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
 
 namespace NobetaTrainer.Saves;

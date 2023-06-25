@@ -1,9 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using BepInEx;
 using ImGuiNET;
 using NobetaTrainer.Teleportation;
-using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
 using NobetaTrainer.Utils.Extensions;
 using UnityEngine;

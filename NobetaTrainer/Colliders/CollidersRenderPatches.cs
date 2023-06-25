@@ -5,7 +5,6 @@ using Il2CppInterop.Runtime;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Il2CppSystem;
 using NobetaTrainer.Config;
-using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
 using NobetaTrainer.Utils.Extensions;
 using UnityEngine;

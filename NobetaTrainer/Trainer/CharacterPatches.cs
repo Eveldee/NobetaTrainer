@@ -10,17 +10,19 @@ namespace NobetaTrainer.Trainer;
 public static class CharacterPatches
 {
     [Bind]
-    public static bool NoDamageEnabled;
-    [Bind]
     public static bool InfiniteHpEnabled;
     [Bind]
     public static bool InfiniteManaEnabled;
     [Bind]
     public static bool InfiniteStaminaEnabled;
     [Bind]
+    public static bool NoDamageEnabled;
+    [Bind]
     public static bool OneTapEnabled;
     [Bind]
     public static bool OneHitKOEnabled;
+    [Bind]
+    public static bool VanillaMode;
 
     public static int SoulsCount;
 
@@ -125,6 +127,12 @@ public static class CharacterPatches
     [HarmonyPrefix]
     private static bool WizardGirlManageHitPrefix(ref bool __result, AttackData Data, bool bIgnoreDodge = false)
     {
+        // Bypass if VanillaMode is enabled
+        if (VanillaMode)
+        {
+            return true;
+        }
+
         // No Damage
         if (NoDamageEnabled)
         {
@@ -145,6 +153,12 @@ public static class CharacterPatches
     [HarmonyPrefix]
     private static void WizardGirlManageUpdatePrefix()
     {
+        // Bypass if VanillaMode is enabled
+        if (VanillaMode)
+        {
+            return;
+        }
+
         var data = Singletons.WizardGirl.BaseData;
 
         // Infinite HP
@@ -183,6 +197,12 @@ public static class CharacterPatches
     [HarmonyPrefix]
     private static void Hit(NPCManage __instance, AttackData Data)
     {
+        // Bypass if VanillaMode is enabled
+        if (VanillaMode)
+        {
+            return;
+        }
+
         // Kill NPC if 'One Tap' is activated
         if (OneTapEnabled)
         {

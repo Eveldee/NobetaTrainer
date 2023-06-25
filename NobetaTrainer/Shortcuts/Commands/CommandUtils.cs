@@ -50,7 +50,8 @@ public static class CommandUtils
                 CollidersRenderPatches.ToggleShowColliders();
             })
         },
-        { ReloadSaveState, new ShortcutEditor.TrainerCommand(ReloadSaveState, () => Singletons.SavesManager?.ReloadSaveState()) }
+        { ReloadSaveState, new ShortcutEditor.TrainerCommand(ReloadSaveState, () => Singletons.SavesManager?.ReloadSaveState()) },
+        { ToggleVanillaMode, new ShortcutEditor.TrainerCommand(ToggleVanillaMode, () => Toggle(ref CharacterPatches.VanillaMode)) }
     };
     public static string[] TrainerCommandNames { get; } = Enum.GetValues<CommandType>().Skip(1).Select(type => type.Humanize(LetterCasing.Title)).ToArray();
 

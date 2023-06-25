@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using MarsSDK;
 using NobetaTrainer.Teleportation;
-using NobetaTrainer.Trainer;
 using NobetaTrainer.Utils;
 
 namespace NobetaTrainer.Saves;
