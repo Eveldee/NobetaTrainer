@@ -6,6 +6,10 @@ using HarmonyLib;
 using NobetaTrainer.Utils;
 using UnityEngine;
 
+#if V1031
+using Il2CppInterop.Runtime;
+#endif
+
 namespace NobetaTrainer.Teleportation;
 
 public static class TeleportationPatches
