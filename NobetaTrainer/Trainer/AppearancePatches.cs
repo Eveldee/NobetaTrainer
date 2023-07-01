@@ -120,14 +120,12 @@ public static class AppearancePatches
 
             var skin = wizardGirl.Skin;
             var renderers = skin.GetComponentsInChildren<MeshRenderer>(true)
-                .Concat<Renderer>(skin.GetComponentsInChildren<SkinnedMeshRenderer>());
+                .Concat<Renderer>(skin.GetComponentsInChildren<SkinnedMeshRenderer>())
+                .Where(renderer => !renderer.name.Contains("script", StringComparison.OrdinalIgnoreCase));
 
             foreach (var renderer in renderers)
             {
-                if (renderer is not null)
-                {
-                    renderer.enabled = !InvisibleEnabled;
-                }
+                renderer.enabled = !InvisibleEnabled;
             }
         });
     }
