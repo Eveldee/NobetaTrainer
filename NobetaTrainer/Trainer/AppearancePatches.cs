@@ -70,6 +70,11 @@ public static class AppearancePatches
                 return;
             }
 
+            if (!InvisibleEnabled)
+            {
+                ApplyInvisible(skin);
+            }
+
             if (skin.bagMesh is not null)
             {
                 skin.bagMesh.enabled = !HideBagEnabled;
@@ -85,7 +90,10 @@ public static class AppearancePatches
                 skin.storyHatMesh.enabled = !HideHatEnabled;
             }
 
-            ToggleInvisible();
+            if (InvisibleEnabled)
+            {
+                ApplyInvisible(skin);
+            }
         });
     }
 
@@ -109,25 +117,21 @@ public static class AppearancePatches
         });
     }
 
-    public static void ToggleInvisible()
+    private static void ApplyInvisible(NobetaSkin skin)
     {
-        Singletons.Dispatcher.Enqueue(() =>
+        if (skin is null)
         {
-            if (Singletons.WizardGirl is not { } wizardGirl)
-            {
-                return;
-            }
+            return;
+        }
 
-            var skin = wizardGirl.Skin;
-            var renderers = skin.GetComponentsInChildren<MeshRenderer>(true)
-                .Concat<Renderer>(skin.GetComponentsInChildren<SkinnedMeshRenderer>())
-                .Where(renderer => !renderer.name.Contains("script", StringComparison.OrdinalIgnoreCase));
+        var renderers = skin.GetComponentsInChildren<MeshRenderer>(true)
+            .Concat<Renderer>(skin.GetComponentsInChildren<SkinnedMeshRenderer>())
+            .Where(renderer => !renderer.name.Contains("script", StringComparison.OrdinalIgnoreCase));
 
-            foreach (var renderer in renderers)
-            {
-                renderer.enabled = !InvisibleEnabled;
-            }
-        });
+        foreach (var renderer in renderers)
+        {
+            renderer.enabled = !InvisibleEnabled;
+        }
     }
 
     [HarmonyPatch(typeof(PlayerController), nameof(PlayerController.UpdateSkin))]

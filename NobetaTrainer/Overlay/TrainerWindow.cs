@@ -148,7 +148,7 @@ public partial class NobetaTrainerOverlay
             ImGui.NewLine();
             if (ImGui.Checkbox("Invisible Nobeta", ref AppearancePatches.InvisibleEnabled))
             {
-                AppearancePatches.ToggleInvisible();
+                AppearancePatches.UpdateAppearance();
             }
 
             ImGui.SeparatorText("Movements");
