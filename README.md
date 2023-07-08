@@ -103,6 +103,9 @@ Save states can also contain a **teleportation point** where Nobeta will be tele
 
 It is also possible **to export and import save state groups** to share them with other people.
 
+> A Nobeta Save States _(nss)_ archive is available for each NMG Advanced speedrun split, it can be [downloaded here](SampleConfigs/NMG%20%5BA%5D.nss.json) _(Use the purple 'Import' button to import them)_.  
+> If you want to share your own save states don't hesitate to message me on discord or open a pull request/issue
+
 ### Timers
 
 ![](Screenshots/PreviewTimers.png)
