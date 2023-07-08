@@ -70,6 +70,8 @@ public static class AppearancePatches
                 return;
             }
 
+            // When invisibility is disabled, every part of nobeta skin will be enabled, so if we want to hide some
+            // specific parts we need to enable them before the hide toggles below
             if (!InvisibleEnabled)
             {
                 ApplyInvisible(skin);
@@ -90,6 +92,8 @@ public static class AppearancePatches
                 skin.storyHatMesh.enabled = !HideHatEnabled;
             }
 
+            // When visibility is enabled, every part of nobeta skin are disabled, so we need to disable them
+            // after they could have been disabled by the hide toggles above
             if (InvisibleEnabled)
             {
                 ApplyInvisible(skin);

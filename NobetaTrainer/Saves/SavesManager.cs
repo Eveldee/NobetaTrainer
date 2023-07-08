@@ -223,6 +223,8 @@ public class SavesManager
             saveState.GroupName = RenameGroupName;
         }
 
+        Save();
+
         UpdateGroups();
     }
 
