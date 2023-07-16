@@ -25,7 +25,7 @@ public static class AppearancePatches
     [Bind]
     public static bool HideHatEnabled;
     [Bind]
-    public static bool UseNobetaMoveset;
+    public static bool ForceNobetaMoveset;
     [Bind]
     public static bool InvisibleEnabled;
 
@@ -101,7 +101,7 @@ public static class AppearancePatches
         });
     }
 
-    public static void ToggleNobetaSkin()
+    public static void ToggleNobetaMoveset()
     {
         if (Singletons.WizardGirl is null)
         {
@@ -110,14 +110,17 @@ public static class AppearancePatches
 
         Singletons.Dispatcher.Enqueue(() =>
         {
-            Singletons.WizardGirl.isNobeta = UseNobetaMoveset;
+            if (ForceNobetaMoveset)
+            {
+                Singletons.WizardGirl.isNobeta = true;
 
-            var originalSkin = SelectedSkinIndex;
+                var originalSkin = SelectedSkinIndex;
 
-            SelectedSkinIndex = (originalSkin + 1) % Enums.GetMemberCount<GameSkin>();
-            LoadSelectedSkin();
-            SelectedSkinIndex = originalSkin;
-            LoadSelectedSkin();
+                SelectedSkinIndex = (originalSkin + 1) % Enums.GetMemberCount<GameSkin>();
+                LoadSelectedSkin();
+                SelectedSkinIndex = originalSkin;
+                LoadSelectedSkin();
+            }
         });
     }
 
@@ -156,6 +159,9 @@ public static class AppearancePatches
     [HarmonyPrefix]
     private static void WizardGirlInitPrefix(WizardGirlManage __instance)
     {
-        __instance.isNobeta = UseNobetaMoveset;
+        if (ForceNobetaMoveset)
+        {
+            __instance.isNobeta = true;
+        }
     }
 }

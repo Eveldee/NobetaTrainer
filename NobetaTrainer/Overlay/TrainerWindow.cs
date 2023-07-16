@@ -70,11 +70,11 @@ public partial class NobetaTrainerOverlay
 
             ImGui.Separator();
 
-            if (ImGui.Checkbox("Nobeta Moveset", ref AppearancePatches.UseNobetaMoveset))
+            if (ImGui.Checkbox("Force Nobeta Moveset", ref AppearancePatches.ForceNobetaMoveset))
             {
-                AppearancePatches.ToggleNobetaSkin();
+                AppearancePatches.ToggleNobetaMoveset();
             }
-            HelpMarker("Enable Nobeta moveset that should only be usable in the second part of the game, also enable Nobeta skin as a side effect");
+            HelpMarker("Enable Nobeta moveset that should only be usable in the second part of the game, also enable Nobeta skin as a side effect. Return to statue to disable.");
 
             ImGui.SeparatorText("Items");
             ImGui.DragInt("Souls", ref CharacterPatches.SoulsCount, 10, 0, 99_999);

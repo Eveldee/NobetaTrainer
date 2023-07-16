@@ -23,8 +23,8 @@ public static class CommandUtils
         { ToggleInfiniteStamina, new ShortcutEditor.TrainerCommand(ToggleInfiniteStamina, () => Toggle(ref CharacterPatches.InfiniteStaminaEnabled)) },
         { ToggleNobetaMoveset, new ShortcutEditor.TrainerCommand(ToggleNobetaMoveset, () =>
             {
-                Toggle(ref AppearancePatches.UseNobetaMoveset);
-                AppearancePatches.ToggleNobetaSkin();
+                Toggle(ref AppearancePatches.ForceNobetaMoveset);
+                AppearancePatches.ToggleNobetaMoveset();
             })
         },
         { GiveHPItem, new ShortcutEditor.TrainerCommand(GiveHPItem, ItemPatches.GiveHPItem) },
