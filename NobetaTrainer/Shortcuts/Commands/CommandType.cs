@@ -23,5 +23,7 @@ public enum CommandType
     ResetTimers = 18,
     ToggleColliders = 19,
     ReloadSaveState = 20,
-    ToggleVanillaMode = 21
+    ToggleVanillaMode = 21,
+    ToggleInvisible = 22,
+    HideHud = 23
 }

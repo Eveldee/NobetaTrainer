@@ -51,7 +51,19 @@ public static class CommandUtils
             })
         },
         { ReloadSaveState, new ShortcutEditor.TrainerCommand(ReloadSaveState, () => Singletons.SavesManager?.ReloadSaveState()) },
-        { ToggleVanillaMode, new ShortcutEditor.TrainerCommand(ToggleVanillaMode, () => Toggle(ref CharacterPatches.VanillaMode)) }
+        { ToggleVanillaMode, new ShortcutEditor.TrainerCommand(ToggleVanillaMode, () => Toggle(ref CharacterPatches.VanillaMode)) },
+        { ToggleInvisible, new ShortcutEditor.TrainerCommand(ToggleInvisible, () =>
+            {
+                Toggle(ref AppearancePatches.InvisibleEnabled);
+                AppearancePatches.UpdateAppearance();
+            })
+        },
+        { HideHud, new ShortcutEditor.TrainerCommand(HideHud, () =>
+            {
+                Toggle(ref OtherPatches.HideHud);
+                UiHelpers.ToggleHudVisibility(!OtherPatches.HideHud);
+            })
+        }
     };
     public static string[] TrainerCommandNames { get; } = Enum.GetValues<CommandType>().Skip(1).Select(type => type.Humanize(LetterCasing.Title)).ToArray();
 
