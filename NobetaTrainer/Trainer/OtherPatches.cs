@@ -19,6 +19,7 @@ public static class OtherPatches
     public static float BrightModeIntensity = 1f;
     [Bind]
     public static Vector3 BrightModeColor = new(1f, 1f, 1f);
+    public static bool HideHud;
 
     private static Light _light;
     private static float _initialLightIntensity;

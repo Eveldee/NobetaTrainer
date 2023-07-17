@@ -381,6 +381,16 @@ public partial class NobetaTrainerOverlay
 
             WithDisabled(!SceneUtils.IsGameScene, () =>
             {
+                if (ImGui.Checkbox("Hide HUD", ref OtherPatches.HideHud))
+                {
+                    UiHelpers.ToggleHudVisibility(!OtherPatches.HideHud);
+                }
+            });
+
+            ImGui.NewLine();
+
+            WithDisabled(!SceneUtils.IsGameScene, () =>
+            {
                 if (ImGui.Button("Return to statue"))
                 {
                     SceneUtils.ReturnToStatue();
