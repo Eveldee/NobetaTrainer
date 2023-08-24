@@ -31,7 +31,7 @@ This Trainer is tested and developed on **latest game version** (`1.0.5` at the 
 This plugin modifies the game using [BepInEx](https://github.com/BepInEx/BepInEx), so it is needed to install BepInEx to load this plugin, here are the steps to achieve this:
 - Find the installation directory of the game *(Usually in `steamapps/common`, you can find this from the game properties in steam -> local files -> browse...)*
 - **/!\ Do a copy of your game installation and rename it `Little Witch Nobeta - Trainer`** *(The changes are reversible but a pain to do, furthermore it's easier to have two versions of the game, one with the trainer and the base one)*
-- You should know have at least two folders in the `steamapps/common` directory: `Little Witch Nobeta` *(base game)* and `Little Witch Nobeta - Trainer` *(will be modded with the Trainer)*
+- You should now have at least two folders in the `steamapps/common` directory: `Little Witch Nobeta` *(base game)* and `Little Witch Nobeta - Trainer` *(will be modded with the Trainer)*
 - Download corresponding version of the Trainer
   - For game version **≥ 1.0.5:** [**`NobetaTrainer.zip`**](/../../releases/latest/download/NobetaTrainer.zip)
   - For game version **< 1.0.5 *(1.0.3.1, 1.0.3.3, ...)*:** [**`NobetaTrainer_compat.zip`**](/../../releases/latest/download/NobetaTrainer_compat.zip)
@@ -163,6 +163,7 @@ This Trainer tool couldn't be made without these awesome libraries and tools:
 - [ImGui](https://github.com/ocornut/imgui) - *licensed under the MIT license*
 - [ClickableTransparentOverlay](https://github.com/zaafar/ClickableTransparentOverlay) - *licensed under the Apache-2.0 license*
 - [Humanizer](https://github.com/Humanizr/Humanizer) - *licensed under the MIT license*
+- [NativeFileDialogSharp](https://github.com/milleniumbug/NativeFileDialogSharp) - *licensed under the Zlib license*
 
 ## Licence
 
