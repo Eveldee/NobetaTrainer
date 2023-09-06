@@ -22,7 +22,7 @@ public partial class NobetaTrainerOverlay
 
         ImGui.TextColored(InfoColor, "Saves Manager");
 
-        if (saveManager.IsLoading || SceneUtils.IsLoading())
+        if (saveManager.IsLoading || SceneUtils.IsLoading)
         {
             ImGui.TextColored(WarningColor, $"Loading...{new string('.', (_saveLoadPoints++) / 100)}");
         }
@@ -31,7 +31,7 @@ public partial class NobetaTrainerOverlay
             _saveLoadPoints = 0;
         }
 
-        WithDisabled(saveManager.IsLoading || SceneUtils.IsLoading(), () =>
+        WithDisabled(saveManager.IsLoading || SceneUtils.IsLoading, () =>
         {
             ImGui.PushTextWrapPos();
             if (ImGui.CollapsingHeader("Game Saves", ImGuiTreeNodeFlags.DefaultOpen))

@@ -12,6 +12,7 @@ namespace NobetaTrainer.Trainer;
 public static class OtherPatches
 {
     public static bool ForceShowTeleportMenu;
+    public static int GameCleared;
 
     [Bind]
     public static bool BrightMode;
@@ -25,13 +26,6 @@ public static class OtherPatches
     private static float _initialLightIntensity;
     private static Color _initialLightColor;
     private static LightShadows _initialShadows;
-
-    [HarmonyPatch(typeof(UIGameSave), nameof(UIGameSave.StartGamePlay))]
-    [HarmonyPostfix]
-    private static void StartGamePlayPostfix(GameSave gameSave)
-    {
-        ForceShowTeleportMenu = Game.GameSave.basic.showTeleportMenu;
-    }
 
     public static void RemoveLava()
     {
@@ -93,6 +87,27 @@ public static class OtherPatches
 
             _light.bakingOutput = lightBakingOutput;
         });
+    }
+
+    public static void UpdateGameCleared()
+    {
+        if (Singletons.GameSave is not { } gameSave)
+        {
+            return;
+        }
+
+        Singletons.Dispatcher.Enqueue(() =>
+        {
+            gameSave.basic.gameCleared = GameCleared;
+        });
+    }
+
+    [HarmonyPatch(typeof(UIGameSave), nameof(UIGameSave.StartGamePlay))]
+    [HarmonyPostfix]
+    private static void StartGamePlayPostfix(GameSave gameSave)
+    {
+        ForceShowTeleportMenu = Game.GameSave.basic.showTeleportMenu;
+        GameCleared = Game.GameSave.basic.gameCleared;
     }
 
     [HarmonyPatch(typeof(SceneManager), nameof(SceneManager.Enter))]

@@ -116,7 +116,7 @@ public class SavesManager
 
         Singletons.Dispatcher.Enqueue(() =>
         {
-            if (SceneUtils.IsLoading())
+            if (SceneUtils.IsLoading)
             {
                 return;
             }
@@ -139,7 +139,7 @@ public class SavesManager
 
     public void LoadSaveState(SaveState saveState)
     {
-        if (SceneUtils.IsLoading())
+        if (SceneUtils.IsLoading)
         {
             return;
         }

@@ -7,10 +7,7 @@ public static class SceneUtils
 {
     public static bool IsGameScene;
 
-    public static bool IsLoading()
-    {
-        return UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Loader";
-    }
+    public static bool IsLoading => UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Loader";
 
     public static AreaCheck FindLastAreaCheck()
     {

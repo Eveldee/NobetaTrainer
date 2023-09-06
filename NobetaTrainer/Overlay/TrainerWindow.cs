@@ -432,6 +432,14 @@ public partial class NobetaTrainerOverlay
             }
             else
             {
+                if (ImGui.Button("Update##GameCleared"))
+                {
+                    OtherPatches.UpdateGameCleared();
+                }
+                ImGui.SameLine();
+                ImGui.InputInt("NG+ Count", ref OtherPatches.GameCleared);
+
+                ImGui.NewLine();
                 if (ImGui.Checkbox("Show Teleport menu", ref OtherPatches.ForceShowTeleportMenu))
                 {
                     OtherPatches.SetShowTeleportMenu();

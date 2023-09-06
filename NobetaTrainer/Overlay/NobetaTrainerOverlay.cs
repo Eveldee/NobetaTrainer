@@ -16,12 +16,17 @@ public partial class NobetaTrainerOverlay : ClickableTransparentOverlay.Overlay
     private bool _showImGuiUserGuideWindow;
     private bool _showImGuiStackToolWindow;
 
+    public NobetaTrainerOverlay() : base("NobetaTrainer")
+    {
+
+    }
+
     protected override Task PostInitialized()
     {
         VSync = true;
 
         IL2CPP.il2cpp_thread_attach(IL2CPP.il2cpp_domain_get());
-        NobetaProcessUtils.OverlayWindowHandle = NobetaProcessUtils.FindWindow(null, "Overlay");
+        NobetaProcessUtils.OverlayWindowHandle = NobetaProcessUtils.FindWindow(null, "NobetaTrainer");
         NobetaProcessUtils.HideOverlayFromTaskbar();
 
         return Task.CompletedTask;
