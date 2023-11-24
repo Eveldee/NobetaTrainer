@@ -293,7 +293,8 @@ public partial class NobetaTrainerOverlay
 
                     ShowValueExpression(characterController.center.Format());
                     ShowValueExpression(characterController.velocity.Format());
-                    ShowValue("Velocity Magnitude", characterController.velocity.magnitude, "F3");
+                    ShowValue("Velocity Magnitude (On ground plane (x, z))", new Vector2(characterController.velocity.x, characterController.velocity.z).magnitude, "F3");
+                    ShowValue("Velocity Magnitude (3 axis)", characterController.velocity.magnitude, "F3");
 
                     ImGui.SeparatorText("Status");
                     ShowValueExpression(FlagEnums.FormatFlags(characterController.collisionFlags));
