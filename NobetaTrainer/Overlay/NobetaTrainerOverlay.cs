@@ -40,6 +40,18 @@ public partial class NobetaTrainerOverlay : ClickableTransparentOverlay.Overlay
             ShowTimersWindow();
         }
 
+        // Velocity overlay is always visible when activated
+        if (_showVelocityOverlay && Singletons.WizardGirl is { } wizardGirl)
+        {
+            ImGui.Begin("velocity", ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoBackground);
+
+            ImGui.SetWindowSize(new(500, -1));
+
+            PlotVelocity(wizardGirl.characterController.velocity, height: 200);
+
+            ImGui.End();
+        }
+
         if (!OverlayState.ShowOverlay)
         {
             return;

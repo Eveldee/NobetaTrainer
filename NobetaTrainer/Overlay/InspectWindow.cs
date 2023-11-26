@@ -7,6 +7,7 @@ using ImGuiNET;
 using NobetaTrainer.Utils;
 using NobetaTrainer.Utils.Extensions;
 using UnityEngine;
+using Random = System.Random;
 
 namespace NobetaTrainer.Overlay;
 
@@ -16,6 +17,10 @@ public partial class NobetaTrainerOverlay
         .Where(property => property.Name.StartsWith("Stage", StringComparison.OrdinalIgnoreCase))
         .GroupBy(property => property.Name[..7])
         .ToArray();
+
+    private float[] _velocities = new float[240];
+    private int _lastFrame = Time.frameCount;
+    private bool _showVelocityOverlay = false;
 
     private void ShowInspectWindow()
     {
@@ -295,6 +300,8 @@ public partial class NobetaTrainerOverlay
                     ShowValueExpression(characterController.velocity.Format());
                     ShowValue("Velocity Magnitude (On ground plane (x, z))", new Vector2(characterController.velocity.x, characterController.velocity.z).magnitude, "F3");
                     ShowValue("Velocity Magnitude (3 axis)", characterController.velocity.magnitude, "F3");
+                    PlotVelocity(characterController.velocity);
+                    ImGui.Checkbox("Show graph in external window", ref _showVelocityOverlay);
 
                     ImGui.SeparatorText("Status");
                     ShowValueExpression(FlagEnums.FormatFlags(characterController.collisionFlags));
@@ -445,5 +452,33 @@ public partial class NobetaTrainerOverlay
 
         ImGui.PushTextWrapPos();
         ImGui.End();
+    }
+
+    private void PlotVelocity(Vector3 velocity, float height = 100)
+    {
+        var realVelocity = new Vector2(velocity.x, velocity.z);
+
+        // Only update data each game frame
+        if (Time.frameCount > _lastFrame)
+        {
+            // Update values
+            float[] newValues = new float[_velocities.Length];
+            Array.Copy(_velocities, 1, newValues, 0, _velocities.Length - 1);
+
+            newValues[^1] = realVelocity.magnitude;
+            _velocities = newValues;
+
+
+            _lastFrame = Time.frameCount;
+        }
+
+        // Display Plot
+        ImGui.PushStyleColor(ImGuiCol.PlotLines, ValueColor);
+        ImGui.PushStyleColor(ImGuiCol.Text, WarningColor);
+
+        ImGui.PlotLines($"Velocity", ref _velocities[0], _velocities.Length, 0, $"Velocity ({realVelocity.magnitude:F3}}})", 0f, 10f, new(-1, height));
+
+        ImGui.PopStyleColor();
+        ImGui.PopStyleColor();
     }
 }
