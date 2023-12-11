@@ -58,7 +58,7 @@ A correct installation directory content should look like this:
 
 ## Features
 
-> **By default, you can unlock the cursor at any time using the `alt` key on your keyboard !**
+> **By default, you can unlock the cursor at any time using the `alt` key on your keyboard and toggle the overlay using `F12` !**
 
 ### Trainer
 
