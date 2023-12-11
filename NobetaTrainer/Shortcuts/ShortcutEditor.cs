@@ -249,6 +249,21 @@ public class ShortcutEditor : MonoBehaviour
         else
         {
             Plugin.Log.LogInfo("No shortcuts found, using empty shortcut map.");
+
+            // Default Toggle Overlay command
+            var toggleInputAction = _inputActionMap.AddAction($"{CommandType.ToggleOverlay}({Guid.NewGuid()})", InputActionType.Button);
+            toggleInputAction.AddBinding("<Keyboard>/F12");
+
+            CommandActionsMap[toggleInputAction.id] =
+                new CommandAction(CommandUtils.TrainerCommands[CommandType.ToggleOverlay], toggleInputAction)
+                {
+                    NeedCtrlModifier = false,
+                    NeedAltModifier = false,
+                    NeedShiftModifier = false,
+                    ActionId = toggleInputAction.id,
+                    HumanReadablePath = InputControlPath.ToHumanReadableString(toggleInputAction.bindings[0].effectivePath),
+                    ControlPath = toggleInputAction.bindings[0].effectivePath
+                };
         }
 
         // CommandActions
