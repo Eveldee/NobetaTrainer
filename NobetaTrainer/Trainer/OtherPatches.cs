@@ -26,6 +26,7 @@ public static class OtherPatches
     private static float _initialLightIntensity;
     private static Color _initialLightColor;
     private static LightShadows _initialShadows;
+    private static bool _initialLightEnabled;
 
     public static void RemoveLava()
     {
@@ -70,6 +71,7 @@ public static class OtherPatches
             var lightBakingOutput = _light.bakingOutput;
             if (BrightMode)
             {
+                _light.enabled = true;
                 _light.shadows = LightShadows.None;
                 lightBakingOutput.lightmapBakeType = LightmapBakeType.Realtime;
 
@@ -78,6 +80,7 @@ public static class OtherPatches
             }
             else
             {
+                _light.enabled = _initialLightEnabled;
                 _light.shadows = _initialShadows;
                 lightBakingOutput.lightmapBakeType = LightmapBakeType.Mixed;
 
@@ -125,6 +128,7 @@ public static class OtherPatches
             _initialShadows = _light.shadows;
             _initialLightColor = _light.color;
             _initialLightIntensity = _light.intensity;
+            _initialLightEnabled = _light.enabled;
 
             UpdateBrightMode();
         }
