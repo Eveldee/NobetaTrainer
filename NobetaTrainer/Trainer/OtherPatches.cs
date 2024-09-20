@@ -14,6 +14,10 @@ public static class OtherPatches
     public static bool ForceShowTeleportMenu;
     public static int GameCleared;
 
+    public static int NextGameStageIndex = 2;
+    public static readonly string[] AvailableGameScenes = System.Enum.GetNames<GameStage>();
+    public static int NextSavePoint = 1;
+
     [Bind]
     public static bool BrightMode;
     [Bind]

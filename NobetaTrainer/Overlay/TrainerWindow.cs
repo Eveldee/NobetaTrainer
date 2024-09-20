@@ -444,6 +444,18 @@ public partial class NobetaTrainerOverlay
                 {
                     OtherPatches.SetShowTeleportMenu();
                 }
+
+                ImGui.SeparatorText("Scene");
+                ImGui.Combo("Game Stage", ref OtherPatches.NextGameStageIndex, OtherPatches.AvailableGameScenes,
+                    OtherPatches.AvailableGameScenes.Length);
+                ImGui.InputInt("Save Point", ref OtherPatches.NextSavePoint);
+
+                if (ImGui.Button("Load scene"))
+                {
+                    UiHelpers.ForceCloseAllUi();
+
+                    Game.SwitchScene(new SceneSwitchData(OtherPatches.NextGameStageIndex, OtherPatches.NextSavePoint, false));
+                }
             }
         }
 
