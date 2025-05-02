@@ -29,12 +29,11 @@ internal class DearImGuiInjectionBasePluginIL2CPP : BasePlugin
     private MethodInfo _eventSystemUpdate;
     private HarmonyMethod _hookIgnoreUIObjectsWhenImGuiCursorIsVisible;
 
-    private static GameObject UnityMainThreadDispatcherHolder;
-    private static UnityMainThreadDispatcher UnityMainThreadDispatcherInstance;
-
     public override void Load()
     {
         LogInitier.Init(Log);
+
+        Application.quitting += (Action) OnDestroy;
 
         var imguiIniConfigDirectoryPath = Paths.ConfigPath;
 
@@ -45,55 +44,27 @@ internal class DearImGuiInjectionBasePluginIL2CPP : BasePlugin
             Config.Bind("Keybinds", "CursorVisibility",
             DearImGuiInjection.CursorVisibilityToggleDefault,
             "Key for switching the cursor visibility."));
+
         var chineseSimplifiedFontName = new BepInExConfigEntry<string>(
             Config.Bind("Chinese Simplified Common Font Name", "ChineseSimplifiedFontName",
             DearImGuiInjection.ChineseSimplifiedFontFileNameDefault,
             "File name of the custom Chinese Simplified Common font."));
+
         var chineseFullFontName = new BepInExConfigEntry<string>(
             Config.Bind("Chinese Full Font Name", "ChineseFullFontName",
             DearImGuiInjection.ChineseFullFontFileNameDefault,
             "File name of the custom Chinese Full font."));
+
         var japaneseFontName = new BepInExConfigEntry<string>(
             Config.Bind("Japanese Font Name", "JapaneseFontName",
             DearImGuiInjection.JapaneseFontFileNameDefault,
             "File name of the custom Japanese font."));
+
         DearImGuiInjection.Init(imguiIniConfigDirectoryPath, assetsFolder, cursorVisibilityConfig, chineseSimplifiedFontName, chineseFullFontName, japaneseFontName);
-        SetupIgnoreUIObjectsWhenImGuiCursorIsVisible();
-
-
-        ClassInjector.RegisterTypeInIl2Cpp<UnityMainThreadDispatcher>();
-        UnityMainThreadDispatcherHolder = new("DearImGui.UnityMainThreadDispatcher");
-        GameObject.DontDestroyOnLoad(UnityMainThreadDispatcherHolder);
-        UnityMainThreadDispatcherHolder.hideFlags |= HideFlags.HideAndDontSave;
-        UnityMainThreadDispatcherInstance = UnityMainThreadDispatcherHolder.AddComponent<UnityMainThreadDispatcher>();
-    }
-
-    private void SetupIgnoreUIObjectsWhenImGuiCursorIsVisible()
-    {
-        try
-        {
-            var allFlags = (BindingFlags)(-1);
-            _eventSystemUpdate = typeof(EventSystem).GetMethod(nameof(EventSystem.Update), allFlags);
-            _hooks = new Harmony(Metadata.GUID);
-            _hookIgnoreUIObjectsWhenImGuiCursorIsVisible =
-                new(typeof(DearImGuiInjectionBasePluginIL2CPP).GetMethod(nameof(IgnoreUIObjectsWhenImGuiCursorIsVisible), allFlags));
-            _hooks.Patch(_eventSystemUpdate, _hookIgnoreUIObjectsWhenImGuiCursorIsVisible);
-        }
-        catch (Exception e)
-        {
-            Log.LogError(e);
-        }
-    }
-
-    public static bool IgnoreUIObjectsWhenImGuiCursorIsVisible()
-    {
-        return !false;
     }
 
     private void OnDestroy()
     {
-        //_eventSystemUpdateHook?.Dispose();
-
         DearImGuiInjection.Dispose();
     }
 }

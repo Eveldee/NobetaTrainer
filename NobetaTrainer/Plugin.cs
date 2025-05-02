@@ -40,10 +40,12 @@ public class Plugin : BasePlugin
         Log = base.Log;
         Log.LogMessage($"Plugin {MyPluginInfo.PLUGIN_GUID} is loading...");
 
-        // Fix ImGUI task preventing the game from closing
         Application.quitting += (Action) (() =>
         {
+            // Fix ImGUI task preventing the game from closing
             NobetaTrainerOverlay.Destroy();
+
+            // Save settings on exit
             Unload();
         });
 
