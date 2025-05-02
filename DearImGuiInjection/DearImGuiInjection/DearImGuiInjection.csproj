@@ -20,9 +20,7 @@
 		<DebugType>none</DebugType>
 		<Optimize>true</Optimize>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-		<TargetFramework>net6</TargetFramework>
-		<OutputPath>../bin/</OutputPath>
-		<DefineConstants>NET6</DefineConstants>
+		<TargetFramework>net6.0</TargetFramework>
 	</PropertyGroup>
 
 	<ItemGroup>

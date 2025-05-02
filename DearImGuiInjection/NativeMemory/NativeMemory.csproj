@@ -8,23 +8,7 @@
 		<DebugSymbols>false</DebugSymbols>
 		<DebugType>none</DebugType>
 		<Optimize>true</Optimize>
-		<Configurations>netstandard2.0;net462;net6</Configurations>
-		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)'=='netstandard2.0'">
-		<TargetFramework>netstandard2.0</TargetFramework>
-		<OutputPath>../bin/</OutputPath>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)'=='net462'">
-		<TargetFramework>net462</TargetFramework>
-		<OutputPath>../bin/</OutputPath>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)'=='net6'">
-		<TargetFramework>net6</TargetFramework>
-		<OutputPath>../bin/</OutputPath>
-	</PropertyGroup>
-	
 </Project>
