@@ -169,4 +169,9 @@ public static class NobetaProcessUtils
         SetForegroundWindow(GameWindowHandle);
         ShowWindow(GameWindowHandle, (int) ShowWindowCommands.SW_SHOW);
     }
+
+    public static bool IsProton()
+    {
+        return Process.GetProcessesByName("winlogon").Length is 0;
+    }
 }

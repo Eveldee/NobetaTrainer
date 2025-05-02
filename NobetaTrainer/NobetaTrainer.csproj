@@ -4,9 +4,9 @@
         <TargetFramework>net6.0</TargetFramework>
         <AssemblyName>NobetaTrainer</AssemblyName>
         <Description>Little Witch Nobeta speedrun Trainer tool</Description>
-        <Version>1.4.3</Version>
+        <Version>1.4.4</Version>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <LangVersion>latest</LangVersion>
+        <LangVersion>preview</LangVersion>
         <RestoreAdditionalProjectSources>
             https://api.nuget.org/v3/index.json;
             https://nuget.bepinex.dev/v3/index.json;

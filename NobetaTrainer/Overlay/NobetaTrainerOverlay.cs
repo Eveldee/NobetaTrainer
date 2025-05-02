@@ -27,7 +27,12 @@ public partial class NobetaTrainerOverlay : ClickableTransparentOverlay.Overlay
 
         IL2CPP.il2cpp_thread_attach(IL2CPP.il2cpp_domain_get());
         NobetaProcessUtils.OverlayWindowHandle = NobetaProcessUtils.FindWindow(null, "NobetaTrainer");
-        NobetaProcessUtils.HideOverlayFromTaskbar();
+
+        // Do not hide window if running under Proton/Wine
+        if (!NobetaProcessUtils.IsProton())
+        {
+            NobetaProcessUtils.HideOverlayFromTaskbar();
+        }
 
         return Task.CompletedTask;
     }
