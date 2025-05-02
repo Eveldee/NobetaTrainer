@@ -6,7 +6,7 @@ using NobetaTrainer.Utils;
 
 namespace NobetaTrainer.Overlay;
 
-public partial class NobetaTrainerOverlay : ClickableTransparentOverlay.Overlay
+public partial class NobetaTrainerOverlay
 {
     private bool _showImGuiAboutWindow;
     private bool _showImGuiStyleEditorWindow;
@@ -16,29 +16,32 @@ public partial class NobetaTrainerOverlay : ClickableTransparentOverlay.Overlay
     private bool _showImGuiUserGuideWindow;
     private bool _showImGuiStackToolWindow;
 
-    public NobetaTrainerOverlay() : base("NobetaTrainer")
-    {
+    private bool _isInitialized;
 
+    public void Create()
+    {
+        DearImGuiInjection.DearImGuiInjection.Render += Render;
     }
 
-    protected override Task PostInitialized()
+    public void Initialize()
     {
-        VSync = true;
-
         IL2CPP.il2cpp_thread_attach(IL2CPP.il2cpp_domain_get());
-        NobetaProcessUtils.OverlayWindowHandle = NobetaProcessUtils.FindWindow(null, "NobetaTrainer");
 
-        // Do not hide window if running under Proton/Wine
-        if (!NobetaProcessUtils.IsProton())
+        _isInitialized = true;
+    }
+
+    public void Destroy()
+    {
+        DearImGuiInjection.DearImGuiInjection.Render -= Render;
+    }
+
+    private void Render()
+    {
+        if (!_isInitialized)
         {
-            NobetaProcessUtils.HideOverlayFromTaskbar();
+            Initialize();
         }
 
-        return Task.CompletedTask;
-    }
-
-    protected override void Render()
-    {
         // Timers are always visible when activated, even if overlay is hidden
         if (Timers.ShowTimers)
         {

@@ -1,0 +1,62 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<LangVersion>preview</LangVersion>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<DebugSymbols>false</DebugSymbols>
+		<DebugType>none</DebugType>
+		<Optimize>true</Optimize>
+		<Configurations>netstandard2.0;net462;net6</Configurations>
+		<TargetFramework>netstandard2.0</TargetFramework>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='netstandard2.0'">
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<OutputPath>../bin/</OutputPath>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='net462'">
+		<TargetFramework>net462</TargetFramework>
+		<OutputPath>../bin/</OutputPath>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='net6'">
+		<TargetFramework>net6</TargetFramework>
+		<OutputPath>../bin/</OutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Reloaded.Hooks" Version="4.3.0" Condition="'$(TargetFramework)' != 'net462'" />
+	</ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+        <Reference Include="Reloaded.Hooks">
+			<HintPath>..\..\Reloaded.Hooks\source\Reloaded.Hooks\bin\Release\net462\Reloaded.Hooks.dll</HintPath>
+        </Reference>
+		<Reference Include="Reloaded.Hooks.Definitions">
+			<HintPath>..\..\Reloaded.Hooks\source\Reloaded.Hooks.Definitions\bin\Release\net462\Reloaded.Hooks.Definitions.dll</HintPath>
+		</Reference>
+    </ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="../NativeMemory/NativeMemory.csproj" />
+		<ProjectReference Include="../CppInterop/CppInterop.csproj" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(Configuration)'=='netstandard2.0' or '$(Configuration)'=='net6'">
+		<PackageReference Include="netstandard2.0.SharpDX" Version="4.2.1-beta0-g7abb72df54" />
+		<PackageReference Include="netstandard2.0.SharpDX.DXGI" Version="4.2.1-beta0-g7abb72df54" />
+		<PackageReference Include="netstandard2.0.SharpDX.Direct3D11" Version="4.2.1-beta0-g7abb72df54" />
+		<PackageReference Include="netstandard2.0.SharpDX.Direct3D12" Version="4.2.1-beta0-g7abb72df54" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(Configuration)'=='net462'">
+		<PackageReference Include="SharpDX" Version="4.2.0" />
+		<PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
+		<PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
+		<PackageReference Include="SharpDX.Direct3D12" Version="4.2.0" />
+	</ItemGroup>
+
+</Project>

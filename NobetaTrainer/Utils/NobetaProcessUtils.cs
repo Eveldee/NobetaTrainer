@@ -154,24 +154,10 @@ public static class NobetaProcessUtils
 
     public static Process NobetaProcess { get; set; }
     public static IntPtr GameWindowHandle { get; set; }
-    public static IntPtr OverlayWindowHandle { get; set; }
-
-    public static void HideOverlayFromTaskbar()
-    {
-        int exStyle = (int)GetWindowLong(OverlayWindowHandle, (int)GetWindowLongFields.GWL_EXSTYLE);
-
-        exStyle |= (int)ExtendedWindowStyles.WS_EX_TOOLWINDOW;
-        SetWindowLong(OverlayWindowHandle, (int)GetWindowLongFields.GWL_EXSTYLE, (IntPtr)exStyle);
-    }
 
     public static void FocusNobetaWindow()
     {
         SetForegroundWindow(GameWindowHandle);
         ShowWindow(GameWindowHandle, (int) ShowWindowCommands.SW_SHOW);
-    }
-
-    public static bool IsProton()
-    {
-        return Process.GetProcessesByName("winlogon").Length is 0;
     }
 }
