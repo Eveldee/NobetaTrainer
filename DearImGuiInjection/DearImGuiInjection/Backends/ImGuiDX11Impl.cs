@@ -17,6 +17,7 @@ using MapFlags = SharpDX.Direct3D11.MapFlags;
 using SamplerStateDescription = SharpDX.Direct3D11.SamplerStateDescription;
 using ShaderResourceViewDescription = SharpDX.Direct3D11.ShaderResourceViewDescription;
 using ShaderResourceViewDimension = SharpDX.Direct3D.ShaderResourceViewDimension;
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
 
 namespace DearImGuiInjection.Backends;
 

@@ -17,8 +17,6 @@ internal static class ImGuiDX11
     private static IntPtr _originalWindowProc;
     private const int GWL_WNDPROC = -4;
 
-    private static User32.POINT _cursorCoords;
-
     internal static void Init()
     {
         RendererFinder.Renderers.DX11Renderer.OnPresent += InitImGui;
@@ -60,8 +58,6 @@ internal static class ImGuiDX11
             DearImGuiInjection.InitImGui();
 
             InitImGuiWin32(windowHandle);
-
-            DearImGuiInjection.UpdateCursorVisibility();
 
             InitImGuiDX11(swapChain);
 
@@ -105,29 +101,10 @@ internal static class ImGuiDX11
 
     private static unsafe IntPtr WndProcHandler(IntPtr windowHandle, WindowMessage message, IntPtr wParam, IntPtr lParam)
     {
-        if (message == WindowMessage.WM_KEYUP && (VirtualKey)wParam == DearImGuiInjection.CursorVisibilityToggle.Get())
-        {
-            SaveOrRestoreCursorPosition();
-
-            DearImGuiInjection.ToggleCursor();
-        }
-
         if (DearImGuiInjection.IsCursorVisible && ImGuiWin32Impl.WndProcHandler(windowHandle, message, wParam, lParam))
             return IntPtr.Zero;
 
         return User32.CallWindowProc(_originalWindowProc, windowHandle, message, wParam, lParam);
-    }
-
-    private static unsafe void SaveOrRestoreCursorPosition()
-    {
-        if (DearImGuiInjection.IsCursorVisible)
-        {
-            User32.GetCursorPos(out _cursorCoords);
-        }
-        else if (_cursorCoords.X + _cursorCoords.Y != 0)
-        {
-            User32.SetCursorPos(_cursorCoords.X, _cursorCoords.Y);
-        }
     }
 
     private static unsafe void RenderImGui(SwapChain swapChain, uint syncInterval, uint flags)

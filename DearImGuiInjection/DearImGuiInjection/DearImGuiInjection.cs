@@ -21,37 +21,17 @@ public static class DearImGuiInjection
     public static ImGuiIOPtr IO { get; internal set; }
 
     public static string ImGuiIniConfigPath { get; private set; }
-    private const string IniFileName = "DearImGuiInjection_imgui.ini";
+    private const string IniFileName = "imgui.ini";
 
     public static string AssetsFolderPath { get; private set; }
 
     /// <summary>
     /// True if the Dear ImGui GUI cursor is visible
     /// </summary>
-    public static bool IsCursorVisible { get; internal set; } = false;
+    public const bool IsCursorVisible = true;
 
-    /// <summary>
-    /// Key for switching the cursor visibility.
-    /// </summary>
-    public static IConfigEntry<VirtualKey> CursorVisibilityToggle { get; internal set; }
-    internal const VirtualKey CursorVisibilityToggleDefault = VirtualKey.F4;
-
-    /// <summary>
-    /// Key for setting Chinese Simplified Common font file name.
-    /// </summary>
-    public static IConfigEntry<string> ChineseSimplifiedFontFileNameValue { get; internal set; }
     internal const string ChineseSimplifiedFontFileNameDefault = "方正准圆_GBK.ttf";
-
-    /// <summary>
-    /// Key for setting Chinese Simplified Common font file name.
-    /// </summary>
-    public static IConfigEntry<string> ChineseFullFontFileNameValue { get; internal set; }
     internal const string ChineseFullFontFileNameDefault = "方正准圆_GBK.ttf";
-
-    /// <summary>
-    /// Key for setting Japanese font file name.
-    /// </summary>
-    public static IConfigEntry<string> JapaneseFontFileNameValue { get; internal set; }
     internal const string JapaneseFontFileNameDefault = "方正准圆_GBK.ttf";
 
     public static ImGuiStyle Style { get; private set; }
@@ -62,16 +42,12 @@ public static class DearImGuiInjection
     public static event Action Render { add { RenderAction += value; } remove { RenderAction -= value; } }
     internal static Action RenderAction;
 
-    internal static void Init(string imguiIniConfigDirectoryPath, string assetsFolder, IConfigEntry<VirtualKey> cursorVisibilityConfig, IConfigEntry<string> chineseSimplifiedFontName, IConfigEntry<string> chineseFullFontName, IConfigEntry<string> japaneseFontName)
+    internal static void Init(string imguiIniConfigDirectoryPath, string assetsFolder)
     {
         if (RendererFinder.RendererFinder.Init())
         {
             ImGuiIniConfigPath = Path.Combine(imguiIniConfigDirectoryPath, IniFileName);
             AssetsFolderPath = assetsFolder;
-            CursorVisibilityToggle = cursorVisibilityConfig;
-            ChineseSimplifiedFontFileNameValue = chineseSimplifiedFontName;
-            ChineseFullFontFileNameValue = chineseFullFontName;
-            JapaneseFontFileNameValue = japaneseFontName;
 
             InitImplementationFromRendererKind(RendererFinder.RendererFinder.RendererKind);
         }
@@ -142,25 +118,6 @@ public static class DearImGuiInjection
             case RendererKind.D3D12:
                 ImGuiDX12.Dispose();
                 break;
-        }
-    }
-
-    internal static void ToggleCursor()
-    {
-        IsCursorVisible ^= true;
-        UpdateCursorVisibility();
-    }
-
-    internal static void UpdateCursorVisibility()
-    {
-        if (IsCursorVisible)
-        {
-            IO.ConfigFlags &= ~ImGuiConfigFlags.NoMouse;
-        }
-        else
-        {
-            IO.MouseDrawCursor = false;
-            IO.ConfigFlags |= ImGuiConfigFlags.NoMouse;
         }
     }
 }

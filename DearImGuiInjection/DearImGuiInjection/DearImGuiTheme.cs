@@ -10,14 +10,15 @@ public static class DearImGuiTheme
 {
     public static ImGuiStylePtr Style { get; private set; }
 
-    private static readonly Vector4 BGColor = new Vector4(0.117f, 0.113f, 0.172f, .75f);
+    private static readonly Vector4 BGColor = new Vector4(0.117f, 0.113f, 0.172f, .9375f);
     private static readonly Vector4 Primary = new Vector4(0.172f, 0.380f, 0.909f, 1f);
     private static readonly Vector4 Secondary = new Vector4(0.443f, 0.654f, 0.819f, 1f);
     private static readonly Vector4 WhiteBroken = new Vector4(0.792f, 0.784f, 0.827f, 1f);
 
     internal static void Init()
     {
-        SetupStyle();
+        // Custom theme provided not used yet
+        // SetupStyle();
 
         SetupCustomFont();
     }
@@ -35,7 +36,7 @@ public static class DearImGuiTheme
         Style.ScrollbarSize = 15f;
         Style.GrabMinSize = 8f;
         Style.WindowBorderSize = 0f;
-        Style.ChildBorderSize = 0f;
+        Style.ChildBorderSize = 1f;
         Style.PopupBorderSize = 0f;
         Style.FrameBorderSize = 0f;
         Style.TabBorderSize = 0f;
@@ -53,7 +54,7 @@ public static class DearImGuiTheme
         colors[(int)ImGuiCol.Text] = new(1.00f, 1.00f, 1.00f, 1.00f);
         colors[(int)ImGuiCol.TextDisabled] = new(1.00f, 0.90f, 0.19f, 1.00f);
         colors[(int)ImGuiCol.WindowBg] = BGColor;
-        colors[(int)ImGuiCol.ChildBg] = new(0.00f, 0.00f, 0.00f, 0.00f);
+        colors[(int)ImGuiCol.ChildBg] = new(0.00f, 0.00f, 0.00f, 0.20f);
         colors[(int)ImGuiCol.PopupBg] = new(0.08f, 0.08f, 0.08f, 0.94f);
         colors[(int)ImGuiCol.Border] = new(0.30f, 0.30f, 0.30f, 0.50f);
         colors[(int)ImGuiCol.BorderShadow] = new(0.00f, 0.00f, 0.00f, 0.00f);
@@ -102,9 +103,9 @@ public static class DearImGuiTheme
 
     private static unsafe void SetupCustomFont()
     {
-        var ChineseSimplifiedCommonFontPath = Path.Combine(DearImGuiInjection.AssetsFolderPath, "Fonts", DearImGuiInjection.ChineseSimplifiedFontFileNameValue.Get());
-        var ChineseFullFontPath = Path.Combine(DearImGuiInjection.AssetsFolderPath, "Fonts", DearImGuiInjection.ChineseFullFontFileNameValue.Get());
-        var JapaneseFontPath = Path.Combine(DearImGuiInjection.AssetsFolderPath, "Fonts", DearImGuiInjection.JapaneseFontFileNameValue.Get());
+        var ChineseSimplifiedCommonFontPath = Path.Combine(DearImGuiInjection.AssetsFolderPath, "Fonts", DearImGuiInjection.ChineseSimplifiedFontFileNameDefault);
+        var ChineseFullFontPath = Path.Combine(DearImGuiInjection.AssetsFolderPath, "Fonts", DearImGuiInjection.ChineseFullFontFileNameDefault);
+        var JapaneseFontPath = Path.Combine(DearImGuiInjection.AssetsFolderPath, "Fonts", DearImGuiInjection.JapaneseFontFileNameDefault);
 
         ImFontConfig* config = ImGuiNative.ImFontConfig_ImFontConfig();
         config->MergeMode = 0;
