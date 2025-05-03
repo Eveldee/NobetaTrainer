@@ -161,7 +161,7 @@ This repository accepts contributions, don't hesite to [open a new issue](/../..
 This Trainer tool couldn't be made without these awesome libraries and tools:
 - [BepInEx](https://github.com/BepInEx/BepInEx) - *licensed under the LGPL-2.1 license*
 - [ImGui](https://github.com/ocornut/imgui) - *licensed under the MIT license*
-- [ClickableTransparentOverlay](https://github.com/zaafar/ClickableTransparentOverlay) - *licensed under the Apache-2.0 license*
+- [DearImGuiInjection](https://github.com/krulci/DearImGuiInjection) - *no license*
 - [Humanizer](https://github.com/Humanizr/Humanizer) - *licensed under the MIT license*
 - [NativeFileDialogSharp](https://github.com/milleniumbug/NativeFileDialogSharp) - *licensed under the Zlib license*
 
