@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using RendererFinder.Renderers;
+using DearImGuiInjection.RendererFinder.Renderers;
 
-namespace RendererFinder;
+namespace DearImGuiInjection.RendererFinder;
 
 public static class RendererFinder
 {

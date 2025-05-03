@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace NativeMemory;
+namespace DearImGuiInjection.NativeMemory;
 
 public static unsafe class Allocator
 {

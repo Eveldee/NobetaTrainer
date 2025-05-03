@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using BepInEx.Unity.IL2CPP.Hook;
-using CppInterop;
+using DearImGuiInjection.CppInterop;
 using Il2CppInterop.Runtime;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using Device = SharpDX.Direct3D11.Device;
 
-namespace RendererFinder.Renderers;
+namespace DearImGuiInjection.RendererFinder.Renderers;
 
 /// <summary>
 /// Contains a full list of IDXGISwapChain functions to be used

@@ -3,9 +3,9 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using DearImGuiInjection.Backends;
+using DearImGuiInjection.RendererFinder.Renderers;
 using DearImGuiInjection.Windows;
 using ImGuiNET;
-using RendererFinder.Renderers;
 
 namespace DearImGuiInjection;
 

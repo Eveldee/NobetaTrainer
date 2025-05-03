@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RendererFinder;
+namespace DearImGuiInjection.RendererFinder;
 
 internal static class Log
 {

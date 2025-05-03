@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
 using BepInEx.Unity.IL2CPP.Hook;
-using CppInterop;
+using DearImGuiInjection.CppInterop;
 using Il2CppInterop.Runtime;
 using SharpDX.Direct3D12;
 using SharpDX.DXGI;
 
-namespace RendererFinder.Renderers;
+namespace DearImGuiInjection.RendererFinder.Renderers;
 
 public class DX12Renderer : IRenderer
 {

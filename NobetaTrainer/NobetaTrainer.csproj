@@ -443,6 +443,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DearImGuiInjection\DearImGuiInjection\DearImGuiInjection.csproj" />
+      <ProjectReference Include="..\DearImGuiInjection\DearImGuiInjection.csproj" />
     </ItemGroup>
 </Project>

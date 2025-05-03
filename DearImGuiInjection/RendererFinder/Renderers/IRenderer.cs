@@ -1,4 +1,4 @@
-﻿namespace RendererFinder.Renderers;
+﻿namespace DearImGuiInjection.RendererFinder.Renderers;
 
 public enum RendererKind
 {

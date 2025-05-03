@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NativeMemory;
+namespace DearImGuiInjection.NativeMemory;
 
 public class PatternBatch
 {

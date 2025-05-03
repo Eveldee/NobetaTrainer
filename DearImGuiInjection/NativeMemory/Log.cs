@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NativeMemory;
+namespace DearImGuiInjection.NativeMemory;
 
 internal static class Log
 {

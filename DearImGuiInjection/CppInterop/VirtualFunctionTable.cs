@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CppInterop;
+namespace DearImGuiInjection.CppInterop;
 
 /// <summary>
 /// A structure type which an individual virtual function table entry.

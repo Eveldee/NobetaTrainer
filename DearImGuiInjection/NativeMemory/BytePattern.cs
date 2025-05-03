@@ -4,7 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace NativeMemory;
+namespace DearImGuiInjection.NativeMemory;
 
 public static class StringBytePattern
 {

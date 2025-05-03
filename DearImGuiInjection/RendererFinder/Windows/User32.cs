@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-namespace RendererFinder.Windows;
+namespace DearImGuiInjection.RendererFinder.Windows;
 
 internal static class User32
 {

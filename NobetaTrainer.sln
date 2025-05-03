@@ -2,13 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NobetaTrainer", "NobetaTrainer\NobetaTrainer.csproj", "{2FD197B9-D535-463C-855F-F354B16E3E64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DearImGuiInjection", "DearImGuiInjection\DearImGuiInjection\DearImGuiInjection.csproj", "{352B4739-C09D-4FD6-A4FE-884307A8EBA1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RendererFinder", "DearImGuiInjection\RendererFinder\RendererFinder.csproj", "{1E0216A4-1EEB-4425-9CE9-65F0162319B2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NativeMemory", "DearImGuiInjection\NativeMemory\NativeMemory.csproj", "{94B34287-97A0-44B8-8619-42B5C962C660}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CppInterop", "DearImGuiInjection\CppInterop\CppInterop.csproj", "{FB92A596-3612-4DE7-9B2D-F75B4D245A87}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DearImGuiInjection", "DearImGuiInjection\DearImGuiInjection.csproj", "{E501A323-5348-4EB5-9DFE-945CF11CAD22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,29 +17,11 @@ Global
 		{2FD197B9-D535-463C-855F-F354B16E3E64}.V1031|Any CPU.Build.0 = V1031|Any CPU
 		{2FD197B9-D535-463C-855F-F354B16E3E64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2FD197B9-D535-463C-855F-F354B16E3E64}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{352B4739-C09D-4FD6-A4FE-884307A8EBA1}.Debug|Any CPU.ActiveCfg = netstandard2.0|Any CPU
-		{352B4739-C09D-4FD6-A4FE-884307A8EBA1}.Debug|Any CPU.Build.0 = netstandard2.0|Any CPU
-		{352B4739-C09D-4FD6-A4FE-884307A8EBA1}.Release|Any CPU.ActiveCfg = netstandard2.0|Any CPU
-		{352B4739-C09D-4FD6-A4FE-884307A8EBA1}.Release|Any CPU.Build.0 = netstandard2.0|Any CPU
-		{352B4739-C09D-4FD6-A4FE-884307A8EBA1}.V1031|Any CPU.ActiveCfg = netstandard2.0|Any CPU
-		{352B4739-C09D-4FD6-A4FE-884307A8EBA1}.V1031|Any CPU.Build.0 = netstandard2.0|Any CPU
-		{1E0216A4-1EEB-4425-9CE9-65F0162319B2}.Debug|Any CPU.ActiveCfg = netstandard2.0|Any CPU
-		{1E0216A4-1EEB-4425-9CE9-65F0162319B2}.Debug|Any CPU.Build.0 = netstandard2.0|Any CPU
-		{1E0216A4-1EEB-4425-9CE9-65F0162319B2}.Release|Any CPU.ActiveCfg = netstandard2.0|Any CPU
-		{1E0216A4-1EEB-4425-9CE9-65F0162319B2}.Release|Any CPU.Build.0 = netstandard2.0|Any CPU
-		{1E0216A4-1EEB-4425-9CE9-65F0162319B2}.V1031|Any CPU.ActiveCfg = netstandard2.0|Any CPU
-		{1E0216A4-1EEB-4425-9CE9-65F0162319B2}.V1031|Any CPU.Build.0 = netstandard2.0|Any CPU
-		{94B34287-97A0-44B8-8619-42B5C962C660}.Debug|Any CPU.ActiveCfg = netstandard2.0|Any CPU
-		{94B34287-97A0-44B8-8619-42B5C962C660}.Debug|Any CPU.Build.0 = netstandard2.0|Any CPU
-		{94B34287-97A0-44B8-8619-42B5C962C660}.Release|Any CPU.ActiveCfg = netstandard2.0|Any CPU
-		{94B34287-97A0-44B8-8619-42B5C962C660}.Release|Any CPU.Build.0 = netstandard2.0|Any CPU
-		{94B34287-97A0-44B8-8619-42B5C962C660}.V1031|Any CPU.ActiveCfg = netstandard2.0|Any CPU
-		{94B34287-97A0-44B8-8619-42B5C962C660}.V1031|Any CPU.Build.0 = netstandard2.0|Any CPU
-		{FB92A596-3612-4DE7-9B2D-F75B4D245A87}.Debug|Any CPU.ActiveCfg = netstandard2.0|Any CPU
-		{FB92A596-3612-4DE7-9B2D-F75B4D245A87}.Debug|Any CPU.Build.0 = netstandard2.0|Any CPU
-		{FB92A596-3612-4DE7-9B2D-F75B4D245A87}.Release|Any CPU.ActiveCfg = netstandard2.0|Any CPU
-		{FB92A596-3612-4DE7-9B2D-F75B4D245A87}.Release|Any CPU.Build.0 = netstandard2.0|Any CPU
-		{FB92A596-3612-4DE7-9B2D-F75B4D245A87}.V1031|Any CPU.ActiveCfg = netstandard2.0|Any CPU
-		{FB92A596-3612-4DE7-9B2D-F75B4D245A87}.V1031|Any CPU.Build.0 = netstandard2.0|Any CPU
+		{E501A323-5348-4EB5-9DFE-945CF11CAD22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E501A323-5348-4EB5-9DFE-945CF11CAD22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E501A323-5348-4EB5-9DFE-945CF11CAD22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E501A323-5348-4EB5-9DFE-945CF11CAD22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E501A323-5348-4EB5-9DFE-945CF11CAD22}.V1031|Any CPU.ActiveCfg = Debug|Any CPU
+		{E501A323-5348-4EB5-9DFE-945CF11CAD22}.V1031|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 EndGlobal
