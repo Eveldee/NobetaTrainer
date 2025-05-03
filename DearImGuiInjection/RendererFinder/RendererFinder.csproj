@@ -9,10 +9,15 @@
 		<DebugType>none</DebugType>
 		<Optimize>true</Optimize>
 		<TargetFramework>net6.0</TargetFramework>
+		<RestoreAdditionalProjectSources>
+			https://api.nuget.org/v3/index.json;
+			https://nuget.bepinex.dev/v3/index.json;
+			https://nuget.samboy.dev/v3/index.json
+		</RestoreAdditionalProjectSources>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Reloaded.Hooks" Version="4.3.0" />
+		<PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.*" IncludeAssets="compile" />
 	</ItemGroup>
 
 	<ItemGroup>

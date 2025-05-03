@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using BepInEx.Unity.IL2CPP.Hook;
 using CppInterop;
-using Reloaded.Hooks;
+using Il2CppInterop.Runtime;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
@@ -45,36 +45,27 @@ public enum IDXGISwapChain
 
 public class DX11Renderer : IRenderer
 {
-    [DllImport("GameAssembly")]
-    private static extern void il2cpp_thread_attach(IntPtr domain);
-    [DllImport("GameAssembly")]
-    private static extern IntPtr il2cpp_domain_get();
-
     public static void AttachThread()
     {
-        il2cpp_thread_attach(il2cpp_domain_get());
+        IL2CPP.il2cpp_thread_attach(IL2CPP.il2cpp_domain_get());
     }
 
-    // https://github.com/BepInEx/BepInEx/blob/master/Runtimes/Unity/BepInEx.Unity.IL2CPP/Hook/INativeDetour.cs#L54
-    // Workaround for CoreCLR collecting all delegates
-    private static List<object> _cache = new();
-
-    [Reloaded.Hooks.Definitions.X64.Function(Reloaded.Hooks.Definitions.X64.CallingConventions.Microsoft)]
-    [Reloaded.Hooks.Definitions.X86.Function(Reloaded.Hooks.Definitions.X86.CallingConventions.Stdcall)]
+    // SwapChainPresent hook
     private delegate IntPtr CDXGISwapChainPresentDelegate(IntPtr self, uint syncInterval, uint flags);
 
-    private static CDXGISwapChainPresentDelegate _swapChainPresentHookDelegate = new(SwapChainPresentHook);
-    private static Hook<CDXGISwapChainPresentDelegate> _swapChainPresentHook;
+    private static readonly CDXGISwapChainPresentDelegate _swapChainPresentHookDelegate = new(SwapChainPresentHook);
+    private static CDXGISwapChainPresentDelegate _swapChainPresentHookOriginal;
+    private static INativeDetour _swapChainPresentHook;
 
     public static event Action<SwapChain, uint, uint> OnPresent { add { _onPresentAction += value; } remove { _onPresentAction -= value; } }
     private static Action<SwapChain, uint, uint> _onPresentAction;
 
-    [Reloaded.Hooks.Definitions.X64.Function(Reloaded.Hooks.Definitions.X64.CallingConventions.Microsoft)]
-    [Reloaded.Hooks.Definitions.X86.Function(Reloaded.Hooks.Definitions.X86.CallingConventions.Stdcall)]
+    // SwapChainResizeBuffer hook
     private delegate IntPtr CDXGISwapChainResizeBuffersDelegate(IntPtr self, uint bufferCount, uint width, uint height, Format newFormat, uint swapchainFlags);
 
-    private static CDXGISwapChainResizeBuffersDelegate _swapChainResizeBuffersHookDelegate = new(SwapChainResizeBuffersHook);
-    private static Hook<CDXGISwapChainResizeBuffersDelegate> _swapChainResizeBuffersHook;
+    private static readonly CDXGISwapChainResizeBuffersDelegate _swapChainResizeBuffersHookDelegate = new(SwapChainResizeBuffersHook);
+    private static CDXGISwapChainResizeBuffersDelegate _swapChainResizeBuffersHookOriginal;
+    private static INativeDetour _swapChainResizeBuffersHook;
 
     public static event Action<SwapChain, uint, uint, uint, Format, uint> PreResizeBuffers { add { _preResizeBuffers += value; } remove { _preResizeBuffers -= value; } }
     private static Action<SwapChain, uint, uint, uint, Format, uint> _preResizeBuffers;
@@ -82,7 +73,7 @@ public class DX11Renderer : IRenderer
     public static event Action<SwapChain, uint, uint, uint, Format, uint> PostResizeBuffers { add { _postResizeBuffers += value; } remove { _postResizeBuffers -= value; } }
     private static Action<SwapChain, uint, uint, uint, Format, uint> _postResizeBuffers;
 
-    public unsafe bool Init()
+    public bool Init()
     {
         Log.Info("DX11Renderer.Init()");
 
@@ -108,21 +99,17 @@ public class DX11Renderer : IRenderer
 
         Windows.User32.DestroyWindow(windowHandle);
 
-        {
-            _cache.Add(_swapChainPresentHookDelegate);
+        _swapChainPresentHook = INativeDetour.CreateAndApply(
+            (nint)swapChainPresentFunctionPtr,
+            _swapChainPresentHookDelegate,
+            out _swapChainPresentHookOriginal
+        );
 
-            _swapChainPresentHook = new(_swapChainPresentHookDelegate, swapChainPresentFunctionPtr);
-
-            _swapChainPresentHook.Activate();
-        }
-
-        {
-            _cache.Add(_swapChainResizeBuffersHookDelegate);
-
-            _swapChainResizeBuffersHook = new(_swapChainResizeBuffersHookDelegate, swapChainResizeBuffersFunctionPtr);
-
-            _swapChainResizeBuffersHook.Activate();
-        }
+        _swapChainResizeBuffersHook = INativeDetour.CreateAndApply(
+            (nint)swapChainResizeBuffersFunctionPtr,
+            _swapChainResizeBuffersHookDelegate,
+            out _swapChainResizeBuffersHookOriginal
+        );
 
         Log.Info("DX11Renderer.Init() end");
 
@@ -131,10 +118,10 @@ public class DX11Renderer : IRenderer
 
     public void Dispose()
     {
-        _swapChainResizeBuffersHook?.Disable();
+        _swapChainResizeBuffersHook?.Dispose();
         _swapChainResizeBuffersHook = null;
 
-        _swapChainPresentHook?.Disable();
+        _swapChainPresentHook?.Dispose();
         _swapChainPresentHook = null;
 
         _onPresentAction = null;
@@ -161,7 +148,7 @@ public class DX11Renderer : IRenderer
             }
         }
 
-        return _swapChainPresentHook.OriginalFunction(self, syncInterval, flags);
+        return _swapChainPresentHookOriginal(self, syncInterval, flags);
     }
 
     private static IntPtr SwapChainResizeBuffersHook(IntPtr swapchainPtr, uint bufferCount, uint width, uint height, Format newFormat, uint swapchainFlags)
@@ -185,7 +172,7 @@ public class DX11Renderer : IRenderer
             }
         }
 
-        var result = _swapChainResizeBuffersHook.OriginalFunction(swapchainPtr, bufferCount, width, height, newFormat, swapchainFlags);
+        var result = _swapChainResizeBuffersHookOriginal(swapchainPtr, bufferCount, width, height, newFormat, swapchainFlags);
 
         if (_postResizeBuffers != null)
         {

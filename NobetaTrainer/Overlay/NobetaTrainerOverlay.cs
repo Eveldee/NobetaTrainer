@@ -16,18 +16,9 @@ public partial class NobetaTrainerOverlay
     private bool _showImGuiUserGuideWindow;
     private bool _showImGuiStackToolWindow;
 
-    private bool _isInitialized;
-
     public void Create()
     {
         DearImGuiInjection.DearImGuiInjection.Render += Render;
-    }
-
-    public void Initialize()
-    {
-        IL2CPP.il2cpp_thread_attach(IL2CPP.il2cpp_domain_get());
-
-        _isInitialized = true;
     }
 
     public void Destroy()
@@ -37,12 +28,7 @@ public partial class NobetaTrainerOverlay
 
     private void Render()
     {
-        if (!_isInitialized)
-        {
-            Initialize();
-        }
-
-        // Timers are always visible when activated, even if overlay is hidden
+        // Timers are always visible when activated, even if the overlay is hidden
         if (Timers.ShowTimers)
         {
             ShowTimersWindow();
