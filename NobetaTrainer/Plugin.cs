@@ -24,6 +24,7 @@ namespace NobetaTrainer;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInProcess("LittleWitchNobeta")]
+[BepInDependency(DearImGuiInjection.Metadata.GUID)]
 public class Plugin : BasePlugin
 {
     internal new static ManualLogSource Log;
@@ -39,10 +40,12 @@ public class Plugin : BasePlugin
         Log = base.Log;
         Log.LogMessage($"Plugin {MyPluginInfo.PLUGIN_GUID} is loading...");
 
-        // Fix ImGUI task preventing the game from closing
         Application.quitting += (Action) (() =>
         {
-            NobetaTrainerOverlay.Close();
+            // Fix ImGUI task preventing the game from closing
+            NobetaTrainerOverlay.Destroy();
+
+            // Save settings on exit
             Unload();
         });
 
@@ -60,7 +63,7 @@ public class Plugin : BasePlugin
 
         // Create and show overlay
         NobetaTrainerOverlay = new NobetaTrainerOverlay();
-        Task.Run(NobetaTrainerOverlay.Run);
+        NobetaTrainerOverlay.Create();
 
         // Apply patches
         ApplyPatches();
