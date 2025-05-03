@@ -11,8 +11,6 @@ namespace RendererFinder.Renderers;
 
 public class DX12Renderer : IRenderer
 {
-#if NETSTANDARD2_0 || NET462
-#else
     [DllImport("GameAssembly")]
     private static extern void il2cpp_thread_attach(IntPtr domain);
     [DllImport("GameAssembly")]
@@ -22,7 +20,6 @@ public class DX12Renderer : IRenderer
     {
         il2cpp_thread_attach(il2cpp_domain_get());
     }
-#endif
 
     // https://github.com/BepInEx/BepInEx/blob/master/Runtimes/Unity/BepInEx.Unity.IL2CPP/Hook/INativeDetour.cs#L54
     // Workaround for CoreCLR collecting all delegates
@@ -160,10 +157,8 @@ public class DX12Renderer : IRenderer
 
     private static IntPtr SwapChainPresentHook(IntPtr self, uint syncInterval, uint flags, IntPtr presentParameters)
     {
-#if NETSTANDARD2_0 || NET462
-#else
         AttachThread();
-#endif
+
         var swapChain = new SwapChain3(self);
 
         if (_onPresentAction != null)
@@ -186,10 +181,8 @@ public class DX12Renderer : IRenderer
 
     private static IntPtr SwapChainResizeBuffersHook(IntPtr swapchainPtr, int bufferCount, int width, int height, int newFormat, int swapchainFlags)
     {
-#if NETSTANDARD2_0 || NET462
-#else
         AttachThread();
-#endif
+
         var swapChain = new SwapChain3(swapchainPtr);
 
         if (_preResizeBuffers != null)
